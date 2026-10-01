@@ -1,0 +1,57 @@
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { RouterLink } from '@angular/router';
+import { renderTemplate } from '../../core/doc/engine';
+import { CategoryId } from '../../core/doc/types';
+import { I18n, TPipe, TrPipe } from '../../core/i18n/i18n.service';
+import { Drafts } from '../../core/services/drafts.service';
+import { Prefs } from '../../core/services/prefs.service';
+import { Icon } from '../../layout/icon';
+import { exampleValues, findTemplate, TEMPLATES } from '../../templates';
+import { CATEGORIES } from '../../templates/shared';
+
+const CAT_ICON: Record<CategoryId, string> = { corporate: 'building', hr: 'users', contracts: 'handshake', acts: 'stamp' };
+
+@Component({
+  selector: 'app-home',
+  imports: [RouterLink, TPipe, TrPipe, Icon],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './home.html',
+  styleUrl: './home.scss',
+})
+export class Home {
+  private readonly i18n = inject(I18n);
+  private readonly sanitizer = inject(DomSanitizer);
+  private readonly drafts = inject(Drafts);
+  protected readonly prefs = inject(Prefs);
+
+  protected readonly categories = CATEGORIES;
+  protected readonly catIcon = CAT_ICON;
+  protected readonly total = TEMPLATES.length;
+  protected readonly query = signal('');
+  protected readonly cat = signal<CategoryId | 'all'>('all');
+
+  protected readonly list = computed(() => {
+    const q = this.query().trim().toLowerCase();
+    const c = this.cat();
+    this.i18n.lang();
+    return TEMPLATES.filter(t => (c === 'all' || t.cat === c) && (!q ||
+      [t.title.uz, t.title.ru, t.title.en, t.desc.uz, t.desc.ru, t.desc.en, t.docTitle].join(' ').toLowerCase().includes(q)));
+  });
+
+  protected readonly countByCat = computed(() => {
+    const m: Record<string, number> = {};
+    TEMPLATES.forEach(t => (m[t.cat] = (m[t.cat] ?? 0) + 1));
+    return m;
+  });
+
+  /** Live sample shown in the hero: the real LLC-formation template with example data. */
+  protected readonly sample = computed(() => {
+    const t = findTemplate('llc-founding')!;
+    const html = renderTemplate(t, exampleValues(t), this.prefs.script()).split('<div class="pb"></div>')[0];
+    return this.sanitizer.bypassSecurityTrustHtml(html);
+  });
+
+  protected hasDraft(id: string): boolean { return this.drafts.has(id); }
+  protected catTitle(id: CategoryId) { return CATEGORIES.find(c => c.id === id)!.title; }
+}

@@ -1,0 +1,142 @@
+@if (tpl(); as t) {
+  <div class="top no-print">
+    <div class="crumbs">
+      <a routerLink="/" fragment="templates" class="back"><app-icon name="back" /> {{ 'ed.back' | t }}</a>
+      <span class="chip">{{ category()?.title | tr }}</span>
+    </div>
+    <div class="title-row">
+      <div class="titles">
+        <h1>{{ t.title | tr }}</h1>
+        <p>{{ t.desc | tr }}</p>
+      </div>
+      <div class="actions">
+        <div class="script">
+          <span class="lbl">{{ 'ed.script' | t }}</span>
+          <div class="seg" role="group" [attr.aria-label]="'ed.script' | t">
+            <button type="button" [attr.aria-pressed]="prefs.script() === 'cyr'" (click)="prefs.script.set('cyr')">Кирилл</button>
+            <button type="button" [attr.aria-pressed]="prefs.script() === 'lat'" (click)="prefs.script.set('lat')">Lotin</button>
+          </div>
+        </div>
+        <button class="btn" type="button" (click)="copy()"><app-icon name="copy" /> {{ 'ed.copy' | t }}</button>
+        <button class="btn" type="button" (click)="print()"><app-icon name="print" /> {{ 'ed.print' | t }}</button>
+        <button class="btn primary" type="button" (click)="downloadDoc()"><app-icon name="download" /> {{ 'ed.doc' | t }}</button>
+      </div>
+    </div>
+    <div class="tabs" role="group">
+      <button type="button" [attr.aria-pressed]="tab() === 'form'" (click)="tab.set('form')">{{ 'ed.tabForm' | t }}</button>
+      <button type="button" [attr.aria-pressed]="tab() === 'doc'" (click)="tab.set('doc')">{{ 'ed.tabDoc' | t }}</button>
+    </div>
+  </div>
+
+  <div class="work" [attr.data-tab]="tab()">
+    <aside class="form no-print">
+      <div class="progress">
+        <div class="bar"><span [style.width.%]="progress()"></span></div>
+        <span class="pct">{{ progress() }}% {{ 'ed.progress' | t }}</span>
+      </div>
+      <div class="form-tools">
+        <button class="btn ghost" type="button" (click)="fillExample()"><app-icon name="wand" /> {{ 'ed.example' | t }}</button>
+        <button class="btn ghost" type="button" (click)="clear()"><app-icon name="eraser" /> {{ 'ed.clear' | t }}</button>
+      </div>
+      <p class="note">{{ note() | t }}</p>
+
+      <form (submit)="$event.preventDefault()" autocomplete="off">
+        @for (g of groups(); track g.key) {
+          <details class="group" open>
+            <summary><span>{{ groupsLabel[g.key] | tr }}</span><app-icon name="chevron" /></summary>
+            <div class="group-body">
+              @for (item of g.fields; track $index) {
+                @if (isPair(item)) {
+                  <div class="pair">
+                    @for (f of item; track f.k) { <ng-container *ngTemplateOutlet="field; context: { $implicit: f }" /> }
+                  </div>
+                } @else {
+                  <ng-container *ngTemplateOutlet="field; context: { $implicit: item }" />
+                }
+              }
+            </div>
+          </details>
+        }
+      </form>
+
+      <ng-template #field let-f>
+        <div class="f" [class.wide]="f.t === 'rows'">
+          @switch (f.t) {
+            @case ('rows') {
+              <div class="rows-head"><label>{{ f.l | tr }}</label><span class="chip">{{ rows(f.k).length }} {{ 'ed.rows' | t }}</span></div>
+              <div class="rows">
+                @for (r of rows(f.k); track $index; let i = $index) {
+                  <div class="row">
+                    <span class="row-n">{{ i + 1 }}</span>
+                    <div class="row-cells">
+                      @for (col of f.cols; track col.k) {
+                        <input [id]="'f-' + f.k + '-' + i + '-' + col.k" [class.num]="col.num" [attr.inputmode]="col.num ? 'decimal' : null"
+                               [value]="r[col.k]" [placeholder]="col.l | tr" [attr.aria-label]="col.l | tr"
+                               (input)="setCell(f.k, i, col.k, $any($event.target).value)">
+                      }
+                    </div>
+                    <button type="button" class="x" (click)="removeRow(f.k, i)" [attr.aria-label]="'ed.removeRow' | t"><app-icon name="x" /></button>
+                  </div>
+                }
+              </div>
+              <div class="rows-foot">
+                <button type="button" class="btn" (click)="addRow(f)"><app-icon name="plus" /> {{ 'ed.addRow' | t }}</button>
+                @if (rowsTotal(f)) { <span class="total">{{ 'ed.sum' | t }}: <b>{{ rowsTotal(f) }}</b></span> }
+              </div>
+            }
+            @case ('select') {
+              <label [for]="'f-' + f.k">{{ f.l | tr }}</label>
+              <select [id]="'f-' + f.k" (change)="set(f.k, $any($event.target).value)">
+                @for (o of f.opts; track o) { <option [value]="o" [selected]="str(f.k) === o">{{ opt(o) }}</option> }
+              </select>
+            }
+            @case ('textarea') {
+              <label [for]="'f-' + f.k">{{ f.l | tr }}</label>
+              <textarea [id]="'f-' + f.k" rows="3" [value]="str(f.k)" (input)="set(f.k, $any($event.target).value)"></textarea>
+            }
+            @case ('date') {
+              <label [for]="'f-' + f.k">{{ f.l | tr }}</label>
+              <input [id]="'f-' + f.k" type="date" [value]="str(f.k)" (input)="set(f.k, $any($event.target).value)">
+            }
+            @case ('money') {
+              <label [for]="'f-' + f.k">{{ f.l | tr }}</label>
+              <div class="money">
+                <input [id]="'f-' + f.k" class="num" inputmode="decimal" [value]="str(f.k)" (input)="set(f.k, $any($event.target).value)">
+                <span class="cur">UZS</span>
+              </div>
+              @if (moneyHint(f.k)) { <span class="hint words">{{ moneyHint(f.k) }}</span> }
+            }
+            @case ('number') {
+              <label [for]="'f-' + f.k">{{ f.l | tr }}</label>
+              <input [id]="'f-' + f.k" class="num" inputmode="decimal" [value]="str(f.k)" (input)="set(f.k, $any($event.target).value)">
+            }
+            @default {
+              <label [for]="'f-' + f.k">{{ f.l | tr }}</label>
+              <input [id]="'f-' + f.k" [value]="str(f.k)" (input)="set(f.k, $any($event.target).value)">
+            }
+          }
+          @if (f.hint) { <span class="hint">{{ f.hint | tr }}</span> }
+        </div>
+      </ng-template>
+    </aside>
+
+    <section class="preview">
+      <div class="pv-bar no-print">
+        <label class="toggle">
+          <input type="checkbox" [checked]="prefs.marks()" (change)="prefs.marks.set($any($event.target).checked)">
+          <span>{{ 'ed.marks' | t }}</span>
+        </label>
+        <span class="lang-note">{{ 'ed.docLang' | t }} · {{ prefs.script() === 'lat' ? 'lotin' : 'кирилл' }}</span>
+      </div>
+      <article #sheet class="sheet" [class.marks]="prefs.marks()" [innerHTML]="html()"></article>
+      @if (prefs.script() === 'lat') { <p class="pv-note no-print">{{ 'ed.latinNote' | t }}</p> }
+    </section>
+  </div>
+
+  <div class="toast no-print" role="status" [class.show]="toast()">{{ toast() }}</div>
+} @else {
+  <div class="missing">
+    <p>{{ 'ed.notFound' | t }}</p>
+    <a class="btn primary" routerLink="/">{{ 'ed.back' | t }}</a>
+  </div>
+}
