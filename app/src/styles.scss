@@ -1,0 +1,169 @@
+/* LexForm design tokens.
+   Concept: official paperwork made calm — seal-ink blue on cool porcelain, one turquoise note
+   taken from Samarkand majolica, documents always on white paper. */
+:root {
+  --bg: #eef1f5;
+  --bg-2: #e4e8ef;
+  --surface: #ffffff;
+  --raised: #f7f8fb;
+  --ink: #141a2e;
+  --ink-2: #2b3350;
+  --muted: #5c667d;
+  --line: #dbe0e9;
+  --line-2: #c9d0dc;
+  --primary: #2336a3;
+  --primary-2: #1a2a86;
+  --primary-soft: #e3e7fb;
+  --on-primary: #ffffff;
+  --accent: #0f8f87;
+  --accent-soft: #d8f1ee;
+  --danger: #b4232f;
+  --ok: #1f7a4d;
+  --mark: #e6ebff;
+  --shadow: 0 1px 2px rgba(16, 24, 48, .06), 0 10px 30px rgba(16, 24, 48, .08);
+  --shadow-lg: 0 2px 4px rgba(16, 24, 48, .06), 0 24px 60px rgba(16, 24, 48, .14);
+
+  --paper: #ffffff;
+  --paper-ink: #111111;
+  --paper-line: #3f3f3f;
+
+  --f-display: "Unbounded", "Manrope", system-ui, sans-serif;
+  --f-ui: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --f-doc: "PT Serif", "Times New Roman", Times, serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+
+  --r-sm: 8px;
+  --r: 12px;
+  --r-lg: 18px;
+  --gutter: clamp(16px, 4vw, 40px);
+  color-scheme: light;
+}
+
+@mixin dark {
+  --bg: #0d111c;
+  --bg-2: #111727;
+  --surface: #151b2b;
+  --raised: #1b2336;
+  --ink: #e8ebf3;
+  --ink-2: #c6ccdb;
+  --muted: #98a2b8;
+  --line: #263049;
+  --line-2: #33405e;
+  --primary: #8e9dff;
+  --primary-2: #a7b3ff;
+  --primary-soft: #222b4f;
+  --on-primary: #0d111c;
+  --accent: #3fd0c3;
+  --accent-soft: #123a39;
+  --danger: #ff7b86;
+  --ok: #5fd39a;
+  --mark: #e6ebff;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 30px rgba(0, 0, 0, .35);
+  --shadow-lg: 0 2px 4px rgba(0, 0, 0, .3), 0 24px 60px rgba(0, 0, 0, .5);
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { @include dark; } }
+:root[data-theme="dark"] { @include dark; }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.55 var(--f-ui);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+a { color: var(--primary); }
+img, svg { max-width: 100%; }
+h1, h2, h3 { text-wrap: balance; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+[hidden] { display: none !important; }
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid var(--line-2); background: var(--surface); color: var(--ink);
+  padding: 8px 14px; border-radius: 999px; cursor: pointer;
+  font-weight: 600; font-size: 14px; line-height: 1.2; text-decoration: none;
+  transition: border-color .15s, background .15s, color .15s, transform .15s;
+  svg { width: 16px; height: 16px; flex: none; }
+  &:hover { border-color: var(--primary); color: var(--primary); }
+  &:active { transform: translateY(1px); }
+  &.primary { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+  &.primary:hover { background: var(--primary-2); border-color: var(--primary-2); color: var(--on-primary); }
+  &.ghost { border-color: transparent; background: transparent; }
+  &.ghost:hover { background: var(--primary-soft); }
+  &.lg { padding: 12px 22px; font-size: 15px; }
+  &.icon { padding: 8px; }
+}
+
+.seg {
+  display: inline-flex; padding: 3px; gap: 2px; border-radius: 999px;
+  background: var(--bg-2); border: 1px solid var(--line);
+  button {
+    border: 0; background: none; cursor: pointer; border-radius: 999px;
+    padding: 5px 12px; font-weight: 600; font-size: 13px; color: var(--muted);
+    &[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, .12); }
+  }
+}
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: 500 12px/1 var(--f-mono); letter-spacing: .02em;
+  padding: 5px 9px; border-radius: 999px; background: var(--bg-2); color: var(--muted);
+}
+
+.eyebrow {
+  font: 600 12px/1 var(--f-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--accent);
+}
+
+/* ---------- the paper sheet (document preview, rendered via innerHTML) ---------- */
+.sheet {
+  background: var(--paper); color: var(--paper-ink);
+  width: 100%; max-width: 794px; min-height: 1123px;
+  margin: 0 auto;
+  padding: 76px 64px 84px 92px;
+  box-shadow: var(--shadow-lg);
+  border-radius: 2px;
+  font: 15.5px/1.55 var(--f-doc);
+  overflow-wrap: anywhere;
+  h2 { font: 700 15.5px/1.4 var(--f-doc); text-align: center; margin: 0 0 4px; text-transform: uppercase; letter-spacing: .03em; }
+  h3 { font: 700 15.5px/1.4 var(--f-doc); text-align: center; margin: 16px 0 6px; }
+  p { margin: 0 0 8px; text-align: justify; }
+  .c { text-align: center; }
+  .r { text-align: right; }
+  .sp { letter-spacing: .35em; font-weight: 700; text-align: center; margin: 14px 0; }
+  .meta { display: flex; justify-content: space-between; gap: 16px; margin: 12px 0 16px; }
+  ol { margin: 0 0 8px; padding-left: 24px; }
+  li { margin-bottom: 4px; text-align: justify; }
+  table.t { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-size: 14px; }
+  table.t th, table.t td { border: 1px solid var(--paper-line); padding: 4px 6px; vertical-align: top; }
+  table.t th { font-weight: 700; text-align: center; }
+  table.t td.n { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  table.sig { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14.5px; }
+  table.sig td { width: 50%; vertical-align: top; padding: 0 12px 0 0; }
+  .ack { margin-top: 24px; }
+  .pb { border-top: 1px dashed #bdbdbd; margin: 40px -24px 32px; position: relative; }
+  .blank { color: #9a9a9a; }
+  &.marks .v { background: var(--mark); border-radius: 2px; box-shadow: 0 0 0 1px var(--mark); }
+}
+
+@media (max-width: 720px) {
+  .sheet { padding: 28px 18px 36px; font-size: 14px; min-height: 0; }
+  .sheet .pb { margin-inline: -8px; }
+}
+
+@media print {
+  body { background: #fff; }
+  .no-print { display: none !important; }
+  .sheet { box-shadow: none; max-width: none; min-height: 0; padding: 0; }
+  .sheet.marks .v { background: none; box-shadow: none; }
+  .sheet .pb { border: 0; margin: 0; break-after: page; }
+  @page { size: A4; margin: 20mm 15mm 20mm 25mm; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}

@@ -1,0 +1,107 @@
+<section class="hero">
+  <svg class="girih" aria-hidden="true">
+    <defs>
+      <pattern id="girih" width="64" height="64" patternUnits="userSpaceOnUse">
+        <path d="M32 6 39 25 58 32 39 39 32 58 25 39 6 32 25 25Z M32 0v6M32 58v6M0 32h6M58 32h6" fill="none" stroke="currentColor" stroke-width="1" />
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#girih)" />
+  </svg>
+
+  <div class="hero-in">
+    <div class="copy">
+      <p class="eyebrow">{{ 'hero.kicker' | t }}</p>
+      <h1>{{ 'hero.title' | t }}</h1>
+      <p class="lead">{{ 'hero.lead' | t }}</p>
+      <div class="cta">
+        <a class="btn primary lg" routerLink="/" fragment="templates">{{ 'hero.cta' | t }} <app-icon name="arrow" /></a>
+        <a class="btn lg" routerLink="/t/llc-founding">{{ 'hero.try' | t }}</a>
+      </div>
+      <dl class="stats">
+        <div><dt>{{ total }}</dt><dd>{{ 'stat.templates' | t }}</dd></div>
+        <div><dt>2</dt><dd>{{ 'stat.scripts' | t }}</dd></div>
+        <div><dt>3</dt><dd>{{ 'stat.ui' | t }}</dd></div>
+      </dl>
+    </div>
+
+    <div class="stage" aria-hidden="true">
+      <div class="paper back"></div>
+      <div class="paper mid"></div>
+      <div class="paper front">
+        <div class="mini sheet" [innerHTML]="sample()"></div>
+      </div>
+      <svg class="seal" viewBox="0 0 120 120">
+        <defs><path id="sealPath" d="M60 60m-44 0a44 44 0 1 1 88 0a44 44 0 1 1-88 0" /></defs>
+        <circle cx="60" cy="60" r="56" />
+        <circle cx="60" cy="60" r="34" />
+        <text><textPath href="#sealPath">LEXFORM · ҲУЖЖАТ · HUJJAT · LEXFORM · ҲУЖЖАТ ·</textPath></text>
+        <text class="mid" x="60" y="66" text-anchor="middle">М.Ў.</text>
+      </svg>
+      <div class="float words">
+        <span class="lbl">50 000 000</span>
+        <span>{{ prefs.script() === 'lat' ? 'Ellik million soʻm' : 'Эллик миллион сўм' }}</span>
+      </div>
+      <div class="float script">
+        <div class="seg" role="group" [attr.aria-label]="'ed.script' | t">
+          <button type="button" [attr.aria-pressed]="prefs.script() === 'cyr'" (click)="prefs.script.set('cyr')">Кирилл</button>
+          <button type="button" [attr.aria-pressed]="prefs.script() === 'lat'" (click)="prefs.script.set('lat')">Lotin</button>
+        </div>
+      </div>
+      <span class="stage-label">{{ 'hero.sheet' | t }}</span>
+    </div>
+  </div>
+</section>
+
+<section class="catalog" id="templates">
+  <div class="cat-head">
+    <h2>{{ 'list.title' | t }}</h2>
+    <label class="search">
+      <app-icon name="search" />
+      <input type="search" [value]="query()" (input)="query.set($any($event.target).value)" [placeholder]="'list.search' | t" [attr.aria-label]="'list.search' | t" id="tpl-search">
+    </label>
+  </div>
+
+  <div class="filters" role="group">
+    <button type="button" class="filter" [attr.aria-pressed]="cat() === 'all'" (click)="cat.set('all')">
+      {{ 'list.all' | t }} <span>{{ total }}</span>
+    </button>
+    @for (c of categories; track c.id) {
+      <button type="button" class="filter" [attr.aria-pressed]="cat() === c.id" (click)="cat.set(c.id)">
+        <app-icon [name]="catIcon[c.id]" /> {{ c.title | tr }} <span>{{ countByCat()[c.id] }}</span>
+      </button>
+    }
+  </div>
+
+  @if (list().length) {
+    <div class="grid">
+      @for (t of list(); track t.id) {
+        <a class="card" [routerLink]="['/t', t.id]" [attr.data-cat]="t.cat">
+          <div class="card-top">
+            <span class="cat-ico"><app-icon [name]="catIcon[t.cat]" /></span>
+            <span class="cat-name">{{ catTitle(t.cat) | tr }}</span>
+            @if (hasDraft(t.id)) { <span class="draft">{{ 'list.draft' | t }}</span> }
+          </div>
+          <h3>{{ t.title | tr }}</h3>
+          <p class="doc-title">{{ t.docTitle }}</p>
+          <p class="desc">{{ t.desc | tr }}</p>
+          <div class="card-foot">
+            <span class="chip"><app-icon name="clock" /> ~{{ t.minutes }} {{ 'list.minutes' | t }}</span>
+            <span class="chip">{{ t.fields.length }} {{ 'list.fields' | t }}</span>
+            <span class="go">{{ 'list.open' | t }} <app-icon name="arrow" /></span>
+          </div>
+        </a>
+      }
+    </div>
+  } @else {
+    <p class="empty">{{ 'list.empty' | t }}</p>
+  }
+</section>
+
+<section class="how" id="how">
+  <h2>{{ 'how.title' | t }}</h2>
+  <ol class="steps">
+    <li><span class="n">1</span><h3>{{ 'how.1.t' | t }}</h3><p>{{ 'how.1.d' | t }}</p></li>
+    <li><span class="n">2</span><h3>{{ 'how.2.t' | t }}</h3><p>{{ 'how.2.d' | t }}</p></li>
+    <li><span class="n">3</span><h3>{{ 'how.3.t' | t }}</h3><p>{{ 'how.3.d' | t }}</p></li>
+  </ol>
+</section>
