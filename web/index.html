@@ -1,0 +1,1321 @@
+<title>LexForm</title>
+<meta name="description" content="Oʻzbekiston yuridik hujjatlari shablonlari: forma toʻldiring, hujjat tayyor.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=PT+Mono&display=swap">
+<style>
+/* Layout: three working columns — template register | form | A4 sheet with live preview. Stacks on phones. */
+:root {
+  --bg: #e9ecf2;
+  --panel: #f7f8fb;
+  --raised: #ffffff;
+  --ink: #1b2130;
+  --muted: #5a6376;
+  --line: #d3d8e2;
+  --stamp: #3044a6;          /* seal-ink blue, the one accent */
+  --stamp-soft: #e2e6fa;
+  --mark: #e7ecff;           /* highlight of filled values in the sheet */
+  --danger: #b4232f;
+  --ok: #1f7a4d;
+  --sheet: #ffffff;          /* the document paper stays paper in both themes */
+  --sheet-ink: #111111;
+  --sheet-line: #444444;
+  --f-ui: "Golos Text", "Segoe UI", system-ui, sans-serif;
+  --f-doc: "PT Serif", "Times New Roman", Times, serif;
+  --f-mono: "PT Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --r: 8px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11141b; --panel: #181c25; --raised: #1f2430; --ink: #e5e8ef; --muted: #98a1b3;
+    --line: #2d3342; --stamp: #8e9dff; --stamp-soft: #262d4f; --mark: #e7ecff;
+    --danger: #ff7b86; --ok: #5fd39a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11141b; --panel: #181c25; --raised: #1f2430; --ink: #e5e8ef; --muted: #98a1b3;
+  --line: #2d3342; --stamp: #8e9dff; --stamp-soft: #262d4f; --mark: #e7ecff;
+  --danger: #ff7b86; --ok: #5fd39a; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 var(--f-ui); }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--stamp); outline-offset: 2px; }
+
+.app { display: grid; grid-template-columns: 270px minmax(320px, 420px) minmax(0, 1fr); height: 100%; }
+
+/* ---- template register ---- */
+.side { background: var(--panel); border-right: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; }
+.brand { padding: 18px 18px 12px; display: flex; align-items: baseline; gap: 8px; }
+.brand b { font-size: 20px; letter-spacing: -0.02em; }
+.brand b span { color: var(--stamp); }
+.brand small { color: var(--muted); font-size: 12px; }
+.search { margin: 0 14px 10px; }
+.search input { width: 100%; padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--r); background: var(--raised); }
+.list { overflow: auto; padding: 0 8px 16px; flex: 1; }
+.cat { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 14px 10px 6px; }
+.tpl { display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; width: 100%; text-align: left; border: 0; background: none; padding: 8px 10px; border-radius: var(--r); cursor: pointer; }
+.tpl:hover { background: var(--stamp-soft); }
+.tpl[aria-current="true"] { background: var(--stamp); color: #fff; }
+.tpl .t { font-weight: 500; line-height: 1.3; }
+.tpl .lang { font: 11px var(--f-mono); border: 1px solid currentColor; border-radius: 4px; padding: 0 4px; align-self: start; opacity: .7; }
+.tpl .s { grid-column: 1 / -1; font-size: 12px; opacity: .75; line-height: 1.3; }
+
+/* ---- form ---- */
+.form { background: var(--raised); border-right: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; }
+.form-head { padding: 16px 18px 12px; border-bottom: 1px solid var(--line); display: grid; gap: 8px; }
+.form-head h1 { margin: 0; font-size: 17px; line-height: 1.3; text-wrap: balance; }
+.form-head p { margin: 0; color: var(--muted); font-size: 12.5px; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 6px; }
+.btn { border: 1px solid var(--line); background: var(--raised); padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+.btn:hover { border-color: var(--stamp); color: var(--stamp); }
+.btn.primary { background: var(--stamp); border-color: var(--stamp); color: #fff; }
+.btn.primary:hover { filter: brightness(1.08); color: #fff; }
+.fields { overflow: auto; padding: 6px 18px 40px; flex: 1; }
+fieldset { border: 0; padding: 0; margin: 14px 0 0; display: grid; gap: 10px; }
+legend { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--stamp); font-weight: 600; padding: 6px 0 2px; }
+.f { display: grid; gap: 4px; }
+.f label { font-size: 12.5px; color: var(--muted); }
+.f input, .f select, .f textarea { width: 100%; padding: 7px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
+.f textarea { min-height: 64px; resize: vertical; }
+.f input:focus, .f select:focus, .f textarea:focus { border-color: var(--stamp); background: var(--raised); outline: none; box-shadow: 0 0 0 3px var(--stamp-soft); }
+.f .hint { font-size: 11.5px; color: var(--muted); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.rows { display: grid; gap: 8px; }
+.rowcard { border: 1px solid var(--line); border-radius: var(--r); padding: 8px; display: grid; gap: 6px; background: var(--panel); }
+.rowcard .rc-head { display: flex; justify-content: space-between; align-items: center; font: 12px var(--f-mono); color: var(--muted); }
+.rowcard .rc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 6px; }
+.rowcard input { width: 100%; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--raised); }
+.x { border: 0; background: none; color: var(--danger); cursor: pointer; font-size: 12px; }
+
+/* ---- preview ---- */
+.preview { overflow: auto; min-width: 0; padding: 22px 24px 60px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.pv-bar { width: 100%; max-width: 794px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 12.5px; }
+.pv-bar label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+.toast { color: var(--ok); font-weight: 500; }
+.sheet {
+  background: var(--sheet); color: var(--sheet-ink);
+  width: 100%; max-width: 794px; min-height: 1123px;
+  padding: 72px 64px 80px 90px;
+  box-shadow: 0 1px 2px rgba(15, 20, 40, .08), 0 8px 28px rgba(15, 20, 40, .10);
+  font: 15px/1.5 var(--f-doc);
+  overflow-wrap: anywhere;
+}
+.sheet h2 { font-size: 15px; text-align: center; margin: 0 0 2px; text-transform: uppercase; letter-spacing: .02em; }
+.sheet h3 { font-size: 15px; text-align: center; margin: 14px 0 6px; }
+.sheet p { margin: 0 0 8px; text-align: justify; }
+.sheet .c { text-align: center; }
+.sheet .r { text-align: right; }
+.sheet .sp { letter-spacing: .35em; font-weight: 700; text-align: center; margin: 12px 0; }
+.sheet .meta { display: flex; justify-content: space-between; gap: 16px; margin: 10px 0 14px; }
+.sheet ol { margin: 0 0 8px; padding-left: 22px; }
+.sheet li { margin-bottom: 4px; text-align: justify; }
+.sheet table.t { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-size: 13.5px; }
+.sheet table.t th, .sheet table.t td { border: 1px solid var(--sheet-line); padding: 4px 6px; vertical-align: top; }
+.sheet table.t th { font-weight: 700; text-align: center; }
+.sheet table.t td.n { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.sheet table.sig { width: 100%; border-collapse: collapse; margin-top: 18px; font-size: 14px; }
+.sheet table.sig td { width: 50%; vertical-align: top; padding: 0 10px 0 0; }
+.sheet .pb { border-top: 1px dashed #b9b9b9; margin: 34px -20px 28px; position: relative; }
+.sheet .pb::after { content: "keyingi sahifa"; position: absolute; top: -9px; left: 50%; transform: translateX(-50%); background: var(--sheet); padding: 0 8px; font: 11px var(--f-ui); color: #8a8a8a; }
+.v { }
+.show-marks .v { background: var(--mark); border-radius: 2px; box-shadow: 0 0 0 1px var(--mark); }
+.blank { color: #8a8a8a; }
+.ex-note { width: 100%; max-width: 794px; font-size: 12px; color: var(--muted); }
+
+/* mobile tabs */
+.tabs { display: none; }
+@media (max-width: 1100px) {
+  .app { grid-template-columns: 240px minmax(0, 1fr); }
+  .form { border-right: 0; }
+  .preview { grid-column: 1 / -1; }
+  .app { height: auto; }
+  .side, .form { max-height: none; }
+  .list, .fields { overflow: visible; }
+}
+@media (max-width: 760px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .side { border-right: 0; border-bottom: 1px solid var(--line); }
+  .list { max-height: 260px; overflow: auto; }
+  .tabs { display: flex; gap: 6px; padding: 10px 16px; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+  .tabs button { flex: 1; }
+  .tabs button[aria-pressed="true"] { background: var(--stamp); color: #fff; border-color: var(--stamp); }
+  .app[data-tab="form"] .preview, .app[data-tab="preview"] .form { display: none; }
+  .preview { padding: 16px; }
+  .sheet { padding: 28px 18px 36px; font-size: 14px; min-height: 0; }
+  .row2 { grid-template-columns: 1fr; }
+}
+@media print {
+  body { background: #fff; }
+  .side, .form, .pv-bar, .tabs, .ex-note { display: none !important; }
+  .app { display: block; height: auto; }
+  .preview { padding: 0; overflow: visible; }
+  .sheet { box-shadow: none; max-width: none; min-height: 0; padding: 0; }
+  .show-marks .v { background: none; box-shadow: none; }
+  .sheet .pb { border: 0; margin: 0; break-after: page; }
+  .sheet .pb::after { display: none; }
+  @page { size: A4; margin: 20mm 15mm 20mm 25mm; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="app" id="app" data-tab="form">
+  <aside class="side">
+    <div class="brand"><b>Lex<span>Form</span></b><small>hujjat shablonlari</small></div>
+    <div class="search"><input id="q" type="search" placeholder="Shablon qidirish…" aria-label="Shablon qidirish"></div>
+    <nav class="list" id="list" aria-label="Shablonlar"></nav>
+  </aside>
+
+  <div class="tabs" role="group" aria-label="Koʻrinish">
+    <button class="btn" id="tab-form" aria-pressed="true">Forma</button>
+    <button class="btn" id="tab-preview" aria-pressed="false">Hujjat</button>
+  </div>
+
+  <section class="form" aria-label="Forma">
+    <div class="form-head">
+      <h1 id="t-title"></h1>
+      <p id="t-desc"></p>
+      <div class="toolbar">
+        <button class="btn" id="b-example" type="button">Namuna bilan toʻldirish</button>
+        <button class="btn" id="b-clear" type="button">Tozalash</button>
+      </div>
+    </div>
+    <form class="fields" id="fields" autocomplete="off"></form>
+  </section>
+
+  <main class="preview" aria-label="Hujjat koʻrinishi">
+    <div class="pv-bar">
+      <label><input type="checkbox" id="marks" checked> Kiritilgan maʼlumotlarni belgilash</label>
+      <span class="toast" id="toast" role="status"></span>
+      <span class="toolbar">
+        <button class="btn primary" id="b-copy" type="button">Matnni nusxalash</button>
+        <button class="btn" id="b-doc" type="button" hidden>Word (.doc) yuklab olish</button>
+        <button class="btn" id="b-print" type="button" hidden>Chop etish / PDF</button>
+      </span>
+    </div>
+    <article class="sheet show-marks" id="sheet"></article>
+    <p class="ex-note" id="ex-note"></p>
+  </main>
+</div>
+
+<script>
+/* =========================================================================
+   LexForm — document templates for Uzbekistan (Uzbek Cyrillic / Russian)
+   Pure logic first (formatters + templates), UI wiring at the bottom.
+   ========================================================================= */
+
+// ---------- number & money formatting ----------
+function parseNum(s) {
+  if (s === null || s === undefined) return NaN;
+  const t = String(s).replace(/\s+/g, '').replace(',', '.');
+  if (t === '') return NaN;
+  return Number(t);
+}
+function fmtMoney(n) {
+  if (!isFinite(n)) return '';
+  const neg = n < 0; n = Math.abs(n);
+  let [i, d] = n.toFixed(2).split('.');
+  i = i.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  return (neg ? '−' : '') + i + (d === '00' ? '' : ',' + d);
+}
+
+// Uzbek Cyrillic number words
+const UZ_ONES = ['', 'бир', 'икки', 'уч', 'тўрт', 'беш', 'олти', 'етти', 'саккиз', 'тўққиз'];
+const UZ_TENS = ['', 'ўн', 'йигирма', 'ўттиз', 'қирқ', 'эллик', 'олтмиш', 'етмиш', 'саксон', 'тўқсон'];
+const UZ_SCALES = ['', 'минг', 'миллион', 'миллиард', 'триллион'];
+function uzTriad(n) {
+  const h = Math.floor(n / 100), t = Math.floor(n / 10) % 10, o = n % 10, w = [];
+  if (h) w.push(UZ_ONES[h], 'юз');
+  if (t) w.push(UZ_TENS[t]);
+  if (o) w.push(UZ_ONES[o]);
+  return w.join(' ');
+}
+function uzWords(n) {
+  n = Math.floor(Math.abs(n));
+  if (n === 0) return 'нол';
+  const parts = []; let i = 0;
+  while (n > 0) {
+    const tr = n % 1000;
+    if (tr) parts.unshift(uzTriad(tr) + (UZ_SCALES[i] ? ' ' + UZ_SCALES[i] : ''));
+    n = Math.floor(n / 1000); i++;
+  }
+  return parts.join(' ');
+}
+function uzMoneyWords(n) {
+  if (!isFinite(n)) return '';
+  const whole = Math.floor(Math.abs(n)), tiyin = Math.round((Math.abs(n) - whole) * 100);
+  let s = uzWords(whole) + ' сўм';
+  if (tiyin) s += ' ' + uzWords(tiyin) + ' тийин';
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+// Russian number words
+const RU_ONES_M = ['', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
+const RU_ONES_F = ['', 'одна', 'две', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
+const RU_TEENS = ['десять', 'одиннадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать'];
+const RU_TENS = ['', '', 'двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто'];
+const RU_HUND = ['', 'сто', 'двести', 'триста', 'четыреста', 'пятьсот', 'шестьсот', 'семьсот', 'восемьсот', 'девятьсот'];
+const RU_SCALES = [null, ['тысяча', 'тысячи', 'тысяч', 'f'], ['миллион', 'миллиона', 'миллионов', 'm'], ['миллиард', 'миллиарда', 'миллиардов', 'm'], ['триллион', 'триллиона', 'триллионов', 'm']];
+function ruPlural(n, forms) {
+  const a = n % 100, b = n % 10;
+  if (a >= 11 && a <= 14) return forms[2];
+  if (b === 1) return forms[0];
+  if (b >= 2 && b <= 4) return forms[1];
+  return forms[2];
+}
+function ruTriad(n, fem) {
+  const h = Math.floor(n / 100), t = Math.floor(n / 10) % 10, o = n % 10, w = [];
+  if (h) w.push(RU_HUND[h]);
+  if (t === 1) w.push(RU_TEENS[o]);
+  else { if (t) w.push(RU_TENS[t]); if (o) w.push((fem ? RU_ONES_F : RU_ONES_M)[o]); }
+  return w.join(' ');
+}
+function ruWords(n) {
+  n = Math.floor(Math.abs(n));
+  if (n === 0) return 'ноль';
+  const parts = []; let i = 0;
+  while (n > 0) {
+    const tr = n % 1000;
+    if (tr) {
+      const sc = RU_SCALES[i];
+      parts.unshift(ruTriad(tr, sc && sc[3] === 'f') + (sc ? ' ' + ruPlural(tr, sc) : ''));
+    }
+    n = Math.floor(n / 1000); i++;
+  }
+  return parts.join(' ');
+}
+function ruMoneyWords(n) {
+  if (!isFinite(n)) return '';
+  const whole = Math.floor(Math.abs(n)), tiyin = Math.round((Math.abs(n) - whole) * 100);
+  let s = ruWords(whole) + ' ' + ruPlural(whole, ['сум', 'сума', 'сумов']);
+  s += ' ' + String(tiyin).padStart(2, '0') + ' ' + ruPlural(tiyin, ['тийин', 'тийина', 'тийинов']);
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+// dates
+const UZ_MONTHS = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+const RU_MONTHS = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+function parseDate(s) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || '');
+  return m ? { y: +m[1], m: +m[2], d: +m[3] } : null;
+}
+function fmtDate(s, lang) {
+  const p = parseDate(s); if (!p) return '';
+  const dd = String(p.d).padStart(2, '0');
+  return lang === 'ru' ? `«${dd}» ${RU_MONTHS[p.m - 1]} ${p.y} г.` : `«${dd}» ${UZ_MONTHS[p.m - 1]} ${p.y} йил`;
+}
+function fmtDateShort(s) {
+  const p = parseDate(s); if (!p) return '';
+  return `${String(p.d).padStart(2, '0')}.${String(p.m).padStart(2, '0')}.${p.y}`;
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+// ---------- render helper bound to one template's values ----------
+function makeCtx(values, lang) {
+  const raw = k => (values[k] ?? '').toString().trim();
+  const span = s => `<span class="v">${s}</span>`;
+  const blank = (w = 14) => `<span class="blank">${'_'.repeat(w)}</span>`;
+  const ctx = {
+    lang,
+    raw,
+    has: k => raw(k) !== '',
+    // text value or underline blank
+    x: (k, w) => raw(k) ? span(esc(raw(k)).replace(/\n/g, '<br>')) : blank(w),
+    num: k => parseNum(raw(k)),
+    sum: k => { const n = parseNum(raw(k)); return isFinite(n) ? span(fmtMoney(n)) : blank(10); },
+    words: (k, l = lang) => { const n = parseNum(raw(k)); return isFinite(n) ? span(l === 'ru' ? ruMoneyWords(n) : uzMoneyWords(n)) : blank(30); },
+    money: (k, l = lang) => { // "1 000 000 (Бир миллион сўм)"
+      const n = parseNum(raw(k));
+      if (!isFinite(n)) return blank(10) + ' (' + blank(30) + ')';
+      return span(fmtMoney(n)) + ' (' + span(l === 'ru' ? ruMoneyWords(n) : uzMoneyWords(n)) + ')';
+    },
+    moneyN: (n, l = lang) => isFinite(n) && n !== 0 ? span(fmtMoney(n)) + ' (' + span(l === 'ru' ? ruMoneyWords(n) : uzMoneyWords(n)) + ')' : blank(10) + ' (' + blank(30) + ')',
+    date: (k, l = lang) => raw(k) ? span(fmtDate(raw(k), l)) : (l === 'ru' ? `«${blank(3)}» ${blank(10)} 20${blank(3)} г.` : `«${blank(3)}» ${blank(10)} 20${blank(3)} йил`),
+    dshort: k => raw(k) ? span(fmtDateShort(raw(k))) : blank(10),
+    rows: k => Array.isArray(values[k]) ? values[k] : [],
+    blank,
+    span,
+  };
+  return ctx;
+}
+
+// ---------- shared field groups ----------
+function partyFields(p, group, ex, opts = {}) {
+  const f = [
+    { k: p + '_name', l: 'Nomi (masalan: «Namuna» МЧЖ)', g: group, ex: ex.name },
+    { k: p + '_pos', l: 'Vakil lavozimi', g: group, ex: ex.pos ?? (opts.ru ? 'Директор' : 'директор'), half: true },
+    { k: p + '_rep', l: 'Vakil F.I.Sh.', g: group, ex: ex.rep, half: true },
+    { k: p + '_basis', l: 'Asos (Устав / ишончнома)', g: group, ex: ex.basis ?? (opts.ru ? 'Устава' : 'Устав'), half: true },
+    { k: p + '_stir', l: 'STIR (INN)', g: group, ex: ex.stir, half: true },
+    { k: p + '_addr', l: 'Yuridik manzil', g: group, ex: ex.addr },
+    { k: p + '_acc', l: 'Hisob raqami (h/r)', g: group, ex: ex.acc, half: true },
+    { k: p + '_mfo', l: 'MFO', g: group, ex: ex.mfo, half: true },
+    { k: p + '_bank', l: 'Bank', g: group, ex: ex.bank },
+    { k: p + '_phone', l: 'Telefon', g: group, ex: ex.phone, half: true },
+  ];
+  return f;
+}
+const EX_A = { name: '«Намуна Савдо» МЧЖ', rep: 'Каримов Алишер Баҳромович', stir: '301 234 567', addr: 'Тошкент ш., Юнусобод тумани, Амир Темур кўчаси, 1-уй', acc: '2020 8000 1001 2345 6001', mfo: '00014', bank: '«Намуна банк» АТБ Юнусобод филиали', phone: '+998 71 200-00-00' };
+const EX_B = { name: '«Мисол Хизмат» МЧЖ', rep: 'Раҳимова Дилноза Шавкатовна', stir: '302 765 432', addr: 'Тошкент ш., Чилонзор тумани, Бунёдкор шоҳ кўчаси, 10-уй', acc: '2020 8000 2002 6789 0001', mfo: '00873', bank: '«Мисол банк» АТБ Чилонзор филиали', phone: '+998 71 300-00-00' };
+const EX_A_RU = { ...EX_A, name: 'ООО «Namuna Savdo»', rep: 'Каримов Алишер Бахромович', addr: 'г. Ташкент, Юнусабадский р-н, ул. Амира Темура, д. 1', bank: 'АКБ «Namuna bank», Юнусабадский филиал' };
+const EX_B_RU = { ...EX_B, name: 'ООО «Misol Xizmat»', rep: 'Рахимова Дилноза Шавкатовна', addr: 'г. Ташкент, Чиланзарский р-н, пр. Бунёдкор, д. 10', bank: 'АКБ «Misol bank», Чиланзарский филиал' };
+
+function partyIntro(c, p, role) {
+  // «Name» номидан Устав асосида иш юритувчи директор F.I.O. (кейинги ўринларда «Role» деб юритилади)
+  return `${c.x(p + '_name', 20)} номидан ${c.x(p + '_basis', 8)} асосида иш юритувчи ${c.x(p + '_pos', 8)} ${c.x(p + '_rep', 22)} (кейинги ўринларда «${role}» деб юритилади)`;
+}
+function partyIntroRu(c, p, role) {
+  return `${c.x(p + '_name', 20)}, именуемое в дальнейшем «${role}», в лице ${c.x(p + '_pos', 8)} ${c.x(p + '_rep', 22)}, действующего на основании ${c.x(p + '_basis', 8)}`;
+}
+function reqCell(c, p, role, ru) {
+  const L = ru ? { addr: 'Адрес', stir: 'ИНН', acc: 'Р/с', mfo: 'МФО', bank: 'Банк', phone: 'Тел.', seal: 'М.П.' }
+               : { addr: 'Манзил', stir: 'СТИР', acc: 'Ҳ/р', mfo: 'МФО', bank: 'Банк', phone: 'Тел.', seal: 'М.Ў.' };
+  return `<b>«${role}»</b><br>${c.x(p + '_name', 20)}<br>
+    ${L.addr}: ${c.x(p + '_addr', 24)}<br>
+    ${L.stir}: ${c.x(p + '_stir', 12)}<br>
+    ${L.acc}: ${c.x(p + '_acc', 22)}<br>
+    ${L.bank}: ${c.x(p + '_bank', 20)}<br>
+    ${L.mfo}: ${c.x(p + '_mfo', 6)} &nbsp; ${L.phone}: ${c.x(p + '_phone', 12)}<br><br>
+    ${c.x(p + '_pos', 8)} ____________ ${c.x(p + '_rep', 16)}<br>${L.seal}`;
+}
+function sigTable(left, right) {
+  return `<table class="sig"><tr><td>${left}</td><td>${right}</td></tr></table>`;
+}
+function meta(left, right) { return `<div class="meta"><span>${left}</span><span>${right}</span></div>`; }
+
+// item tables (name/unit/qty/price → sum)
+function itemsTable(c, key, ru) {
+  const rows = c.rows(key);
+  const H = ru ? ['№', 'Наименование', 'Ед. изм.', 'Кол-во', 'Цена', 'Сумма'] : ['№', 'Номи', 'Ўлчов бирлиги', 'Миқдори', 'Нархи', 'Суммаси'];
+  let total = 0, body = '';
+  rows.forEach((r, i) => {
+    const q = parseNum(r.qty), pr = parseNum(r.price), s = isFinite(q) && isFinite(pr) ? q * pr : NaN;
+    if (isFinite(s)) total += s;
+    body += `<tr><td class="n">${i + 1}</td><td>${r.name ? c.span(esc(r.name)) : c.blank(12)}</td><td>${esc(r.unit || '')}</td>
+      <td class="n">${isFinite(q) ? fmtMoney(q) : ''}</td><td class="n">${isFinite(pr) ? fmtMoney(pr) : ''}</td><td class="n">${isFinite(s) ? fmtMoney(s) : ''}</td></tr>`;
+  });
+  if (!rows.length) body = `<tr><td class="n">1</td><td>${c.blank(12)}</td><td></td><td></td><td></td><td></td></tr>`;
+  body += `<tr><td></td><td colspan="4"><b>${ru ? 'Итого' : 'Жами'}</b></td><td class="n"><b>${total ? fmtMoney(total) : ''}</b></td></tr>`;
+  return { html: `<table class="t"><thead><tr>${H.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table>`, total };
+}
+const ITEM_COLS = [
+  { k: 'name', l: 'Nomi' }, { k: 'unit', l: 'Oʻlchov' }, { k: 'qty', l: 'Miqdori', num: true }, { k: 'price', l: 'Narxi', num: true },
+];
+
+/* =========================================================================
+   TEMPLATES
+   Each: id, cat, lang ('uz' = Uzbek Cyrillic, 'ru'), title, desc, fields[], render(c)
+   Field: k, l (label), t (text|date|money|number|select|textarea|rows), g (group),
+          ex (example), opts (select), cols (rows), half (two-column layout)
+   ========================================================================= */
+const TEMPLATES = [
+
+/* ----------------------------- Корпоратив ----------------------------- */
+{
+  id: 'llc-founding', cat: 'Korporativ', lang: 'uz',
+  title: 'MChJ tashkil etish qarori va direktor buyrugʻi',
+  desc: 'Yagona ishtirokchining 1-sonli qarori + direktorning lavozimga kirishishi haqida 1-sonli buyruq.',
+  fields: [
+    { k: 'company', l: 'Jamiyat nomi', g: 'Jamiyat', ex: 'Намуна Савдо' },
+    { k: 'city', l: 'Shahar / tuman', g: 'Jamiyat', ex: 'Тошкент шаҳри', half: true },
+    { k: 'date', l: 'Qaror sanasi', t: 'date', g: 'Jamiyat', ex: '2026-10-01', half: true },
+    { k: 'purpose', l: 'Tashkil etish maqsadi', t: 'textarea', g: 'Jamiyat', ex: 'аҳолини сифатли озиқ-овқат маҳсулотлари билан таъминлаш' },
+    { k: 'capital', l: 'Ustav fondi (soʻm)', t: 'money', g: 'Jamiyat', ex: '50000000' },
+    { k: 'center', l: 'Roʻyxatdan oʻtkazuvchi markaz', g: 'Jamiyat', ex: 'Тошкент шаҳар Юнусобод тумани Давлат хизматлари маркази' },
+    { k: 'founder', l: 'Yagona ishtirokchi F.I.Sh.', g: 'Ishtirokchi', ex: 'Каримов Алишер Баҳромович' },
+    { k: 'director', l: 'Direktor F.I.Sh.', g: 'Direktor', ex: 'Каримов Алишер Баҳромович' },
+    { k: 'dir_birth', l: 'Tugʻilgan sana', t: 'date', g: 'Direktor', ex: '1990-05-14', half: true },
+    { k: 'dir_pass', l: 'Pasport seriya va raqami', g: 'Direktor', ex: 'AA 0000000', half: true },
+    { k: 'dir_pass_by', l: 'Kim tomonidan berilgan', g: 'Direktor', ex: 'Юнусобод тумани ИИБ', half: true },
+    { k: 'dir_pass_date', l: 'Berilgan sana', t: 'date', g: 'Direktor', ex: '2015-03-20', half: true },
+    { k: 'order_date', l: 'Buyruq sanasi (lavozimga kirish)', t: 'date', g: 'Direktor', ex: '2026-10-02' },
+    { k: 'cert', l: 'Roʻyxatdan oʻtkazish guvohnomasi raqami', g: 'Direktor', ex: '' , hint: 'Roʻyxatdan oʻtgandan soʻng toʻldiriladi' },
+  ],
+  render: c => `
+    <p class="c">«${c.x('company')}»<br>масъулияти чекланган жамияти ягона иштирокчисининг</p>
+    <h2>1-сонли қарори</h2>
+    ${meta(c.date('date'), c.x('city', 14))}
+    <p>Мен, «${c.x('company')}» масъулияти чекланган жамиятининг ягона иштирокчиси ${c.x('founder', 24)}, ${c.x('purpose', 30)} мақсадида масъулияти чекланган жамият ташкил қилиш ва унинг устав фондини тасдиқлаш мақсадида,</p>
+    <p class="sp">ҚАРОР ҚИЛАМАН:</p>
+    <ol>
+      <li>«${c.x('company')}» номли масъулияти чекланган жамияти ташкил қилинсин.</li>
+      <li>«${c.x('company')}» масъулияти чекланган жамиятининг устав фонди жами ${c.money('capital')} миқдорида тасдиқлансин.</li>
+      <li>Жамиятни ташкил қилиш юзасидан тегишли ҳужжатлар ўз вақтида расмийлаштирилиб, ${c.x('center', 24)}да давлат рўйхатидан ўтказилсин.</li>
+      <li>«${c.x('company')}» МЧЖ директори этиб ${c.x('director', 22)} (${c.dshort('dir_birth')} йилда туғилган, паспорт ${c.x('dir_pass', 10)}, ${c.x('dir_pass_by', 14)} томонидан ${c.dshort('dir_pass_date')} йилда берилган) тайинлансин.</li>
+    </ol>
+    ${sigTable(`«${c.x('company')}» МЧЖ<br>ягона иштирокчиси`, `<br>____________ ${c.x('founder', 18)}`)}
+    <div class="pb"></div>
+    <p class="c">«${c.x('company')}» масъулияти чекланган жамияти</p>
+    <h2>Буйруқ № 1</h2>
+    ${meta(c.date('order_date'), c.x('city', 14))}
+    <p class="c"><i>Жамият директори вазифасига киришиш тўғрисида</i></p>
+    <p class="sp">БУЮРАМАН:</p>
+    <ol>
+      <li>Мен, ${c.x('director', 22)}, ${c.date('order_date')}дан «${c.x('company')}» масъулияти чекланган жамияти директори лавозимига киришаман.</li>
+      <li>Жамият муҳри ва тўлов ҳужжатларида биринчи имзо қўйиш ҳуқуқини ўз зиммамга оламан.</li>
+      <li>Ойлик маош штатлар жадвалига мувофиқ тўлансин.</li>
+    </ol>
+    <p><b>Асос:</b> жамият ягона иштирокчисининг ${c.dshort('date')} йилдаги 1-сонли қарори; ${c.dshort('order_date')} йилдаги меҳнат шартномаси${c.has('cert') ? '; юридик шахсни давлат рўйхатидан ўтказиш тўғрисидаги ' + c.x('cert') + '-сонли гувоҳнома' : ''}.</p>
+    ${sigTable('Директор', `____________ ${c.x('director', 18)}`)}
+  `,
+},
+{
+  id: 'director-change', cat: 'Korporativ', lang: 'uz',
+  title: 'Direktorni almashtirish — taʼsischilar yigʻilishi bayoni',
+  desc: 'Amaldagi direktorni lavozimdan ozod qilish va yangi direktor tayinlash haqida umumiy yigʻilish bayoni.',
+  fields: [
+    { k: 'company', l: 'Jamiyat nomi', g: 'Yigʻilish', ex: 'Намуна Савдо' },
+    { k: 'no', l: 'Bayon raqami', g: 'Yigʻilish', ex: '5', half: true },
+    { k: 'date', l: 'Sana', t: 'date', g: 'Yigʻilish', ex: '2026-10-01', half: true },
+    { k: 'city', l: 'Shahar', g: 'Yigʻilish', ex: 'Тошкент шаҳри' },
+    { k: 'chair', l: 'Yigʻilish raisi', g: 'Yigʻilish', ex: 'Каримов А.Б.', half: true },
+    { k: 'secr', l: 'Yigʻilish kotibi', g: 'Yigʻilish', ex: 'Раҳимова Д.Ш.', half: true },
+    { k: 'present', l: 'Qatnashdilar (har biri yangi qatordan)', t: 'textarea', g: 'Yigʻilish', ex: 'Каримов Алишер Баҳромович — 60%\nРаҳимова Дилноза Шавкатовна — 40%' },
+    { k: 'old', l: 'Ozod qilinayotgan direktor', g: 'Qaror', ex: 'Тошматов Бахтиёр Олимович' },
+    { k: 'reason', l: 'Ozod qilish asosi', g: 'Qaror', ex: 'ўз аризасига' },
+    { k: 'new', l: 'Yangi direktor F.I.Sh.', g: 'Qaror', ex: 'Раҳимов Жасур Акмалович' },
+    { k: 'new_pos', l: 'Yangi direktorning hozirgi lavozimi', g: 'Qaror', ex: 'директор ўринбосари' },
+    { k: 'eff', l: 'Kuchga kirish sanasi', t: 'date', g: 'Qaror', ex: '2026-10-02' },
+  ],
+  render: c => `
+    <p class="c">«${c.x('company')}» масъулияти чекланган жамияти<br>таъсисчиларининг умумий йиғилиши</p>
+    <h2>Баёни № ${c.x('no', 3)}</h2>
+    ${meta(c.date('date'), c.x('city', 14))}
+    <p>Йиғилиш раиси: ${c.x('chair', 18)}<br>Йиғилиш котиби: ${c.x('secr', 18)}</p>
+    <p>Қатнашдилар:<br>${c.x('present', 30)}</p>
+    <p>Кворум мавжуд. Йиғилиш ваколатли.</p>
+    <p><b>КУН ТАРТИБИ:</b></p>
+    <ol>
+      <li>«${c.x('company')}» МЧЖ директори ${c.x('old', 18)}ни эгаллаб турган лавозимидан озод қилиш тўғрисида.</li>
+      <li>«${c.x('company')}» МЧЖга директор тайинлаш тўғрисида.</li>
+    </ol>
+    <p><b>ЭШИТИЛДИ:</b> Йиғилиш раиси ${c.x('chair', 14)} йиғилишни очиб, кун тартибидаги масалалар юзасидан батафсил маълумот берди ва ${c.x('reason', 12)} асосан жамият директори ${c.x('old', 18)}ни эгаллаб турган лавозимидан озод этишни, жамият директори лавозимига ҳозирда ${c.x('new_pos', 14)} лавозимида ишлаб келаётган ${c.x('new', 18)}ни тайинлашни таклиф қилди.</p>
+    <p>Таклиф овозга қўйилди. Йиғилиш иштирокчилари бир овоздан маъқулладилар.</p>
+    <p class="sp">ҚАРОР ҚИЛАДИ:</p>
+    <ol>
+      <li>${c.date('eff')}дан ${c.x('old', 18)} жамият директори лавозимидан озод этилсин.</li>
+      <li>${c.date('eff')}дан ${c.x('new', 18)} жамият директори этиб тайинлансин.</li>
+      <li>Жамият директори ${c.x('new', 18)}га жамият номидан барча расмий ҳужжатларга биринчи имзо қўйиш ҳуқуқи берилсин.</li>
+      <li>Таъсис ҳужжатларидаги тегишли ўзгаришлар белгиланган тартибда рўйхатдан ўтказилсин; ушбу қарор ижросини таъминлаш жамият директори зиммасига юклатилсин.</li>
+    </ol>
+    ${sigTable('Йиғилиш раиси<br><br>Йиғилиш котиби', `____________ ${c.x('chair', 14)}<br><br>____________ ${c.x('secr', 14)}`)}
+  `,
+},
+{
+  id: 'name-change', cat: 'Korporativ', lang: 'uz',
+  title: 'Korxona nomini oʻzgartirish qarori va buyrugʻi',
+  desc: 'Yagona taʼsischi qarori, Ustavga oʻzgartirishlar va ijro buyrugʻi.',
+  fields: [
+    { k: 'old', l: 'Amaldagi nom', g: 'Qaror', ex: 'Намуна Савдо' },
+    { k: 'new', l: 'Yangi nom', g: 'Qaror', ex: 'Намуна Трейд' },
+    { k: 'no', l: 'Qaror / buyruq raqami', g: 'Qaror', ex: '01', half: true },
+    { k: 'date', l: 'Sana', t: 'date', g: 'Qaror', ex: '2026-10-01', half: true },
+    { k: 'city', l: 'Shahar', g: 'Qaror', ex: 'Тошкент ш.' },
+    { k: 'founder', l: 'Yagona taʼsischi F.I.Sh.', g: 'Qaror', ex: 'Каримов Алишер Баҳромович' },
+    { k: 'center', l: 'Roʻyxatdan oʻtkazish markazi', g: 'Qaror', ex: 'Тошкент шаҳар Юнусобод тумани Давлат хизматлари маркази' },
+    { k: 'head', l: 'Rahbar F.I.Sh. (buyruq uchun)', g: 'Buyruq', ex: 'Каримов А.Б.' },
+  ],
+  render: c => `
+    <p class="c">«${c.x('old')}»<br>Масъулияти чекланган жамияти</p>
+    <h2>Ягона таъсисчисининг қарори № ${c.x('no', 3)}</h2>
+    ${meta(c.date('date'), c.x('city', 12))}
+    <p>Мен, ${c.x('founder', 22)}, «${c.x('old')}» МЧЖнинг ягона таъсисчиси сифатида, жамият номини ўзгартириш мақсадида,</p>
+    <p class="sp">ҚАРОР ҚИЛАМАН:</p>
+    <ol>
+      <li>«${c.x('old')}» МЧЖ номи «${c.x('new')}» МЧЖ га ўзгартирилсин.</li>
+      <li>Жамият Уставига киритилган қўшимча ва ўзгартиришлар тасдиқлансин.</li>
+      <li>Устав ва таъсис ҳужжатларига киритилган қўшимча ва ўзгартиришлар белгиланган тартибда ${c.x('center', 24)}да рўйхатдан ўтказилсин.</li>
+    </ol>
+    ${sigTable('Жамиятнинг ягона таъсисчиси', `____________ ${c.x('founder', 18)}`)}
+    <div class="pb"></div>
+    <p class="c">«${c.x('old')}» МЧЖ</p>
+    <h2>Буйруқ № ${c.x('no', 3)}</h2>
+    ${meta(c.date('date'), c.x('city', 12))}
+    <p>«${c.x('old')}» МЧЖ корхона номи «${c.x('new')}» МЧЖ га ўзгартирилсин.</p>
+    <p><b>Асос:</b> ${c.dshort('date')} йилдаги № ${c.x('no', 3)} сонли ягона таъсисчининг қарори.</p>
+    ${sigTable('Раҳбар', `____________ ${c.x('head', 16)}`)}
+  `,
+},
+{
+  id: 'address-change', cat: 'Korporativ', lang: 'uz',
+  title: 'Yuridik manzilni oʻzgartirish qarori va buyrugʻi',
+  desc: 'Yagona taʼsischi qarori (pasport maʼlumotlari bilan) va ijro buyrugʻi.',
+  fields: [
+    { k: 'company', l: 'Jamiyat nomi', g: 'Qaror', ex: 'Намуна Савдо' },
+    { k: 'no', l: 'Raqam', g: 'Qaror', ex: '01', half: true },
+    { k: 'date', l: 'Sana', t: 'date', g: 'Qaror', ex: '2026-10-01', half: true },
+    { k: 'city', l: 'Shahar', g: 'Qaror', ex: 'Тошкент ш.' },
+    { k: 'founder', l: 'Yagona taʼsischi F.I.Sh.', g: 'Taʼsischi', ex: 'Каримов Алишер Баҳромович' },
+    { k: 'f_birth', l: 'Tugʻilgan sana', t: 'date', g: 'Taʼsischi', ex: '1990-05-14', half: true },
+    { k: 'f_pass', l: 'Pasport', g: 'Taʼsischi', ex: 'AA 0000000', half: true },
+    { k: 'f_pass_by', l: 'Kim tomonidan berilgan', g: 'Taʼsischi', ex: 'Юнусобод тумани ИИБ', half: true },
+    { k: 'f_pass_date', l: 'Berilgan sana', t: 'date', g: 'Taʼsischi', ex: '2015-03-20', half: true },
+    { k: 'old_addr', l: 'Eski manzil', t: 'textarea', g: 'Manzil', ex: 'Ўзбекистон Республикаси, Тошкент шаҳри, Сергели тумани, 1-мавзе, 2-уй, 22-хонадон' },
+    { k: 'new_addr', l: 'Yangi manzil', t: 'textarea', g: 'Manzil', ex: 'Ўзбекистон Республикаси, Тошкент шаҳри, Янгиҳаёт тумани, 5-уй, 12-хонадон' },
+    { k: 'center', l: 'Roʻyxatdan oʻtkazish markazi', g: 'Manzil', ex: 'Тошкент шаҳар Янгиҳаёт тумани Давлат хизматлари маркази' },
+  ],
+  render: c => `
+    <p class="c">«${c.x('company')}»<br>Масъулияти чекланган жамияти</p>
+    <h2>Ягона таъсисчисининг қарори № ${c.x('no', 3)}</h2>
+    ${meta(c.date('date'), c.x('city', 12))}
+    <p>Мен, ${c.x('founder', 22)}, ${c.dshort('f_birth')} йилда туғилган (паспорт ${c.x('f_pass', 10)}, ${c.x('f_pass_by', 14)} томонидан ${c.dshort('f_pass_date')} йилда берилган), «${c.x('company')}» МЧЖнинг ягона таъсисчиси сифатида,</p>
+    <p class="sp">ҚАРОР ҚИЛАМАН:</p>
+    <ol>
+      <li>Жамият Таъсис шартномаси ва Уставига киритилган қўшимча ва ўзгартиришлар тасдиқлансин.</li>
+      <li>«${c.x('company')}» МЧЖнинг юридик манзили ${c.x('old_addr', 30)}дан ${c.x('new_addr', 30)}га ўзгартирилсин.</li>
+      <li>Устав ва Таъсис шартномасига киритилган ўзгартиришлар белгиланган тартибда ${c.x('center', 24)}да рўйхатдан ўтказилсин.</li>
+    </ol>
+    ${sigTable('Жамиятнинг ягона таъсисчиси', `____________ ${c.x('founder', 18)}`)}
+    <div class="pb"></div>
+    <p class="c">«${c.x('company')}» МЧЖ</p>
+    <h2>Буйруқ № ${c.x('no', 3)}</h2>
+    ${meta(c.date('date'), c.x('city', 12))}
+    <p>«${c.x('company')}» масъулияти чекланган жамиятининг юридик манзили ${c.x('old_addr', 30)}дан ${c.x('new_addr', 30)}га ўзгартирилсин.</p>
+    <p><b>Асос:</b> ${c.dshort('date')} йилдаги № ${c.x('no', 3)} сонли ягона таъсисчининг қарори.</p>
+    ${sigTable('Раҳбар', `____________ ${c.x('founder', 16)}`)}
+  `,
+},
+{
+  id: 'charter-contribution', cat: 'Korporativ', lang: 'uz',
+  title: 'Ustav fondiga mulk topshirish dalolatnomasi',
+  desc: 'Taʼsischi ustav fondiga tovar (mulk) topshiradi, direktor qabul qiladi. Jami summa soʻz bilan avtomatik.',
+  fields: [
+    { k: 'company', l: 'Jamiyat nomi', g: 'Dalolatnoma', ex: 'Намуна Савдо' },
+    { k: 'city', l: 'Shahar', g: 'Dalolatnoma', ex: 'Тошкент ш.', half: true },
+    { k: 'date', l: 'Sana', t: 'date', g: 'Dalolatnoma', ex: '2026-10-05', half: true },
+    { k: 'decision', l: 'Asos qaror (raqam, sana)', g: 'Dalolatnoma', ex: '01.10.2026 йилдаги 1-сонли қарор' },
+    { k: 'founder', l: 'Taʼsischi (topshiruvchi)', g: 'Tomonlar', ex: 'Каримов Алишер Баҳромович' },
+    { k: 'director', l: 'Direktor (qabul qiluvchi)', g: 'Tomonlar', ex: 'Каримов Алишер Баҳромович' },
+    { k: 'items', l: 'Mulk roʻyxati', t: 'rows', g: 'Mulk', cols: ITEM_COLS,
+      ex: [{ name: 'Ёзув столи', unit: 'дона', qty: '2', price: '1500000' }, { name: 'Ноутбук', unit: 'дона', qty: '2', price: '9000000' }, { name: 'Ҳужжат жавони', unit: 'дона', qty: '1', price: '2500000' }] },
+  ],
+  render: c => {
+    const t = itemsTable(c, 'items');
+    return `
+    <h2>Далолатнома</h2>
+    <p class="c">«${c.x('company')}» МЧЖ устав фондига товар (мулк)ни қабул қилиш-топшириш тўғрисида</p>
+    ${meta(c.date('date'), c.x('city', 12))}
+    <p>Биз, қуйида имзо қўювчилар, таъсисчи ${c.x('founder', 22)} ҳамда «${c.x('company')}» МЧЖ директори ${c.x('director', 22)}, ${c.x('decision', 20)}га асосан «${c.x('company')}» МЧЖ устав фондига товар (мулк)ни қабул қилиш-топширишни қуйидаги кўринишда амалга оширдик:</p>
+    ${t.html}
+    <p>Жами: ${c.moneyN(t.total)}.</p>
+    <p>Топширилган мулк таъсисчига мулк ҳуқуқи асосида тегишли, учинчи шахсларнинг ҳуқуқлари билан оғирлаштирилмаган.</p>
+    ${sigTable(`Топширдим:<br>Таъсисчи<br><br>____________ ${c.x('founder', 16)}`, `Қабул қилдим:<br>Директор<br><br>____________ ${c.x('director', 16)}<br>М.Ў.`)}
+  `; },
+},
+{
+  id: 'dividend', cat: 'Korporativ', lang: 'uz',
+  title: 'Dividend taqsimlash — umumiy yigʻilish bayoni',
+  desc: 'Choraklik sof foydani ulushlarga mutanosib taqsimlash; daromad soligʻi va toʻlanadigan summa avtomatik hisoblanadi.',
+  fields: [
+    { k: 'company', l: 'Jamiyat nomi', g: 'Yigʻilish', ex: 'Намуна Савдо' },
+    { k: 'no', l: 'Bayon raqami', g: 'Yigʻilish', ex: '3', half: true },
+    { k: 'date', l: 'Sana', t: 'date', g: 'Yigʻilish', ex: '2026-10-10', half: true },
+    { k: 'city', l: 'Shahar', g: 'Yigʻilish', ex: 'Тошкент шаҳри' },
+    { k: 'chair', l: 'Rais', g: 'Yigʻilish', ex: 'Каримов А.Б.', half: true },
+    { k: 'secr', l: 'Kotib', g: 'Yigʻilish', ex: 'Раҳимова Д.Ш.', half: true },
+    { k: 'year', l: 'Yil', g: 'Moliyaviy natija', ex: '2026', half: true },
+    { k: 'q', l: 'Chorak', t: 'select', opts: ['I', 'II', 'III', 'IV'], g: 'Moliyaviy natija', ex: 'III', half: true },
+    { k: 'profit', l: 'Chorak sof foydasi (soʻm)', t: 'money', g: 'Moliyaviy natija', ex: '120000000' },
+    { k: 'dist', l: 'Taqsimlanadigan summa (soʻm)', t: 'money', g: 'Moliyaviy natija', ex: '100000000' },
+    { k: 'tax', l: 'Dividend soligʻi, %', t: 'number', g: 'Moliyaviy natija', ex: '5', hint: 'Amaldagi Soliq kodeksi boʻyicha stavkani tekshiring' },
+    { k: 'parts', l: 'Ishtirokchilar va ulushlar', t: 'rows', g: 'Ishtirokchilar',
+      cols: [{ k: 'name', l: 'F.I.Sh.' }, { k: 'share', l: 'Ulush, %', num: true }],
+      ex: [{ name: 'Каримов Алишер Баҳромович', share: '60' }, { name: 'Раҳимова Дилноза Шавкатовна', share: '40' }] },
+  ],
+  render: c => {
+    const dist = c.num('dist'), tax = isFinite(c.num('tax')) ? c.num('tax') : 0;
+    let rows = '', tot = 0;
+    c.rows('parts').forEach((r, i) => {
+      const sh = parseNum(r.share), a = isFinite(dist) && isFinite(sh) ? Math.round(dist * sh) / 100 : NaN;
+      const tx = isFinite(a) ? Math.round(a * tax) / 100 : NaN, net = isFinite(a) ? a - tx : NaN;
+      if (isFinite(net)) tot += net;
+      rows += `<tr><td class="n">${i + 1}</td><td>${c.span(esc(r.name || ''))}</td><td class="n">${isFinite(sh) ? sh + '%' : ''}</td><td class="n">${isFinite(a) ? fmtMoney(a) : ''}</td><td class="n">${isFinite(tx) ? fmtMoney(tx) : ''}</td><td class="n">${isFinite(net) ? fmtMoney(net) : ''}</td></tr>`;
+    });
+    return `
+    <p class="c">«${c.x('company')}» масъулияти чекланган жамияти<br>таъсисчиларининг умумий йиғилиши</p>
+    <h2>Баёни № ${c.x('no', 3)}</h2>
+    ${meta(c.date('date'), c.x('city', 14))}
+    <p>Йиғилиш раиси: ${c.x('chair', 16)}<br>Йиғилиш котиби: ${c.x('secr', 16)}</p>
+    <p><b>КУН ТАРТИБИ:</b> «${c.x('company')}» МЧЖнинг ${c.x('year', 4)} йил ${c.x('q', 3)} чораги фаолияти натижасида олинган соф фойдасини жамият иштирокчилари ўртасида тақсимлаш тўғрисида.</p>
+    <p><b>ЭШИТИЛДИ:</b> Жамият директори ${c.x('year', 4)} йил ${c.x('q', 3)} чораги фаолияти натижалари бўйича маъруза қилиб, жамият ${c.money('profit')} соф фойда олганлигини маълум қилди. Йиғилиш раиси «Масъулияти чекланган ҳамда қўшимча масъулиятли жамиятлар тўғрисида»ги Қонун ва жамият Уставига асосан соф фойдадан ${c.money('dist')}ни иштирокчиларнинг устав фондидаги улушларига мутаносиб равишда тақсимлаш ва тўлов манбаида ${c.x('tax', 2)}% миқдорида дивидендлардан даромад солиғини ушлаб қолишни таклиф қилди. Таклиф бир овоздан маъқулланди.</p>
+    <p class="sp">ҚАРОР ҚИЛАДИ:</p>
+    <ol>
+      <li>Жамият ижро этувчи органи тайёрлаган ${c.x('year', 4)} йил ${c.x('q', 3)} чорак молиявий ҳисоботлари тасдиқлансин.</li>
+      <li>Соф фойдадан ${c.money('dist')} жамият иштирокчилари ўртасида устав фондидаги улушларига мутаносиб равишда тақсимлансин:</li>
+    </ol>
+    <table class="t"><thead><tr><th>№</th><th>Иштирокчи</th><th>Улуши</th><th>Тегишли қисм, сўм</th><th>${tax}% солиқ, сўм</th><th>Тўланадиган, сўм</th></tr></thead>
+    <tbody>${rows || `<tr><td></td><td>${c.blank(14)}</td><td></td><td></td><td></td><td></td></tr>`}
+    <tr><td></td><td colspan="4"><b>Жами тўланадиган</b></td><td class="n"><b>${tot ? fmtMoney(tot) : ''}</b></td></tr></tbody></table>
+    <ol start="3">
+      <li>Ҳисобланган дивидендлардан даромад солиғи ушлаб қолиниб, давлат бюджетига ўтказилсин; банк хизматлари харажатлари жамият ҳисобидан қоплансин.</li>
+      <li>Дивидендларни бир йўла ёки жамиятнинг молиявий имкониятларини ҳисобга олиб бўлиб-бўлиб тўлаш бош ҳисобчига, қарор ижросини таъминлаш жамият директорига юклатилсин.</li>
+    </ol>
+    ${sigTable('Йиғилиш раиси<br><br>Йиғилиш котиби', `____________ ${c.x('chair', 14)}<br><br>____________ ${c.x('secr', 14)}`)}
+  `; },
+},
+
+/* ----------------------------- Кадрлар ----------------------------- */
+{
+  id: 'employment-contract', cat: 'Kadrlar', lang: 'uz',
+  title: 'Mehnat shartnomasi',
+  desc: 'MChJ va xodim oʻrtasida. Asosiy ish, muddat, sinov, maosh, taʼtil, rekvizitlar.',
+  fields: [
+    { k: 'no', l: 'Shartnoma raqami', g: 'Shartnoma', ex: '12', half: true },
+    { k: 'date', l: 'Sana', t: 'date', g: 'Shartnoma', ex: '2026-10-01', half: true },
+    { k: 'city', l: 'Shahar', g: 'Shartnoma', ex: 'Тошкент шаҳри' },
+    ...partyFields('e', 'Ish beruvchi', EX_A),
+    { k: 'w', l: 'Xodim F.I.Sh.', g: 'Xodim', ex: 'Алиев Тимур Рустамович' },
+    { k: 'w_pass', l: 'Pasport seriya va raqami', g: 'Xodim', ex: 'AB 1234567', half: true },
+    { k: 'w_pass_by', l: 'Kim bergan, sana', g: 'Xodim', ex: 'Чилонзор тумани ИИБ, 12.08.2018', half: true },
+    { k: 'w_addr', l: 'Yashash manzili', g: 'Xodim', ex: 'Тошкент ш., Чилонзор тумани, 5-мавзе, 3-уй, 7-хонадон' },
+    { k: 'w_phone', l: 'Telefon', g: 'Xodim', ex: '+998 90 000-00-00', half: true },
+    { k: 'w_stir', l: 'JShShIR / STIR', g: 'Xodim', ex: '', half: true },
+    { k: 'pos', l: 'Lavozim (kasb, razryad)', g: 'Ish shartlari', ex: 'савдо менежери' },
+    { k: 'kind', l: 'Shartnoma turi', t: 'select', opts: ['асосий иш бўйича', 'ўриндошлик бўйича'], g: 'Ish shartlari', ex: 'асосий иш бўйича', half: true },
+    { k: 'term', l: 'Muddat', t: 'select', opts: ['номуайян муддатга', 'муайян муддатга', 'муайян ишни бажариш вақтига'], g: 'Ish shartlari', ex: 'номуайян муддатга', half: true },
+    { k: 'start', l: 'Ish boshlanishi', t: 'date', g: 'Ish shartlari', ex: '2026-10-02', half: true },
+    { k: 'end', l: 'Tugashi (muddatli boʻlsa)', t: 'date', g: 'Ish shartlari', ex: '', half: true },
+    { k: 'prob', l: 'Sinov muddati', g: 'Ish shartlari', ex: '3 ой', half: true },
+    { k: 'week', l: 'Ish haftasi', t: 'select', opts: ['5 кунлик', '6 кунлик'], g: 'Ish shartlari', ex: '5 кунлик', half: true },
+    { k: 'hours', l: 'Ish vaqti', g: 'Ish shartlari', ex: '09:00–18:00, тушлик 13:00–14:00' },
+    { k: 'salary', l: 'Lavozim maoshi, oyiga (soʻm)', t: 'money', g: 'Ish shartlari', ex: '6000000' },
+    { k: 'leave', l: 'Yillik asosiy taʼtil (kalendar kun)', t: 'number', g: 'Ish shartlari', ex: '21', half: true },
+    { k: 'leave_add', l: 'Qoʻshimcha taʼtil (kun)', t: 'number', g: 'Ish shartlari', ex: '', half: true },
+  ],
+  render: c => `
+    <h2>Меҳнат шартномаси № ${c.x('no', 3)}</h2>
+    ${meta(c.x('city', 14), c.date('date'))}
+    <p>1. ${partyIntro(c, 'e', 'Иш берувчи')} бир томондан, ва Ўзбекистон Республикаси фуқароси ${c.x('w', 24)} (кейинги ўринларда «Ходим» деб юритилади) иккинчи томондан, мазкур шартномани қуйидагилар ҳақида туздилар:</p>
+    <p>2. Ходим ${c.x('pos', 18)} лавозимига ишга қабул қилинади.</p>
+    <p>3. Шартнома ${c.x('kind', 12)} ҳисобланади. Шартнома муддати — ${c.x('term', 12)}.</p>
+    <p>4. Ишни бошлаш санаси: ${c.date('start')}${c.has('end') ? '. Тугаш санаси: ' + c.date('end') : ''}.</p>
+    <p>5. Синов муддати: ${c.x('prob', 8)}.</p>
+    <p>6. Ходимнинг мажбуриятлари: меҳнат ва технология интизомига, ички меҳнат тартиби қоидаларига риоя қилиш; иш берувчининг қонуний буйруқ ва фармойишларини бажариш; меҳнатни муҳофаза қилиш, техника хавфсизлиги ва ёнғин хавфсизлиги талабларига риоя қилиш; лавозим йўриқномасига амал қилиш; ишониб топширилган мулкдан тўғри фойдаланиш ва уни асраш; тижорат сирини сақлаш.</p>
+    <p>7. Иш берувчининг мажбуриятлари: ходимнинг меҳнатини ташкил этиш ва уни ички ҳужжатлар билан таништириш; хавфсиз меҳнат шароитларини яратиш; иш ҳақини ўз вақтида тўлаш; меҳнат қонунчилиги ва жамоа шартномасига риоя қилиш.</p>
+    <p>8. Иш вақти тартиби: ${c.x('week', 8)} иш ҳафтаси, ${c.x('hours', 18)}.</p>
+    <p>9. Меҳнатга ҳақ тўлаш: лавозим маоши ойига ${c.money('salary')}; қонунчилик ва жамоа шартномасида назарда тутилган қўшимча тўловлар, устамалар ва мукофотлар. Иш ҳақи ойига камида икки марта тўланади.</p>
+    <p>10. Ходимга ${c.x('leave', 3)} календарь кундан иборат ҳақ тўланадиган йиллик асосий таътил${c.has('leave_add') ? ' ва ' + c.x('leave_add', 2) + ' кунлик қўшимча таътил' : ''} берилади.</p>
+    <p>11. Шартнома Ўзбекистон Республикаси Меҳнат кодексида назарда тутилган асосларда ўзгартирилиши ва бекор қилиниши мумкин. Шартномада назарда тутилмаган масалалар меҳнат тўғрисидаги қонунчилик билан тартибга солинади.</p>
+    <p>12. Шартнома ўзбек тилида, бир хил юридик кучга эга икки нусхада тузилди.</p>
+    <h3>Тарафларнинг реквизитлари ва имзолари</h3>
+    ${sigTable(reqCell(c, 'e', 'Иш берувчи'), `<b>«Ходим»</b><br>${c.x('w', 20)}<br>Паспорт: ${c.x('w_pass', 10)}<br>Берилган: ${c.x('w_pass_by', 16)}<br>Манзил: ${c.x('w_addr', 22)}<br>Тел.: ${c.x('w_phone', 12)}<br>ЖШШИР/СТИР: ${c.x('w_stir', 14)}<br><br>____________ (имзо)<br><br>Ички меҳнат тартиби қоидалари, лавозим йўриқномаси ва меҳнат муҳофазаси талаблари билан танишдим: ____________`)}
+  `,
+},
+{
+  id: 'hiring-order', cat: 'Kadrlar', lang: 'uz',
+  title: 'Ishga qabul qilish buyrugʻi',
+  desc: 'Mehnat shartnomasi asosida xodimni lavozimga qabul qilish.',
+  fields: [
+    { k: 'company', l: 'Jamiyat nomi', g: 'Buyruq', ex: 'Намуна Савдо' },
+    { k: 'no', l: 'Buyruq raqami', g: 'Buyruq', ex: '15-К', half: true },
+    { k: 'date', l: 'Sana', t: 'date', g: 'Buyruq', ex: '2026-10-01', half: true },
+    { k: 'city', l: 'Shahar', g: 'Buyruq', ex: 'Тошкент ш.' },
+    { k: 'w', l: 'Xodim F.I.Sh.', g: 'Xodim', ex: 'Алиев Тимур Рустамович' },
+    { k: 'pos', l: 'Lavozim', g: 'Xodim', ex: 'савдо менежери' },
+    { k: 'dept', l: 'Boʻlim', g: 'Xodim', ex: 'савдо бўлими' },
+    { k: 'start', l: 'Qabul sanasi', t: 'date', g: 'Xodim', ex: '2026-10-02', half: true },
+    { k: 'prob', l: 'Sinov muddati', g: 'Xodim', ex: '3 ой', half: true },
+    { k: 'salary', l: 'Maosh (soʻm)', t: 'money', g: 'Xodim', ex: '6000000' },
+    { k: 'tab', l: 'Tabel raqami', g: 'Xodim', ex: '0042', half: true },
+    { k: 'contract', l: 'Mehnat shartnomasi (raqam, sana)', g: 'Xodim', ex: '01.10.2026 йилдаги 12-сон', half: true },
+    { k: 'head', l: 'Direktor F.I.Sh.', g: 'Imzo', ex: 'Каримов А.Б.' },
+  ],
+  render: c => `
+    <p class="c">«${c.x('company')}» масъулияти чекланган жамияти</p>
+    <h2>Буйруқ № ${c.x('no', 4)}</h2>
+    ${meta(c.date('date'), c.x('city', 12))}
+    <p class="c"><i>Ишга қабул қилиш тўғрисида</i></p>
+    <p class="sp">БУЮРАМАН:</p>
+    <p>${c.x('w', 22)} ${c.date('start')}дан ${c.x('dept', 14)}га ${c.x('pos', 16)} лавозимига ${c.x('prob', 6)} синов муддати билан, лавозим маоши ойига ${c.money('salary')} миқдорида белгиланган ҳолда ишга қабул қилинсин. Табель рақами ${c.x('tab', 5)}.</p>
+    <p><b>Асос:</b> ${c.x('contract', 18)} меҳнат шартномаси, ходимнинг аризаси.</p>
+    ${sigTable('Директор', `____________ ${c.x('head', 16)}`)}
+    <p style="margin-top:22px">Буйруқ билан танишдим: ____________ ${c.x('w', 16)} &nbsp; «___» __________ 20__ й.</p>
+  `,
+},
+{
+  id: 'dismissal-order', cat: 'Kadrlar', lang: 'uz',
+  title: 'Mehnat shartnomasini bekor qilish buyrugʻi',
+  desc: 'Xodimni ishdan boʻshatish, foydalanilmagan taʼtil uchun kompensatsiya.',
+  fields: [
+    { k: 'company', l: 'Jamiyat nomi', g: 'Buyruq', ex: 'Намуна Савдо' },
+    { k: 'no', l: 'Buyruq raqami', g: 'Buyruq', ex: '21-К', half: true },
+    { k: 'date', l: 'Sana', t: 'date', g: 'Buyruq', ex: '2026-11-30', half: true },
+    { k: 'city', l: 'Shahar', g: 'Buyruq', ex: 'Тошкент ш.' },
+    { k: 'w', l: 'Xodim F.I.Sh.', g: 'Xodim', ex: 'Алиев Тимур Рустамович' },
+    { k: 'pos', l: 'Lavozim', g: 'Xodim', ex: 'савдо менежери' },
+    { k: 'end', l: 'Boʻshatish sanasi', t: 'date', g: 'Xodim', ex: '2026-11-30' },
+    { k: 'reason', l: 'Asos', t: 'select', opts: ['ходимнинг ташаббусига кўра (ўз хоҳишига кўра)', 'тарафларнинг келишувига кўра', 'муддатли меҳнат шартномасининг муддати тугаши муносабати билан'], g: 'Xodim', ex: 'ходимнинг ташаббусига кўра (ўз хоҳишига кўра)' },
+    { k: 'days', l: 'Foydalanilmagan taʼtil kunlari', t: 'number', g: 'Xodim', ex: '8', half: true },
+    { k: 'period', l: 'Ish yili davri', g: 'Xodim', ex: '02.10.2026–30.11.2026', half: true },
+    { k: 'basis', l: 'Asos hujjat', g: 'Xodim', ex: 'ходимнинг 16.11.2026 йилдаги аризаси' },
+    { k: 'head', l: 'Rahbar F.I.Sh.', g: 'Imzo', ex: 'Каримов А.Б.' },
+  ],
+  render: c => `
+    <p class="c">«${c.x('company')}» масъулияти чекланган жамияти</p>
+    <h2>Буйруқ № ${c.x('no', 4)}</h2>
+    ${meta(c.date('date'), c.x('city', 12))}
+    <p class="c"><i>Меҳнат шартномасини бекор қилиш тўғрисида</i></p>
+    <p class="sp">БУЮРАМАН:</p>
+    <ol>
+      <li>${c.x('pos', 14)} ${c.x('w', 22)} билан тузилган меҳнат шартномаси ${c.x('reason', 24)} ${c.date('end')}дан бекор қилинсин.</li>
+      <li>Бухгалтерия ходим билан тўлиқ ҳисоб-китоб қилсин ва ${c.x('period', 16)} иш йили учун фойдаланилмаган ${c.x('days', 2)} кунлик таътил учун пуллик компенсация тўласин.</li>
+      <li>Кадрлар бўйича масъул ходим меҳнат фаолияти тўғрисидаги маълумотларни белгиланган тартибда расмийлаштирсин.</li>
+    </ol>
+    <p><b>Асос:</b> ${c.x('basis', 24)}.</p>
+    ${sigTable('Раҳбар', `____________ ${c.x('head', 16)}`)}
+    <p style="margin-top:22px">Буйруқ билан танишдим: ____________ ${c.x('w', 16)} &nbsp; «___» __________ 20__ й.</p>
+  `,
+},
+{
+  id: 'staffing', cat: 'Kadrlar', lang: 'uz',
+  title: 'Shtat jadvalini tasdiqlash buyrugʻi va shtat jadvali',
+  desc: 'Buyruq + ilova: lavozimlar, shtat birliklari, maoshlar, oylik mehnatga haq fondi avtomatik.',
+  fields: [
+    { k: 'company', l: 'Jamiyat nomi', g: 'Buyruq', ex: 'Намуна Савдо' },
+    { k: 'no', l: 'Buyruq raqami', g: 'Buyruq', ex: '3', half: true },
+    { k: 'date', l: 'Sana', t: 'date', g: 'Buyruq', ex: '2026-01-02', half: true },
+    { k: 'city', l: 'Shahar', g: 'Buyruq', ex: 'Тошкент ш.', half: true },
+    { k: 'year', l: 'Yil', g: 'Buyruq', ex: '2026', half: true },
+    { k: 'head', l: 'Rahbar F.I.Sh.', g: 'Buyruq', ex: 'Каримов А.Б.', half: true },
+    { k: 'acc', l: 'Bosh hisobchi F.I.Sh.', g: 'Buyruq', ex: 'Раҳимова Д.Ш.', half: true },
+    { k: 'rows', l: 'Lavozimlar', t: 'rows', g: 'Shtat jadvali',
+      cols: [{ k: 'pos', l: 'Lavozim' }, { k: 'units', l: 'Birlik', num: true }, { k: 'salary', l: 'Maosh', num: true }],
+      ex: [{ pos: 'Директор', units: '1', salary: '9000000' }, { pos: 'Бош ҳисобчи', units: '1', salary: '7000000' }, { pos: 'Савдо менежери', units: '2', salary: '6000000' }, { pos: 'Омборчи', units: '1', salary: '4500000' }] },
+  ],
+  render: c => {
+    let body = '', units = 0, fund = 0;
+    c.rows('rows').forEach((r, i) => {
+      const u = parseNum(r.units), s = parseNum(r.salary), t = isFinite(u) && isFinite(s) ? u * s : NaN;
+      if (isFinite(u)) units += u; if (isFinite(t)) fund += t;
+      body += `<tr><td class="n">${i + 1}</td><td>${c.span(esc(r.pos || ''))}</td><td class="n">${isFinite(u) ? u : ''}</td><td class="n">${isFinite(s) ? fmtMoney(s) : ''}</td><td class="n">${isFinite(t) ? fmtMoney(t) : ''}</td></tr>`;
+    });
+    return `
+    <p class="c">«${c.x('company')}» масъулияти чекланган жамияти</p>
+    <h2>Буйруқ № ${c.x('no', 3)}</h2>
+    ${meta(c.date('date'), c.x('city', 12))}
+    <p class="c"><i>Штат жадвалини тасдиқлаш тўғрисида</i></p>
+    <p class="sp">БУЮРАМАН:</p>
+    <ol>
+      <li>«${c.x('company')}» МЧЖнинг ${c.x('year', 4)} йил учун штат жадвали ${units || c.blank(3)} та штат бирлиги, ойлик меҳнатга ҳақ тўлаш жамғармаси ${c.moneyN(fund)} миқдорида илова асосида тасдиқлансин.</li>
+      <li>Жамиятнинг молиявий ҳолатига қараб штат бирликлари ва лавозим маошлари ўзгартирилиши мумкин.</li>
+      <li>Ушбу буйруқ ижросини назорат қилишни ўз зиммамда қолдираман.</li>
+    </ol>
+    ${sigTable('Раҳбар', `____________ ${c.x('head', 16)}`)}
+    <div class="pb"></div>
+    <p class="r">${c.dshort('date')} йилдаги ${c.x('no', 3)}-сон буйруққа илова</p>
+    <h2>Штат жадвали</h2>
+    <p class="c">«${c.x('company')}» МЧЖ — ${c.x('year', 4)} йилдан амалга киритилади</p>
+    <table class="t"><thead><tr><th>№</th><th>Лавозим</th><th>Штат бирлиги</th><th>Лавозим маоши, сўм</th><th>Ойлик фонд, сўм</th></tr></thead>
+    <tbody>${body}<tr><td></td><td><b>Жами</b></td><td class="n"><b>${units || ''}</b></td><td></td><td class="n"><b>${fund ? fmtMoney(fund) : ''}</b></td></tr></tbody></table>
+    ${sigTable('Директор<br><br>Бош ҳисобчи', `____________ ${c.x('head', 14)}<br><br>____________ ${c.x('acc', 14)}`)}
+  `; },
+},
+
+/* ----------------------------- Шартномалар ----------------------------- */
+{
+  id: 'services', cat: 'Shartnomalar', lang: 'uz',
+  title: 'Xizmat koʻrsatish shartnomasi',
+  desc: 'Haq evaziga xizmat: xizmatlar jadvali, avans foizi, penyalar (0,5% / 0,4%, 50% gacha), iqtisodiy sud.',
+  fields: [
+    { k: 'no', l: 'Shartnoma raqami', g: 'Shartnoma', ex: '27', half: true },
+    { k: 'date', l: 'Sana', t: 'date', g: 'Shartnoma', ex: '2026-10-01', half: true },
+    { k: 'city', l: 'Shahar', g: 'Shartnoma', ex: 'Тошкент шаҳри' },
+    ...partyFields('cu', 'Buyurtmachi', EX_A),
+    ...partyFields('ex', 'Ijrochi', EX_B),
+    { k: 'items', l: 'Xizmatlar', t: 'rows', g: 'Xizmatlar', cols: ITEM_COLS,
+      ex: [{ name: 'Бухгалтерия ҳисобини юритиш', unit: 'ой', qty: '3', price: '4000000' }, { name: 'Солиқ ҳисоботларини тайёрлаш', unit: 'чорак', qty: '1', price: '2500000' }] },
+    { k: 'adv', l: 'Avans, %', t: 'number', g: 'Toʻlov va muddat', ex: '15', half: true },
+    { k: 'pay_days', l: 'Qolgan toʻlov muddati (kun)', t: 'number', g: 'Toʻlov va muddat', ex: '10', half: true },
+    { k: 'fix_days', l: 'Kamchilikni bartaraf etish (kun)', t: 'number', g: 'Toʻlov va muddat', ex: '5', half: true },
+    { k: 'until', l: 'Amal qilish muddati', t: 'date', g: 'Toʻlov va muddat', ex: '2026-12-31', half: true },
+    { k: 'treasury', l: 'Gʻaznachilikda roʻyxatdan oʻtadi', t: 'select', opts: ['йўқ', 'ҳа'], g: 'Toʻlov va muddat', ex: 'йўқ', hint: 'Byudjet tashkiloti buyurtmachi boʻlsa “ҳа”' },
+  ],
+  render: c => {
+    const t = itemsTable(c, 'items');
+    const tr = c.raw('treasury') === 'ҳа';
+    return `
+    <h2>Хизмат кўрсатиш шартномаси № ${c.x('no', 3)}</h2>
+    ${meta(c.x('city', 14), c.date('date'))}
+    <p>${partyIntro(c, 'cu', 'Буюртмачи')} бир томондан, ва ${partyIntro(c, 'ex', 'Ижрочи')} иккинчи томондан, мазкур шартномани қуйидагилар ҳақида туздилар.</p>
+    <h3>1. Шартнома предмети</h3>
+    <p>1.1. Ижрочи Буюртмачининг топшириғига кўра қуйидаги хизматларни кўрсатиш, Буюртмачи эса ушбу хизматлар ҳақини тўлаш мажбуриятини олади:</p>
+    ${t.html}
+    <p>1.2. Хизматлар Буюртмачи ёки унинг ваколатли вакили томонидан хизматларни қабул қилиш-топшириш далолатномаси имзолангандан кейин кўрсатилган деб ҳисобланади. Ижрочи хизматларни муддатидан олдин кўрсатишга ҳақли.</p>
+    <h3>2. Тарафларнинг ҳуқуқ ва мажбуриятлари</h3>
+    <p>2.1. Ижрочи: хизматларни лозим даражадаги сифатда, тўлиқ ҳажмда ва белгиланган муддатда кўрсатиш; сифатни ёмонлаштирадиган камчиликларни Буюртмачининг талабига кўра ${c.x('fix_days', 2)} кун ичида текин бартараф этиш; хизматларни шахсан бажариш мажбуриятини олади.</p>
+    <p>2.2. Буюртмачи: шартнома баҳосининг ${c.x('adv', 2)}% миқдорида олдиндан тўловни амалга ошириш, қолган қисмини далолатнома имзолангандан кейин ${c.x('pay_days', 2)} банк куни ичида тўлаш мажбуриятини олади.</p>
+    <p>2.3. Буюртмачи ҳар қандай вақтда Ижрочининг фаолиятига аралашмаган ҳолда хизматлар сифатини текширишга ҳамда далолатнома имзолангунга қадар, кўрсатилган хизматлар қисми ҳақини тўлаган ҳолда, шартномадан воз кечишга ҳақли.</p>
+    <h3>3. Шартнома баҳоси ва ҳисоб-китоблар</h3>
+    <p>3.1. Шартноманинг умумий баҳоси ${c.moneyN(t.total)}ни ташкил этади.</p>
+    <p>3.2. Тўловлар Ижрочининг ҳисоб-китоб варағига пул ўтказиш йўли билан амалга оширилади.</p>
+    <h3>4. Тарафларнинг жавобгарлиги</h3>
+    <p>4.1. Хизмат кўрсатиш муддати бузилганда Ижрочи Буюртмачига кечиктирилган ҳар бир кун учун мажбуриятнинг бажарилмаган қисмининг 0,5 фоизи миқдорида, бироқ кўрсатилмаган хизматлар баҳосининг 50 фоизидан ошмаган миқдорда пеня тўлайди.</p>
+    <p>4.2. Хизматлар ҳақи ўз вақтида тўланмаганда Буюртмачи ҳар бир кечиктирилган кун учун кечиктирилган тўлов суммасининг 0,4 фоизи миқдорида, бироқ кечиктирилган тўлов суммасининг 50 фоизидан ошмаган миқдорда пеня тўлайди.</p>
+    <p>4.3. Пеня тўлаш тарафларни мажбуриятларни бажаришдан ва зарарни қоплашдан озод этмайди. Бошқа ҳолларда тарафлар Ўзбекистон Республикасининг Фуқаролик кодекси ва «Хўжалик юритувчи субъектлар фаолиятининг шартномавий-ҳуқуқий базаси тўғрисида»ги Қонунига мувофиқ жавоб берадилар.</p>
+    <h3>5. Форс-мажор</h3>
+    <p>5.1. Тарафлар енгиб бўлмайдиган куч ҳолатлари (уруш, табиий офатлар, эпидемия, давлат органлари қарорлари ва бошқалар) натижасида мажбуриятларни бажармаганлик учун жавобгар эмас. Бундай ҳолат ҳақида иккинчи тараф ёзма хабардор қилинади. Ҳолат уч ойдан ортиқ давом этса, тарафлар шартномани бекор қилишлари мумкин.</p>
+    <h3>6. Низоларни ҳал этиш</h3>
+    <p>6.1. Низолар музокаралар йўли билан, бу имкони бўлмаганда қонунчиликда назарда тутилган судгача ҳал қилиш тартиби (талабнома) амалга оширилганидан сўнг иқтисодий суд томонидан ҳал этилади.</p>
+    <h3>7. Якуний қоидалар</h3>
+    <p>7.1. Шартнома ${tr ? 'Ғазначилик органларида рўйхатдан ўтказилган кундан' : 'тарафлар имзолаган кундан'} бошлаб кучга киради ва ${c.date('until')}гача амал қилади.</p>
+    <p>7.2. Шартномага ўзгартириш ва қўшимчалар ёзма шаклда тузилиб, тарафлар томонидан имзоланган${tr ? ' ва Ғазначилик органларида рўйхатдан ўтказилган' : ''} тақдирда ҳақиқий ҳисобланади. Шартнома бир хил юридик кучга эга икки нусхада тузилди.</p>
+    <h3>8. Тарафларнинг реквизитлари</h3>
+    ${sigTable(reqCell(c, 'ex', 'Ижрочи'), reqCell(c, 'cu', 'Буюртмачи'))}
+  `; },
+},
+{
+  id: 'sale', cat: 'Shartnomalar', lang: 'uz',
+  title: 'Tovar oldi-sotdi shartnomasi',
+  desc: 'Tovarlar jadvali, avans va qolgan toʻlov, yetkazish muddati, reklamatsiya, standart penyalar.',
+  fields: [
+    { k: 'no', l: 'Shartnoma raqami', g: 'Shartnoma', ex: '45', half: true },
+    { k: 'date', l: 'Sana', t: 'date', g: 'Shartnoma', ex: '2026-10-01', half: true },
+    { k: 'city', l: 'Shahar', g: 'Shartnoma', ex: 'Тошкент шаҳри' },
+    ...partyFields('se', 'Sotuvchi', EX_B),
+    ...partyFields('bu', 'Xaridor', EX_A),
+    { k: 'items', l: 'Tovarlar', t: 'rows', g: 'Tovarlar', cols: ITEM_COLS,
+      ex: [{ name: 'Қоғоз А4, 80 г/м²', unit: 'қути', qty: '50', price: '320000' }, { name: 'Принтер картриджи', unit: 'дона', qty: '10', price: '450000' }] },
+    { k: 'adv', l: 'Avans, %', t: 'number', g: 'Shartlar', ex: '15', half: true },
+    { k: 'adv_days', l: 'Avans muddati (kun)', t: 'number', g: 'Shartlar', ex: '5', half: true },
+    { k: 'del_days', l: 'Yetkazib berish (avansdan keyin, kun)', t: 'number', g: 'Shartlar', ex: '20', half: true },
+    { k: 'pay_days', l: 'Qolgan toʻlov (hisob-fakturadan keyin, kun)', t: 'number', g: 'Shartlar', ex: '10', half: true },
+    { k: 'place', l: 'Yetkazib berish joyi', g: 'Shartlar', ex: 'Харидорнинг омбори, Тошкент ш., Юнусобод тумани' },
+  ],
+  render: c => {
+    const t = itemsTable(c, 'items');
+    return `
+    <h2>Олди-сотди шартномаси № ${c.x('no', 3)}</h2>
+    ${meta(c.x('city', 14), c.date('date'))}
+    <p>${partyIntro(c, 'se', 'Сотувчи')} бир томондан, ва ${partyIntro(c, 'bu', 'Харидор')} иккинчи томондан, қуйидагилар ҳақида мазкур шартномани туздилар.</p>
+    <h3>1. Шартнома предмети</h3>
+    <p>1.1. Сотувчи қуйидаги товарни Харидорнинг мулкига топшириш, Харидор эса уни қабул қилиш ва ҳақини шартномада белгиланган муддатларда тўлаш мажбуриятини олади:</p>
+    ${t.html}
+    <p>1.2. Товарнинг умумий қиймати ${c.moneyN(t.total)}ни ташкил этади.</p>
+    <h3>2. Тўлов шартлари</h3>
+    <p>2.1. Харидор товар қийматининг ${c.x('adv', 2)}% миқдоридаги олдиндан тўловни шартнома имзоланган кундан бошлаб ${c.x('adv_days', 2)} банк куни ичида Сотувчининг ҳисоб-китоб варағига ўтказади.</p>
+    <p>2.2. Қолган тўлов товар қабул қилиниб, ҳисобварақ-фактура расмийлаштирилгач ${c.x('pay_days', 2)} банк куни ичида амалга оширилади.</p>
+    <h3>3. Товарни топшириш</h3>
+    <p>3.1. Сотувчи товарни олдиндан тўлов келиб тушган кундан бошлаб ${c.x('del_days', 2)} кун ичида ${c.x('place', 20)}да Харидорга товарга оид ҳужжатлар (ҳисобварақ-фактура, сертификатлар) билан бирга топширади.</p>
+    <p>3.2. Товар ташиш вақтида шикастланишини истисно қиладиган идишда ва қадоқда топширилади. Мулк ҳуқуқи ва тасодифий нобуд бўлиш хавфи товар топширилган пайтдан Харидорга ўтади.</p>
+    <h3>4. Товар сифати</h3>
+    <p>4.1. Товар сифати ушбу турдаги товарлар учун амалдаги стандартлар ва техник шартларга мувофиқ бўлиши керак.</p>
+    <p>4.2. Харидор товарни 5 кун ичида кўздан кечиради ва номувофиқлик аниқланганда Сотувчига рекламация юборади. Сотувчи сифатсиз товарни рекламация олинган кундан бошлаб 20 кун ичида сифатлисига алмаштиради.</p>
+    <h3>5. Тарафларнинг жавобгарлиги</h3>
+    <p>5.1. Товар етказиб бериш муддати кечиктирилганда ёки тўлиқ етказиб берилмаганда Сотувчи ҳар бир кечиктирилган кун учун бажарилмаган қисмнинг 0,5 фоизи миқдорида, бироқ етказиб берилмаган товар қийматининг 50 фоизидан ошмаган миқдорда пеня тўлайди.</p>
+    <p>5.2. Товар ҳақи ўз вақтида тўланмаганда Харидор ҳар бир кечиктирилган кун учун кечиктирилган тўлов суммасининг 0,4 фоизи миқдорида, бироқ 50 фоизидан ошмаган миқдорда пеня тўлайди.</p>
+    <p>5.3. Сифати, ассортименти ёки нави лозим даражада бўлмаган товар етказиб берилганда Харидор уни қабул қилиш ва ҳақини тўлашни рад этиб, бундай товар қийматининг 20 фоизи миқдорида жарима ундиришга ҳақли.</p>
+    <p>5.4. Бошқа ҳолларда тарафларнинг жавобгарлиги Фуқаролик кодекси ва «Хўжалик юритувчи субъектлар фаолиятининг шартномавий-ҳуқуқий базаси тўғрисида»ги Қонун билан белгиланади.</p>
+    <h3>6. Форс-мажор ва низолар</h3>
+    <p>6.1. Енгиб бўлмайдиган куч ҳолатлари юзага келганда мажбуриятларни бажариш муддати ушбу ҳолатлар давом этган муддатга узаяди; бу ҳақда тараф иккинчи тарафни ёзма хабардор қилиши шарт.</p>
+    <p>6.2. Низолар ёзма талабнома тартибида ҳал этилади. Талабномага бир ой ичида жавоб олинмаганда тараф жавобгар жойлашган ердаги иқтисодий судга мурожаат қилишга ҳақли.</p>
+    <h3>7. Якуний қоидалар</h3>
+    <p>7.1. Шартнома имзоланган пайтдан кучга киради ва мажбуриятлар тўлиқ бажарилгунга қадар амал қилади. Ўзгартиришлар ёзма шаклда ва тарафлар имзоси билан ҳақиқий ҳисобланади. Тарафлар реквизитлари ўзгарганда 10 кун ичида бир-бирини хабардор қилади. Шартнома икки нусхада тузилди.</p>
+    <h3>8. Тарафларнинг реквизитлари</h3>
+    ${sigTable(reqCell(c, 'se', 'Сотувчи'), reqCell(c, 'bu', 'Харидор'))}
+  `; },
+},
+{
+  id: 'lease-premises', cat: 'Shartnomalar', lang: 'ru',
+  title: 'Договор аренды помещения (jismoniy shaxs → MChJ)',
+  desc: 'Ofis ijarasi + topshirish dalolatnomasi. Daromad soligʻi ijarachi tomonidan ushlab qolinadi. Soliq organida 10 kun ichida hisobga qoʻyish eslatmasi.',
+  fields: [
+    { k: 'no', l: 'Shartnoma raqami', g: 'Shartnoma', ex: '7', half: true },
+    { k: 'date', l: 'Sana', t: 'date', g: 'Shartnoma', ex: '2026-10-01', half: true },
+    { k: 'city', l: 'Shahar', g: 'Shartnoma', ex: 'г. Ташкент' },
+    { k: 'll', l: 'Ijaraga beruvchi F.I.Sh.', g: 'Ijaraga beruvchi (jismoniy shaxs)', ex: 'Юсупов Шерзод Анварович' },
+    { k: 'll_pass', l: 'Pasport', g: 'Ijaraga beruvchi (jismoniy shaxs)', ex: 'AC 7654321', half: true },
+    { k: 'll_pass_by', l: 'Kim bergan, sana', g: 'Ijaraga beruvchi (jismoniy shaxs)', ex: 'Мирабадский РОВД, 10.02.2017', half: true },
+    { k: 'll_inn', l: 'INN / PINFL', g: 'Ijaraga beruvchi (jismoniy shaxs)', ex: '', half: true },
+    { k: 'll_cad', l: 'Kadastr reestr raqami va sanasi', g: 'Ijaraga beruvchi (jismoniy shaxs)', ex: '№ 10:05:01:02:03:0045 от 12.03.2019', half: true },
+    { k: 'll_addr', l: 'Yashash manzili', g: 'Ijaraga beruvchi (jismoniy shaxs)', ex: 'г. Ташкент, Мирабадский р-н, ул. Нукус, д. 20, кв. 21' },
+    { k: 'll_acc', l: 'Hisob raqami / karta', g: 'Ijaraga beruvchi (jismoniy shaxs)', ex: '', half: true },
+    { k: 'll_bank', l: 'Bank, MFO', g: 'Ijaraga beruvchi (jismoniy shaxs)', ex: '', half: true },
+    ...partyFields('tn', 'Ijarachi (MChJ)', EX_A_RU, { ru: true }),
+    { k: 'area', l: 'Maydon, m²', t: 'number', g: 'Obyekt', ex: '64', half: true },
+    { k: 'purpose', l: 'Maqsad', g: 'Obyekt', ex: 'офиса', half: true },
+    { k: 'addr', l: 'Binoning manzili', g: 'Obyekt', ex: 'г. Ташкент, Мирабадский р-н, ул. Афросиаб, д. 4, офис 12' },
+    { k: 'until', l: 'Ijara muddati (gacha)', t: 'date', g: 'Shartlar', ex: '2027-09-30', half: true },
+    { k: 'rent', l: 'Oylik ijara haqi (soʻm)', t: 'money', g: 'Shartlar', ex: '8000000', half: true },
+    { k: 'pen', l: 'Penya, %/kun', t: 'number', g: 'Shartlar', ex: '0.5', half: true },
+    { k: 'court', l: 'Sud', g: 'Shartlar', ex: 'Ташкентский межрайонный экономический суд', half: true },
+  ],
+  render: c => `
+    <h2>Договор аренды помещения № ${c.x('no', 3)}</h2>
+    ${meta(c.x('city', 12), c.date('date'))}
+    <p>Гражданин Республики Узбекистан ${c.x('ll', 22)} (паспорт ${c.x('ll_pass', 10)}, выдан ${c.x('ll_pass_by', 16)}), являющийся собственником помещения на основании кадастрового документа ${c.x('ll_cad', 18)}, именуемый в дальнейшем «Арендодатель», с одной стороны, и ${partyIntroRu(c, 'tn', 'Арендатор')}, с другой стороны, совместно именуемые «Стороны», заключили настоящий Договор о нижеследующем:</p>
+    <h3>1. Предмет договора</h3>
+    <p>1.1. Арендодатель предоставляет, а Арендатор принимает во временное владение и пользование помещение общей площадью ${c.x('area', 4)} кв. м, расположенное по адресу: ${c.x('addr', 26)} (далее — «Помещение»). План Помещения — Приложение № 1.</p>
+    <p>1.2. Помещение предоставляется для использования в качестве ${c.x('purpose', 10)}. Сдача в субаренду без письменного согласия Арендодателя не допускается.</p>
+    <h3>2. Срок аренды</h3>
+    <p>2.1. Договор действует до ${c.date('until')} с момента подписания Передаточного акта (Приложение № 2). Арендатор, надлежаще исполнявший обязательства, имеет преимущественное право на заключение договора на новый срок при уведомлении не позднее чем за 1 месяц.</p>
+    <h3>3. Платежи и расчеты</h3>
+    <p>3.1. Арендная плата составляет ${c.money('rent')} в месяц и начисляется с даты подписания Передаточного акта до даты фактического возврата Помещения.</p>
+    <p>3.2. Оплата производится ежемесячно, авансом в размере 100%, в период с 25 по 30 число месяца, предшествующего оплачиваемому, путем перечисления на счет Арендодателя. Арендатор как налоговый агент удерживает налог на доходы физических лиц в порядке, установленном законодательством Республики Узбекистан.</p>
+    <p>3.3. Арендная плата не включает коммунальные платежи (электроэнергия, вода, газ), которые Арендатор возмещает в течение 5 банковских дней на основании счета Арендодателя с приложением квитанций.</p>
+    <h3>4. Права и обязанности сторон</h3>
+    <p>4.1. Арендодатель обязан: передать Помещение, пригодное для использования; не чинить препятствий в пользовании; в течение 3 рабочих дней письменно уведомлять об изменении реквизитов; немедленно принимать меры к ремонту при авариях, возникших не по вине Арендатора; поставить Договор на учет в органах государственной налоговой службы в течение 10 дней с даты заключения.</p>
+    <p>4.2. Арендатор обязан: использовать Помещение по назначению, соблюдать требования пожарной безопасности и санитарные нормы; производить за свой счет текущий ремонт; своевременно вносить арендную плату; не производить неотделимых улучшений без письменного согласия Арендодателя; по окончании срока аренды освободить Помещение.</p>
+    <h3>5. Возврат помещения</h3>
+    <p>5.1. Помещение возвращается по передаточному акту в течение 5 рабочих дней после окончания срока аренды в состоянии, в котором оно было получено, с учетом нормального износа. Неотделимые улучшения, произведенные Арендатором, переходят Арендодателю без возмещения.</p>
+    <h3>6. Ответственность сторон</h3>
+    <p>6.1. За просрочку арендной платы Арендатор уплачивает пеню ${c.x('pen', 3)}% от суммы просроченного платежа за каждый день просрочки, но не более 50% месячной арендной платы. За просрочку передачи Помещения Арендодатель уплачивает пеню в том же размере.</p>
+    <p>6.2. Споры разрешаются путем переговоров, а при недостижении согласия — в ${c.x('court', 20)}.</p>
+    <h3>7. Форс-мажор</h3>
+    <p>7.1. Стороны освобождаются от ответственности за неисполнение обязательств вследствие обстоятельств непреодолимой силы при условии письменного уведомления другой Стороны не позднее 3 дней с момента их наступления.</p>
+    <h3>8. Расторжение договора</h3>
+    <p>8.1. Договор может быть расторгнут: по соглашению Сторон; Арендодателем — с уведомлением не менее чем за 3 месяца, а при существенном нарушении (неоплата в срок) — за 30 дней; Арендатором — с уведомлением не менее чем за 30 дней. Задолженность по арендной плате подлежит погашению независимо от расторжения.</p>
+    <h3>9. Заключительные положения</h3>
+    <p>9.1. Договор вступает в силу с момента подписания. Изменения оформляются дополнительными соглашениями в письменной форме. Уступка прав по Договору без согласия другой Стороны не допускается. Договор составлен в двух экземплярах, имеющих одинаковую юридическую силу.</p>
+    <h3>10. Адреса и реквизиты сторон</h3>
+    ${sigTable(`<b>«Арендодатель»</b><br>${c.x('ll', 20)}<br>Паспорт: ${c.x('ll_pass', 10)}<br>Адрес: ${c.x('ll_addr', 22)}<br>ИНН/ПИНФЛ: ${c.x('ll_inn', 14)}<br>Счет: ${c.x('ll_acc', 18)}<br>Банк: ${c.x('ll_bank', 16)}<br><br>____________ ${c.x('ll', 14)}`, reqCell(c, 'tn', 'Арендатор', true))}
+    <div class="pb"></div>
+    <p class="r">Приложение № 2<br>к Договору аренды помещения № ${c.x('no', 3)} от ${c.dshort('date')}</p>
+    <h2>Передаточный акт</h2>
+    ${meta(c.x('city', 12), c.blank(20))}
+    <p>Арендодатель ${c.x('ll', 22)} и Арендатор ${c.x('tn_name', 18)} в лице ${c.x('tn_pos', 8)} ${c.x('tn_rep', 20)} составили настоящий акт о нижеследующем:</p>
+    <ol>
+      <li>На основании Договора аренды помещения № ${c.x('no', 3)} от ${c.dshort('date')} Арендодатель передал, а Арендатор принял помещение по адресу: ${c.x('addr', 26)}, общей площадью ${c.x('area', 4)} кв. м.</li>
+      <li>Помещение соответствует условиям Договора. Стороны претензий друг к другу не имеют.</li>
+    </ol>
+    ${sigTable(`Арендодатель<br><br>____________ ${c.x('ll', 14)}`, `Арендатор<br><br>____________ ${c.x('tn_rep', 14)}<br>М.П.`)}
+  `,
+},
+{
+  id: 'financial-aid', cat: 'Shartnomalar', lang: 'uz',
+  title: 'Moliyaviy yordam (foizsiz qarz) shartnomasi',
+  desc: 'Korxonalararo qaytariladigan moliyaviy yordam: summa, qaytarish sanasi, toʻlov tartibi.',
+  fields: [
+    { k: 'no', l: 'Shartnoma raqami', g: 'Shartnoma', ex: '1', half: true },
+    { k: 'date', l: 'Sana', t: 'date', g: 'Shartnoma', ex: '2026-10-01', half: true },
+    { k: 'city', l: 'Shahar', g: 'Shartnoma', ex: 'Тошкент ш.' },
+    ...partyFields('le', 'Qarz beruvchi', EX_A),
+    ...partyFields('bo', 'Qarz oluvchi', EX_B),
+    { k: 'amount', l: 'Summa (soʻm)', t: 'money', g: 'Shartlar', ex: '200000000' },
+    { k: 'mode', l: 'Oʻtkazish tartibi', t: 'select', opts: ['бир йўла', 'бўлиб-бўлиб'], g: 'Shartlar', ex: 'бир йўла', half: true },
+    { k: 'tr_days', l: 'Oʻtkazish muddati (bank kuni)', t: 'number', g: 'Shartlar', ex: '5', half: true },
+    { k: 'ret', l: 'Qaytarish sanasi', t: 'date', g: 'Shartlar', ex: '2027-06-30', half: true },
+    { k: 'pen', l: 'Kechiktirish penyasi, %/kun', t: 'number', g: 'Shartlar', ex: '0.1', half: true },
+  ],
+  render: c => `
+    <h2>Шартнома № ${c.x('no', 3)}</h2>
+    <p class="c"><b>молиявий ёрдам (фоизсиз қарз) кўрсатиш тўғрисида</b></p>
+    ${meta(c.x('city', 12), c.date('date'))}
+    <p>${partyIntro(c, 'le', 'Қарз берувчи')} бир томондан, ва ${partyIntro(c, 'bo', 'Қарз олувчи')} иккинчи томондан, мазкур шартномани қуйидагилар ҳақида туздилар.</p>
+    <h3>1. Шартнома предмети</h3>
+    <p>1.1. Қарз берувчи Қарз олувчига ${c.money('amount')} миқдорида қайтариладиган молиявий ёрдам (фоизсиз қарз) беради, Қарз олувчи эса олинган маблағни шартномада белгиланган муддатда қайтаради.</p>
+    <p>1.2. Қарздан фойдаланганлик учун фоиз ҳисобланмайди.</p>
+    <h3>2. Тарафларнинг мажбуриятлари</h3>
+    <p>2.1. Қарз берувчи маблағни шартнома имзолангандан кейин ${c.x('tr_days', 2)} банк куни ичида ${c.x('mode', 8)} Қарз олувчининг банк ҳисоб рақамига ўтказади.</p>
+    <p>2.2. Қарз олувчи маблағни ${c.date('ret')}гача тўлиқ қайтаради. Маблағни муддатидан олдин қайтаришга йўл қўйилади.</p>
+    <p>2.3. Шартнома шартлари учинчи шахслар учун махфий ҳисобланади.</p>
+    <h3>3. Жавобгарлик</h3>
+    <p>3.1. Маблағ белгиланган муддатда қайтарилмаганда Қарз олувчи ҳар бир кечиктирилган кун учун қайтарилмаган сумманинг ${c.x('pen', 3)} фоизи миқдорида, бироқ қайтарилмаган сумманинг 50 фоизидан ошмаган миқдорда пеня тўлайди.</p>
+    <h3>4. Амал қилиш муддати ва низолар</h3>
+    <p>4.1. Шартнома имзоланган кундан кучга киради ва тарафлар мажбуриятлари тўлиқ бажарилгунга қадар амал қилади.</p>
+    <p>4.2. Низолар музокаралар йўли билан, келишилмаганда иқтисодий суд орқали ҳал этилади. Шартнома икки нусхада тузилди.</p>
+    <h3>5. Тарафларнинг реквизитлари</h3>
+    ${sigTable(reqCell(c, 'le', 'Қарз берувчи'), reqCell(c, 'bo', 'Қарз олувчи'))}
+  `,
+},
+{
+  id: 'gph-services', cat: 'Shartnomalar', lang: 'ru',
+  title: 'Договор ГПХ на оказание услуг + Акт',
+  desc: 'Tashkilot va jismoniy shaxs oʻrtasida fuqarolik-huquqiy shartnoma va bajarilgan ishlar dalolatnomasi.',
+  fields: [
+    { k: 'no', l: 'Shartnoma raqami', g: 'Shartnoma', ex: '3', half: true },
+    { k: 'date', l: 'Sana', t: 'date', g: 'Shartnoma', ex: '2026-10-01', half: true },
+    { k: 'city', l: 'Shahar', g: 'Shartnoma', ex: 'г. Ташкент' },
+    ...partyFields('cu', 'Buyurtmachi (tashkilot)', EX_A_RU, { ru: true }),
+    { k: 'ex', l: 'Ijrochi F.I.Sh.', g: 'Ijrochi (jismoniy shaxs)', ex: 'Назаров Отабек Ильхомович' },
+    { k: 'ex_pass', l: 'Pasport (seriya, raqam, kim bergan, sana)', g: 'Ijrochi (jismoniy shaxs)', ex: 'AD 1122334, выдан Сергелийским РОВД 05.06.2020' },
+    { k: 'ex_addr', l: 'Manzil', g: 'Ijrochi (jismoniy shaxs)', ex: 'г. Ташкент, Сергелийский р-н, массив Сергели-7, д. 15, кв. 3' },
+    { k: 'ex_pinfl', l: 'PINFL', g: 'Ijrochi (jismoniy shaxs)', ex: '', half: true },
+    { k: 'ex_card', l: 'Hisob / karta raqami', g: 'Ijrochi (jismoniy shaxs)', ex: '', half: true },
+    { k: 'services', l: 'Xizmatlar tavsifi', t: 'textarea', g: 'Xizmatlar', ex: 'перевод технической документации с английского языка на русский язык объемом до 120 страниц' },
+    { k: 'from', l: 'Boshlanishi', t: 'date', g: 'Xizmatlar', ex: '2026-10-02', half: true },
+    { k: 'to', l: 'Tugashi', t: 'date', g: 'Xizmatlar', ex: '2026-10-31', half: true },
+    { k: 'fee', l: 'Haq (soʻm)', t: 'money', g: 'Toʻlov', ex: '12000000', half: true },
+    { k: 'costs', l: 'Xarajatlar (soʻm)', t: 'money', g: 'Toʻlov', ex: '0', half: true },
+    { k: 'pay_days', l: 'Toʻlov muddati (aktdan keyin, kun)', t: 'number', g: 'Toʻlov', ex: '5', half: true },
+    { k: 'pen', l: 'Penya, %/kun', t: 'number', g: 'Toʻlov', ex: '0.1', half: true },
+    { k: 'fix', l: 'Kamchilikni tuzatish (kun)', t: 'number', g: 'Toʻlov', ex: '3', half: true },
+    { k: 'act_date', l: 'Akt sanasi', t: 'date', g: 'Akt', ex: '2026-10-31', half: true },
+  ],
+  render: c => {
+    const fee = c.num('fee'), costs = c.num('costs');
+    const total = (isFinite(fee) ? fee : 0) + (isFinite(costs) ? costs : 0);
+    return `
+    <h2>Договор № ${c.x('no', 3)}</h2>
+    <p class="c"><b>на оказание услуг</b></p>
+    ${meta(c.x('city', 12), c.date('date'))}
+    <p>${partyIntroRu(c, 'cu', 'Заказчик')}, с одной стороны, и гражданин Республики Узбекистан ${c.x('ex', 22)} (паспорт ${c.x('ex_pass', 26)}), проживающий по адресу: ${c.x('ex_addr', 24)}, именуемый в дальнейшем «Исполнитель», с другой стороны, заключили настоящий договор о нижеследующем.</p>
+    <h3>1. Предмет договора</h3>
+    <p>1.1. Исполнитель обязуется по заданию Заказчика оказать следующие услуги: ${c.x('services', 30)} (далее — «Услуги»), а Заказчик обязуется принять и оплатить их.</p>
+    <p>1.2. Срок оказания Услуг: с ${c.date('from')} по ${c.date('to')}. Исполнитель вправе оказать Услуги досрочно.</p>
+    <p>1.3. Услуги считаются оказанными после подписания Сторонами акта приема-сдачи.</p>
+    <p>1.4. Настоящий договор является гражданско-правовым и не порождает трудовых отношений между Сторонами.</p>
+    <h3>2. Права и обязанности сторон</h3>
+    <p>2.1. Исполнитель обязан оказать Услуги качественно, в полном объеме и в срок, а также безвозмездно устранить выявленные недостатки в течение ${c.x('fix', 2)} дней. Привлечение третьих лиц допускается только с письменного согласия Заказчика.</p>
+    <p>2.2. Заказчик обязан обеспечить условия для оказания Услуг, принять Услуги по акту и оплатить их в течение ${c.x('pay_days', 2)} банковских дней с даты подписания акта. Заказчик вправе проверять ход оказания Услуг и отказаться от договора до подписания акта, оплатив фактически оказанную часть Услуг.</p>
+    <h3>3. Цена договора</h3>
+    <p>3.1. Вознаграждение Исполнителя составляет ${c.money('fee')}${isFinite(costs) && costs > 0 ? ', возмещаемые расходы — ' + c.money('costs') : ''}. Общая цена договора — ${c.moneyN(total)}.</p>
+    <p>3.2. Заказчик удерживает и перечисляет в бюджет налог на доходы физических лиц и иные обязательные платежи в порядке, установленном законодательством Республики Узбекистан. Оплата производится на счет Исполнителя.</p>
+    <h3>4. Ответственность сторон</h3>
+    <p>4.1. За нарушение срока оказания Услуг Исполнитель уплачивает пеню ${c.x('pen', 3)}% от цены договора за каждый день просрочки; за нарушение срока оплаты Заказчик уплачивает пеню в том же размере. Общий размер пени не превышает 50% цены договора.</p>
+    <p>4.2. Споры разрешаются путем переговоров, а при недостижении согласия — в суде по месту нахождения Заказчика.</p>
+    <h3>5. Прочие условия</h3>
+    <p>5.1. Изменения действительны в письменной форме. Договор составлен в двух экземплярах, по одному для каждой Стороны.</p>
+    <h3>6. Реквизиты и подписи сторон</h3>
+    ${sigTable(`<b>«Исполнитель»</b><br>${c.x('ex', 20)}<br>Паспорт: ${c.x('ex_pass', 18)}<br>Адрес: ${c.x('ex_addr', 20)}<br>ПИНФЛ: ${c.x('ex_pinfl', 14)}<br>Счет/карта: ${c.x('ex_card', 16)}<br><br>____________ ${c.x('ex', 14)}`, reqCell(c, 'cu', 'Заказчик', true))}
+    <div class="pb"></div>
+    <h2>Акт приема-сдачи оказанных услуг</h2>
+    <p class="c">к Договору № ${c.x('no', 3)} от ${c.dshort('date')}</p>
+    ${meta(c.x('city', 12), c.date('act_date'))}
+    <p>Мы, нижеподписавшиеся, Исполнитель ${c.x('ex', 22)}, с одной стороны, и Заказчик ${c.x('cu_name', 18)} в лице ${c.x('cu_pos', 8)} ${c.x('cu_rep', 20)}, с другой стороны, составили настоящий акт о нижеследующем:</p>
+    <ol>
+      <li>Исполнитель в соответствии с Договором № ${c.x('no', 3)} от ${c.dshort('date')} оказал следующие услуги: ${c.x('services', 30)}.</li>
+      <li>Услуги оказаны на сумму ${c.moneyN(total)}, без НДС. Претензий к качеству и срокам оказания услуг Заказчик не имеет.</li>
+    </ol>
+    ${sigTable(`Исполнитель<br><br>____________ ${c.x('ex', 14)}`, `Заказчик<br><br>____________ ${c.x('cu_rep', 14)}<br>М.П.`)}
+  `; },
+},
+{
+  id: 'supplementary', cat: 'Shartnomalar', lang: 'ru',
+  title: 'Дополнительное соглашение к договору',
+  desc: 'Shartnoma summasi va/yoki amal qilish muddatini oʻzgartirish.',
+  fields: [
+    { k: 'no', l: 'Kelishuv raqami', g: 'Kelishuv', ex: '1', half: true },
+    { k: 'date', l: 'Sana', t: 'date', g: 'Kelishuv', ex: '2026-12-15', half: true },
+    { k: 'city', l: 'Shahar', g: 'Kelishuv', ex: 'г. Ташкент' },
+    { k: 'c_no', l: 'Asosiy shartnoma raqami', g: 'Asosiy shartnoma', ex: '27', half: true },
+    { k: 'c_date', l: 'Asosiy shartnoma sanasi', t: 'date', g: 'Asosiy shartnoma', ex: '2026-10-01', half: true },
+    { k: 'r1', l: '1-tomon roli', t: 'select', opts: ['Исполнитель', 'Продавец', 'Арендодатель', 'Поставщик'], g: 'Asosiy shartnoma', ex: 'Исполнитель', half: true },
+    { k: 'r2', l: '2-tomon roli', t: 'select', opts: ['Заказчик', 'Покупатель', 'Арендатор'], g: 'Asosiy shartnoma', ex: 'Заказчик', half: true },
+    ...partyFields('p1', '1-tomon', EX_B_RU, { ru: true }),
+    ...partyFields('p2', '2-tomon', EX_A_RU, { ru: true }),
+    { k: 'sum_clause', l: 'Summa bandi raqami', g: 'Oʻzgarishlar', ex: '3.1', half: true },
+    { k: 'sum', l: 'Yangi summa (soʻm, boʻsh qoldirsa oʻzgarmaydi)', t: 'money', g: 'Oʻzgarishlar', ex: '17500000', half: true },
+    { k: 'vat', l: 'QQS', t: 'select', opts: ['без НДС', 'включая НДС 12%'], g: 'Oʻzgarishlar', ex: 'без НДС', half: true },
+    { k: 'term_clause', l: 'Muddat bandi raqami', g: 'Oʻzgarishlar', ex: '7.1', half: true },
+    { k: 'term', l: 'Yangi amal qilish muddati', t: 'date', g: 'Oʻzgarishlar', ex: '2027-03-31' },
+  ],
+  render: c => {
+    let n = 0; const items = [];
+    if (c.has('sum')) items.push(`Изложить п. ${c.x('sum_clause', 4)} Договора в следующей редакции: «Сумма договора составляет ${c.money('sum')}, ${c.x('vat', 8)}».`);
+    if (c.has('term')) items.push(`Изложить п. ${c.x('term_clause', 4)} Договора в следующей редакции: «Договор действует до ${c.date('term')}».`);
+    if (!items.length) items.push(`${c.blank(40)}`);
+    return `
+    <p class="r">Приложение к Договору № ${c.x('c_no', 3)} от ${c.dshort('c_date')}</p>
+    <h2>Дополнительное соглашение № ${c.x('no', 3)}</h2>
+    <p class="c">к Договору № ${c.x('c_no', 3)} от ${c.date('c_date')}</p>
+    ${meta(c.x('city', 12), c.date('date'))}
+    <p>${partyIntroRu(c, 'p1', c.raw('r1') || 'Исполнитель')}, с одной стороны, и ${partyIntroRu(c, 'p2', c.raw('r2') || 'Заказчик')}, с другой стороны, пришли к соглашению о внесении в Договор следующих изменений:</p>
+    <ol>
+      ${items.map(i => `<li>${i}</li>`).join('')}
+      <li>Остальные условия Договора, не затронутые настоящим соглашением, остаются в силе, и Стороны подтверждают по ним свои обязательства.</li>
+      <li>Настоящее соглашение вступает в силу с момента подписания, является неотъемлемой частью Договора и составлено в двух экземплярах, имеющих одинаковую юридическую силу.</li>
+    </ol>
+    ${sigTable(reqCell(c, 'p1', c.raw('r1') || 'Исполнитель', true), reqCell(c, 'p2', c.raw('r2') || 'Заказчик', true))}
+  `; },
+},
+];
+
+const CAT_ORDER = ['Korporativ', 'Kadrlar', 'Shartnomalar'];
+const LANG_LABEL = { uz: 'ЎЗ', ru: 'РУ' };
+
+function exampleValues(t) {
+  const v = {};
+  t.fields.forEach(f => { v[f.k] = Array.isArray(f.ex) ? f.ex.map(r => ({ ...r })) : (f.ex ?? ''); });
+  return v;
+}
+function emptyValues(t) {
+  const v = {};
+  t.fields.forEach(f => { v[f.k] = f.t === 'rows' ? [] : ''; });
+  return v;
+}
+function renderDoc(t, values) { return t.render(makeCtx(values, t.lang)); }
+
+/* ============================== UI ============================== */
+if (typeof document !== 'undefined') (function ui() {
+  const $ = id => document.getElementById(id);
+  const store = {
+    get(k) { try { const s = localStorage.getItem('lexform:v1:' + k); return s ? JSON.parse(s) : null; } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem('lexform:v1:' + k, JSON.stringify(v)); } catch (e) { /* storage unavailable */ } },
+  };
+  let cur = null, values = {};
+
+  // Print & .doc download only make sense outside an embedding frame.
+  const standalone = (() => { try { return window.self === window.top; } catch (e) { return false; } })();
+  $('b-doc').hidden = !standalone; $('b-print').hidden = !standalone;
+
+  function drawList() {
+    const q = $('q').value.trim().toLowerCase();
+    let html = '';
+    CAT_ORDER.forEach(cat => {
+      const ts = TEMPLATES.filter(t => t.cat === cat && (!q || (t.title + ' ' + t.desc).toLowerCase().includes(q)));
+      if (!ts.length) return;
+      html += `<div class="cat">${cat}</div>`;
+      ts.forEach(t => {
+        html += `<button class="tpl" data-id="${t.id}" aria-current="${cur && cur.id === t.id}"><span class="t">${esc(t.title)}</span><span class="lang">${LANG_LABEL[t.lang]}</span><span class="s">${esc(t.desc)}</span></button>`;
+      });
+    });
+    $('list').innerHTML = html || '<p style="padding:10px;color:var(--muted)">Hech narsa topilmadi.</p>';
+  }
+
+  function fieldHTML(f) {
+    const id = 'f-' + f.k, v = values[f.k] ?? '';
+    const hint = f.hint ? `<span class="hint">${esc(f.hint)}</span>` : '';
+    if (f.t === 'rows') {
+      const rows = Array.isArray(v) ? v : [];
+      const cards = rows.map((r, i) => `<div class="rowcard"><div class="rc-head"><span>№ ${i + 1}</span><button type="button" class="x" data-del="${f.k}" data-i="${i}">Oʻchirish</button></div>
+        <div class="rc-grid">${f.cols.map(col => `<input id="${id}-${i}-${col.k}" data-rows="${f.k}" data-i="${i}" data-col="${col.k}" placeholder="${esc(col.l)}" aria-label="${esc(col.l)}" value="${esc(r[col.k] ?? '')}" ${col.num ? 'inputmode="decimal"' : ''}>`).join('')}</div></div>`).join('');
+      return `<div class="f"><label>${esc(f.l)}</label><div class="rows">${cards}</div><button type="button" class="btn" data-add="${f.k}">+ Qator qoʻshish</button>${hint}</div>`;
+    }
+    let ctl;
+    if (f.t === 'select') ctl = `<select id="${id}" data-k="${f.k}">${f.opts.map(o => `<option ${o === v ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`;
+    else if (f.t === 'textarea') ctl = `<textarea id="${id}" data-k="${f.k}">${esc(v)}</textarea>`;
+    else if (f.t === 'date') ctl = `<input id="${id}" data-k="${f.k}" type="date" value="${esc(v)}">`;
+    else if (f.t === 'money' || f.t === 'number') ctl = `<input id="${id}" data-k="${f.k}" inputmode="decimal" value="${esc(v)}">`;
+    else ctl = `<input id="${id}" data-k="${f.k}" value="${esc(v)}">`;
+    const mhint = f.t === 'money' ? `<span class="hint" data-mh="${f.k}">${moneyHint(v)}</span>` : '';
+    return `<div class="f"><label for="${id}">${esc(f.l)}</label>${ctl}${mhint}${hint}</div>`;
+  }
+  function moneyHint(v) {
+    const n = parseNum(v);
+    return isFinite(n) ? esc(fmtMoney(n) + ' — ' + (cur.lang === 'ru' ? ruMoneyWords(n) : uzMoneyWords(n))) : '';
+  }
+
+  function drawForm() {
+    const groups = [];
+    cur.fields.forEach(f => {
+      let g = groups.find(x => x.name === f.g); if (!g) groups.push(g = { name: f.g, fs: [] });
+      g.fs.push(f);
+    });
+    let html = '';
+    groups.forEach(g => {
+      html += `<fieldset><legend>${esc(g.name)}</legend>`;
+      let pend = null;
+      g.fs.forEach(f => {
+        if (f.half) {
+          if (pend) { html += `<div class="row2">${fieldHTML(pend)}${fieldHTML(f)}</div>`; pend = null; }
+          else pend = f;
+        } else {
+          if (pend) { html += fieldHTML(pend); pend = null; }
+          html += fieldHTML(f);
+        }
+      });
+      if (pend) html += fieldHTML(pend);
+      html += `</fieldset>`;
+    });
+    $('fields').innerHTML = html;
+  }
+
+  let raf = 0;
+  function drawSheet() {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => {
+      $('sheet').innerHTML = renderDoc(cur, values);
+      store.set(cur.id, values);
+    });
+  }
+
+  function open(id, push = true) {
+    cur = TEMPLATES.find(t => t.id === id) || TEMPLATES[0];
+    const saved = store.get(cur.id);
+    values = saved || exampleValues(cur);
+    $('t-title').textContent = cur.title;
+    $('t-desc').textContent = cur.desc + (cur.lang === 'ru' ? ' Hujjat tili: rus.' : ' Hujjat tili: oʻzbek (kirill).');
+    $('ex-note').textContent = saved ? 'Maʼlumotlar shu brauzerda saqlanadi.' : 'Forma namunaviy (toʻqima) maʼlumotlar bilan toʻldirilgan — oʻzingiznikiga almashtiring.';
+    drawList(); drawForm(); $('sheet').innerHTML = renderDoc(cur, values);
+    if (push) { try { history.replaceState(null, '', '#' + cur.id); } catch (e) { /* ignore */ } }
+  }
+
+  $('list').addEventListener('click', e => {
+    const b = e.target.closest('.tpl'); if (!b) return;
+    open(b.dataset.id);
+    if (window.matchMedia('(max-width: 760px)').matches) setTab('form');
+  });
+  $('q').addEventListener('input', drawList);
+
+  $('fields').addEventListener('input', e => {
+    const el = e.target;
+    if (el.dataset.k) {
+      values[el.dataset.k] = el.value;
+      const mh = $('fields').querySelector(`[data-mh="${el.dataset.k}"]`); if (mh) mh.textContent = moneyHint(el.value);
+    } else if (el.dataset.rows) {
+      const arr = values[el.dataset.rows] || (values[el.dataset.rows] = []);
+      arr[+el.dataset.i][el.dataset.col] = el.value;
+    } else return;
+    $('ex-note').textContent = 'Maʼlumotlar shu brauzerda saqlanadi.';
+    drawSheet();
+  });
+  $('fields').addEventListener('change', e => { if (e.target.tagName === 'SELECT') e.target.dispatchEvent(new Event('input', { bubbles: true })); });
+  $('fields').addEventListener('click', e => {
+    const add = e.target.closest('[data-add]'), del = e.target.closest('[data-del]');
+    if (add) {
+      const f = cur.fields.find(x => x.k === add.dataset.add);
+      (values[f.k] = values[f.k] || []).push(Object.fromEntries(f.cols.map(c => [c.k, ''])));
+    } else if (del) {
+      values[del.dataset.del].splice(+del.dataset.i, 1);
+    } else return;
+    drawForm(); drawSheet();
+  });
+  $('fields').addEventListener('submit', e => e.preventDefault());
+
+  $('b-example').addEventListener('click', () => { values = exampleValues(cur); drawForm(); drawSheet(); $('ex-note').textContent = 'Forma namunaviy (toʻqima) maʼlumotlar bilan toʻldirildi.'; });
+  $('b-clear').addEventListener('click', () => { values = emptyValues(cur); drawForm(); drawSheet(); $('ex-note').textContent = 'Forma tozalandi. Boʻsh joylar hujjatda chiziq bilan koʻrsatiladi.'; });
+  $('marks').addEventListener('change', e => $('sheet').classList.toggle('show-marks', e.target.checked));
+
+  function toast(msg) { $('toast').textContent = msg; clearTimeout(toast.t); toast.t = setTimeout(() => { $('toast').textContent = ''; }, 2600); }
+
+  function cleanHTML() {
+    const clone = $('sheet').cloneNode(true);
+    clone.querySelectorAll('.pb').forEach(p => { p.outerHTML = '<br style="page-break-before:always">'; });
+    return clone.innerHTML;
+  }
+  const WORD_CSS = 'body{font-family:"Times New Roman",serif;font-size:12pt;line-height:1.4}h2,h3{text-align:center;font-size:12pt}h2{text-transform:uppercase}p,li{text-align:justify}.c{text-align:center}.r{text-align:right}.sp{text-align:center;font-weight:bold;letter-spacing:3pt}.meta{display:flex;justify-content:space-between}table.t{border-collapse:collapse;width:100%}table.t td,table.t th{border:1px solid #000;padding:3pt 5pt;font-size:11pt}td.n{text-align:right}table.sig{width:100%}table.sig td{width:50%;vertical-align:top}.blank{color:#000}';
+
+  $('b-copy').addEventListener('click', async () => {
+    const html = `<div style="font-family:'Times New Roman',serif;font-size:12pt">${cleanHTML()}</div>`;
+    const text = $('sheet').innerText;
+    try {
+      if (window.ClipboardItem && navigator.clipboard && navigator.clipboard.write) {
+        await navigator.clipboard.write([new ClipboardItem({ 'text/html': new Blob([html], { type: 'text/html' }), 'text/plain': new Blob([text], { type: 'text/plain' }) })]);
+      } else { await navigator.clipboard.writeText(text); }
+      toast('Nusxalandi — Word yoki Google Docs’ga qoʻying.');
+    } catch (e) {
+      try { await navigator.clipboard.writeText(text); toast('Matn nusxalandi.'); }
+      catch (e2) {
+        const r = document.createRange(); r.selectNodeContents($('sheet'));
+        const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+        toast('Hujjat belgilandi — Ctrl+C bosing.');
+      }
+    }
+  });
+  $('b-doc').addEventListener('click', () => {
+    const doc = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>${esc(cur.title)}</title><style>@page{size:A4;margin:2cm 1.5cm 2cm 2.5cm}${WORD_CSS}</style></head><body>${cleanHTML()}</body></html>`;
+    const url = URL.createObjectURL(new Blob(['﻿', doc], { type: 'application/msword' }));
+    const a = document.createElement('a'); a.href = url; a.download = cur.id + '.doc'; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+    toast('Yuklab olindi.');
+  });
+  $('b-print').addEventListener('click', () => window.print());
+
+  function setTab(t) {
+    $('app').dataset.tab = t;
+    $('tab-form').setAttribute('aria-pressed', t === 'form'); $('tab-preview').setAttribute('aria-pressed', t === 'preview');
+  }
+  $('tab-form').addEventListener('click', () => setTab('form'));
+  $('tab-preview').addEventListener('click', () => setTab('preview'));
+  window.addEventListener('hashchange', () => { const id = location.hash.slice(1); if (id && (!cur || id !== cur.id)) open(id, false); });
+
+  open(location.hash.slice(1) || TEMPLATES[0].id);
+})();
+
+if (typeof module !== 'undefined') module.exports = { TEMPLATES, renderDoc, exampleValues, emptyValues, uzMoneyWords, ruMoneyWords, fmtDate, fmtMoney };
+</script>
