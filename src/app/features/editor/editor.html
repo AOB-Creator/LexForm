@@ -70,9 +70,14 @@
                     <span class="row-n">{{ i + 1 }}</span>
                     <div class="row-cells">
                       @for (col of f.cols; track col.k) {
+                        @if (col.area) {
+                          <textarea class="area" rows="3" [id]="'f-' + f.k + '-' + i + '-' + col.k" [value]="r[col.k]" [placeholder]="col.l | tr" [attr.aria-label]="col.l | tr"
+                                    (input)="setCell(f.k, i, col.k, $any($event.target).value)"></textarea>
+                        } @else {
                         <input [id]="'f-' + f.k + '-' + i + '-' + col.k" [class.num]="col.num" [attr.inputmode]="col.num ? 'decimal' : null"
                                [value]="r[col.k]" [placeholder]="col.l | tr" [attr.aria-label]="col.l | tr"
                                (input)="setCell(f.k, i, col.k, $any($event.target).value)">
+                        }
                       }
                     </div>
                     <button type="button" class="x" (click)="removeRow(f.k, i)" [attr.aria-label]="'ed.removeRow' | t"><app-icon name="x" /></button>

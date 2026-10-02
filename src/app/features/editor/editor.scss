@@ -81,8 +81,9 @@ h1 { font: 600 clamp(20px, 2.4vw, 28px)/1.2 var(--f-display); letter-spacing: -.
 .row { display: grid; grid-template-columns: 22px minmax(0, 1fr) 28px; gap: 8px; align-items: start; padding: 10px; border-radius: 12px; background: var(--raised); border: 1px solid var(--line); }
 .row-n { font: 500 12px var(--f-mono); color: var(--muted); padding-top: 9px; text-align: center; }
 .row-cells { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 6px; }
-.row-cells input:first-child { grid-column: 1 / -1; }
-.row .f, .row input { background: var(--surface); }
+.row-cells input:first-child, .row-cells .area { grid-column: 1 / -1; }
+.row-cells .area { min-height: 84px; resize: vertical; }
+.row .f, .row input, .row textarea { background: var(--surface); }
 .x { border: 0; background: none; color: var(--muted); cursor: pointer; padding: 6px; border-radius: 8px; }
 .x:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
 .rows-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }

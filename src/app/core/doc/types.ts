@@ -6,7 +6,7 @@ export interface Tr { uz: string; ru: string; en: string; }
 
 export type FieldType = 'text' | 'textarea' | 'date' | 'money' | 'number' | 'select' | 'rows' | 'image';
 
-export interface RowColumn { k: string; l: Tr; num?: boolean; }
+export interface RowColumn { k: string; l: Tr; num?: boolean; /** multi-line, full row width */ area?: boolean; }
 
 export interface FieldDef {
   k: string;

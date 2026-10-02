@@ -217,7 +217,7 @@ export const HR: DocTemplate[] = [
         ] },
       { k: 'rel', g: 'relatives', l: tr('Yaqin qarindoshlari', 'Близкие родственники', 'Close relatives'), t: 'rows',
         hint: tr('Turmushga chiqishdan oldingi familiya qavsda; vafot etganlar uchun yili va avvalgi lavozimi; manzil qisqartmasiz.', 'Девичья фамилия в скобках; для умерших — год и прежняя должность; адрес без сокращений.', 'Maiden name in brackets; for the deceased give year and former post; full address.'),
-        cols: [{ k: 'kin', l: tr('Qarindoshligi', 'Родство', 'Relation') }, { k: 'name', l: L.fio }, { k: 'birth', l: tr('Tugʻilgan yili va joyi', 'Год и место рождения', 'Year and place of birth') }, { k: 'job', l: tr('Ish joyi va lavozimi', 'Место работы и должность', 'Employer and position') }, { k: 'home', l: tr('Turar joyi', 'Место жительства', 'Residence') }],
+        cols: [{ k: 'kin', l: tr('Qarindoshligi', 'Родство', 'Relation') }, { k: 'name', l: L.fio }, { k: 'birth', l: tr('Tugʻilgan yili va joyi', 'Год и место рождения', 'Year and place of birth') }, { k: 'job', l: tr('Ish joyi va lavozimi', 'Место работы и должность', 'Employer and position'), area: true }, { k: 'home', l: tr('Turar joyi', 'Место жительства', 'Residence'), area: true }],
         ex: [
           { kin: 'Отаси', name: 'Раҳимов Аҳмад Каримович', birth: '1958 йил, Самарқанд вилояти, Ургут тумани', job: 'Пенсияда (Ургут туманидаги 12-мактаб ўқитувчиси)', home: 'Самарқанд вилояти, Ургут тумани, Боғишамол кўчаси, 8-уй' },
           { kin: 'Онаси', name: 'Раҳимова (Солиева) Мунира', birth: '1962 йил, Самарқанд вилояти, Ургут тумани', job: 'Пенсияда (Ургут тумани марказий шифохонаси ҳамшираси)', home: 'Самарқанд вилояти, Ургут тумани, Боғишамол кўчаси, 8-уй' },
