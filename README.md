@@ -21,6 +21,8 @@ Node 22.22+ talab qilinadi (Angular 21).
 ## Tuzilma
 
 ```
+knowledge/       Drive’dagi hujjatlar bo‘yicha bilimlar bazasi (shablonlar manbasi)
+web/             avvalgi bir faylli HTML versiya
 src/app/
   core/doc/        types.ts, engine.ts (Ctx + yordamchi HTML), format.ts (sana, summa so‘zda), translit.ts
   core/i18n/       dictionary.ts (UI matnlari 3 tilda), i18n.service.ts (`t` va `tr` pipe’lari)
