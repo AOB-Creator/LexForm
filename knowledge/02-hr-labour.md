@@ -154,3 +154,11 @@ organization, position, main responsibilities).
 bonuses & annual rewards (month/year paid, amount, period, indicators). Basis documents (payroll books, ledgers).
 For district department of the off-budget Pension Fund under MinFin. Signed by head and chief accountant, М.П.
 Note: corrections in payroll books must be indicated.
+
+## Маълумотнома (объективка)
+
+Standard personal reference submitted for appointments. Template: `personal-reference`.
+
+- **Page 1 — Маълумотнома:** 3×4 colour photo (taken within the last 3 months, formal wear); full name; "since <date>:" + current employer and position; paired fields — year/place of birth, nationality/party membership, education/graduated (year, institution, full-time/part-time), speciality, academic degree/title, foreign languages/military (special) rank; state awards; deputy or elected-body membership; **МЕҲНАТ ФАОЛИЯТИ** — one line per period: "2004-2008 йй. - …", current post as "2021 й. - ҳ.в. - …".
+- **Page 2 — "<Исм Отасининг исми Фамилияси>нинг яқин қариндошлари ҳақида МАЪЛУМОТ":** table with columns Қариндошлиги · Ф.И.Ш. · Туғилган йили ва жойи · Иш жойи ва лавозими · Турар жойи.
+- **Rules (from the form's notes):** Times New Roman 11, MS Word .doc; margins top 1.5 cm, bottom 1 cm, right 1 cm, left 2 cm; no abbreviations; name checked against the passport, work history against the work record book, education against the diploma; only fluently spoken languages; maiden name in brackets — "Раҳимова (Назарова) Дилноза"; deceased: "1992 йил вафот этган (former post)", pensioners: "Пенсияда (former post)" without "илгари"/"бўлган"; full region/district/street in addresses; electronic file named with the full name in Cyrillic, using у, к, г, х instead of ў, қ, ғ, ҳ (e.g. "Рахимов Жасур Ахмадович.doc").

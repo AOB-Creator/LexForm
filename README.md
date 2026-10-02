@@ -4,7 +4,7 @@ Hujjat shablonlari generatori: forma to‘ldiriladi, hujjat jonli ko‘rinishda 
 
 - **Interfeys tillari:** O‘zbekcha (lotin), Русский, English — sarlavhadagi UZ / RU / EN tugmalari.
 - **Hujjat tili:** faqat o‘zbek tili — **kirill** yoki **lotin** yozuvida. Shablonlar kirillda yozilgan, lotin varianti rasmiy alifbo qoidalari bo‘yicha avtomatik transliteratsiya qilinadi (ʻ U+02BB, ʼ U+02BC).
-- **18 ta shablon:** korporativ (6), kadrlar (4), shartnomalar (6), dalolatnoma va ishonchnoma (2).
+- **19 ta shablon:** korporativ (6), kadrlar (5), shartnomalar (6), dalolatnoma va ishonchnoma (2).
 - Summalar avtomatik so‘z bilan yoziladi (so‘m / tiyin), qoralamalar brauzerda (localStorage) saqlanadi, yorug‘ / qorong‘i mavzu.
 
 ## Ishga tushirish

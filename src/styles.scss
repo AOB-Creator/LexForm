@@ -142,6 +142,11 @@ h1, h2, h3 { text-wrap: balance; }
   table.t th, table.t td { border: 1px solid var(--paper-line); padding: 4px 6px; vertical-align: top; }
   table.t th { font-weight: 700; text-align: center; }
   table.t td.n { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  table.info { width: 100%; border-collapse: collapse; margin: 4px 0; font-size: 14.5px; }
+  table.info td { width: 50%; vertical-align: top; padding: 3px 12px 3px 0; }
+  table.info b { display: block; }
+  .photo { float: right; width: 3cm; height: 4cm; margin: 0 0 8px 12px; border: 1px dashed var(--paper-line); display: grid; place-items: center; text-align: center; font-size: 11px; color: #888; }
+  .fio { clear: none; text-align: center; font-weight: 700; font-size: 16px; margin: 14px 0 4px; }
   table.sig { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14.5px; }
   table.sig td { width: 50%; vertical-align: top; padding: 0 12px 0 0; }
   .ack { margin-top: 24px; }

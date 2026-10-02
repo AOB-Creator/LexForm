@@ -45,6 +45,10 @@ export const GROUPS: Record<string, Tr> = {
   powers: tr('Vakolatlar', 'Полномочия', 'Powers'),
   sign: tr('Imzo', 'Подпись', 'Signature'),
   act: tr('Dalolatnoma', 'Акт', 'Act'),
+  person: tr('Shaxsiy maʼlumotlar', 'Личные данные', 'Personal details'),
+  education: tr('Maʼlumoti va unvonlar', 'Образование и звания', 'Education & titles'),
+  career: tr('Mehnat faoliyati', 'Трудовая деятельность', 'Work history'),
+  relatives: tr('Yaqin qarindoshlar', 'Близкие родственники', 'Close relatives'),
 };
 
 /** Common field labels. */
