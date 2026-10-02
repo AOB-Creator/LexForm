@@ -1,4 +1,4 @@
-# LexForm — Angular
+# LexForm — Angular (v1.1)
 
 Hujjat shablonlari generatori: forma to‘ldiriladi, hujjat jonli ko‘rinishda yig‘iladi va Word (.doc), chop etish yoki nusxa ko‘chirish orqali olinadi.
 
