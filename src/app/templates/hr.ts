@@ -1,7 +1,19 @@
 import { esc, fmtMoney, parseNum } from '../core/doc/format';
 import { meta, ol, partyIntro, reqCell, sigTable } from '../core/doc/engine';
-import { DocTemplate } from '../core/doc/types';
+import { DocTemplate, Values } from '../core/doc/types';
 import { EX_A, L, partyFields, tr } from './shared';
+
+/** «Эшматов Ботир Баҳодирович» → «Ботир Баҳодирович Эшматовнинг» */
+const genitive = (fio: string) => {
+  const p = fio.trim().split(/\s+/);
+  return p.length >= 3 ? `${p.slice(1).join(' ')} ${p[0]}нинг` : `${fio.trim()}нинг`;
+};
+/** File name rule for the reference: full name in Cyrillic with ў, қ, ғ, ҳ replaced by у, к, г, х. */
+const refFileName = (v: Values) => {
+  const fio = typeof v['fio'] === 'string' ? v['fio'].trim() : '';
+  const map: Record<string, string> = { ў: 'у', Ў: 'У', қ: 'к', Қ: 'К', ғ: 'г', Ғ: 'Г', ҳ: 'х', Ҳ: 'Х' };
+  return fio.replace(/[ўЎқҚғҒҳҲ]/g, ch => map[ch]).replace(/[\\/:*?"<>|]/g, '');
+};
 
 const ackLine = (who: string) => `<p class="ack">Буйруқ билан танишдим: ____________ ${who} &nbsp; «___» __________ 20__ й.</p>`;
 
@@ -166,6 +178,86 @@ export const HR: DocTemplate[] = [
       <table class="t"><thead><tr><th>№</th><th>Лавозим</th><th>Штат бирлиги</th><th>Лавозим маоши, сўм</th><th>Ойлик фонд, сўм</th></tr></thead>
       <tbody>${body}<tr><td></td><td><b>Жами</b></td><td class="n"><b>${units || ''}</b></td><td></td><td class="n"><b>${fund ? fmtMoney(fund) : ''}</b></td></tr></tbody></table>
       ${sigTable('Директор<br><br>Бош ҳисобчи', `____________ ${c.x('head', 14)}<br><br>____________ ${c.x('acc', 14)}`)}`;
+    },
+  },
+
+  {
+    id: 'personal-reference', cat: 'hr', minutes: 10,
+    docTitle: 'Маълумотнома',
+    title: tr('Maʼlumotnoma (obyektivka)', 'Справка-объективка', 'Personal reference (objektivka)'),
+    desc: tr('Xodim haqida maʼlumotnoma: shaxsiy maʼlumotlar, maʼlumoti, mehnat faoliyati va yaqin qarindoshlari jadvali.', 'Справка о сотруднике: личные данные, образование, трудовая деятельность и таблица близких родственников.', 'Staff reference: personal details, education, work history and a table of close relatives.'),
+    fileName: refFileName,
+    wordCss: '@page{size:A4;margin:1.5cm 1cm 1cm 2cm}body{font-size:11pt}',
+    fields: [
+      { k: 'fio', g: 'person', l: L.fio, ex: 'Раҳимов Жасур Аҳмадович', hint: tr('Pasport maʼlumotlari bilan tekshiriladi.', 'Сверяется с паспортными данными.', 'Must match the passport.') },
+      { k: 'since', g: 'person', l: tr('Hozirgi lavozimda (qachondan)', 'В текущей должности (с какого времени)', 'In current post since'), ex: '2021 йил 1 мартдан', half: true },
+      { k: 'pos', g: 'person', l: tr('Hozirgi ish joyi va lavozimi', 'Текущее место работы и должность', 'Current employer and position'), ex: '«Намуна Савдо» МЧЖ директори', half: true },
+      { k: 'born', g: 'person', l: tr('Tugʻilgan yili', 'Год рождения', 'Year of birth'), ex: '14.06.1986', half: true },
+      { k: 'birthplace', g: 'person', l: tr('Tugʻilgan joyi', 'Место рождения', 'Place of birth'), ex: 'Самарқанд вилояти, Ургут тумани', half: true },
+      { k: 'nation', g: 'person', l: tr('Millati', 'Национальность', 'Nationality'), ex: 'ўзбек', half: true },
+      { k: 'party', g: 'person', l: tr('Partiyaviyligi', 'Партийность', 'Party membership'), ex: 'йўқ', half: true },
+      { k: 'edu', g: 'education', l: tr('Maʼlumoti', 'Образование', 'Education level'), t: 'select', opts: ['олий', 'тугалланмаган олий', 'ўрта махсус', 'ўрта'], ex: 'олий', half: true },
+      { k: 'spec', g: 'education', l: tr('Mutaxassisligi', 'Специальность', 'Speciality'), ex: 'иқтисодчи', half: true },
+      { k: 'grad', g: 'education', l: tr('Tamomlagan (yil, OTM, taʼlim shakli)', 'Окончил (год, вуз, форма обучения)', 'Graduated (year, university, mode)'), t: 'textarea', ex: '2008 й. Самарқанд иқтисодиёт ва сервис институти (кундузги)', hint: tr('Diplom nusxasi bilan tekshiriladi.', 'Сверяется с копией диплома.', 'Checked against the diploma.') },
+      { k: 'degree', g: 'education', l: tr('Ilmiy darajasi', 'Учёная степень', 'Academic degree'), ex: 'йўқ', half: true },
+      { k: 'atitle', g: 'education', l: tr('Ilmiy unvoni', 'Учёное звание', 'Academic title'), ex: 'йўқ', half: true },
+      { k: 'langs', g: 'education', l: tr('Qaysi chet tillarini biladi', 'Какими иностранными языками владеет', 'Foreign languages'), ex: 'рус, инглиз тиллари', half: true, hint: tr('Faqat mukammal biladigan tillar.', 'Только свободно.', 'Fluent only.') },
+      { k: 'rank', g: 'education', l: tr('Harbiy (maxsus) unvoni', 'Воинское (специальное) звание', 'Military (special) rank'), ex: 'йўқ', half: true },
+      { k: 'awards', g: 'education', l: tr('Davlat mukofotlari', 'Государственные награды', 'State awards'), ex: 'йўқ' },
+      { k: 'deputy', g: 'education', l: tr('Deputatligi / saylanadigan organlar aʼzoligi', 'Депутатство / членство в выборных органах', 'Deputy / elected bodies'), t: 'textarea', ex: 'йўқ' },
+      { k: 'work', g: 'career', l: tr('Mehnat faoliyati', 'Трудовая деятельность', 'Work history'), t: 'rows',
+        hint: tr('Mehnat daftarchasi bilan tekshiriladi, qisqartmalarsiz.', 'Сверяется с трудовой книжкой, без сокращений.', 'Checked against the work record book; no abbreviations.'),
+        cols: [{ k: 'years', l: tr('Yillar', 'Годы', 'Years') }, { k: 'what', l: tr('Ish joyi va lavozimi', 'Место работы и должность', 'Employer and position') }],
+        ex: [
+          { years: '2004-2008 йй.', what: 'Самарқанд иқтисодиёт ва сервис институти талабаси' },
+          { years: '2008-2014 йй.', what: '«Мисол Хизмат» масъулияти чекланган жамияти иқтисодчиси, бош иқтисодчиси' },
+          { years: '2014-2021 йй.', what: '«Намуна Савдо» масъулияти чекланган жамияти молия бўлими бошлиғи' },
+          { years: '2021 й. - ҳ.в.', what: '«Намуна Савдо» масъулияти чекланган жамияти директори' },
+        ] },
+      { k: 'rel', g: 'relatives', l: tr('Yaqin qarindoshlari', 'Близкие родственники', 'Close relatives'), t: 'rows',
+        hint: tr('Turmushga chiqishdan oldingi familiya qavsda; vafot etganlar uchun yili va avvalgi lavozimi; manzil qisqartmasiz.', 'Девичья фамилия в скобках; для умерших — год и прежняя должность; адрес без сокращений.', 'Maiden name in brackets; for the deceased give year and former post; full address.'),
+        cols: [{ k: 'kin', l: tr('Qarindoshligi', 'Родство', 'Relation') }, { k: 'name', l: L.fio }, { k: 'birth', l: tr('Tugʻilgan yili va joyi', 'Год и место рождения', 'Year and place of birth') }, { k: 'job', l: tr('Ish joyi va lavozimi', 'Место работы и должность', 'Employer and position') }, { k: 'home', l: tr('Turar joyi', 'Место жительства', 'Residence') }],
+        ex: [
+          { kin: 'Отаси', name: 'Раҳимов Аҳмад Каримович', birth: '1958 йил, Самарқанд вилояти, Ургут тумани', job: 'Пенсияда (Ургут туманидаги 12-мактаб ўқитувчиси)', home: 'Самарқанд вилояти, Ургут тумани, Боғишамол кўчаси, 8-уй' },
+          { kin: 'Онаси', name: 'Раҳимова (Солиева) Мунира', birth: '1962 йил, Самарқанд вилояти, Ургут тумани', job: 'Пенсияда (Ургут тумани марказий шифохонаси ҳамшираси)', home: 'Самарқанд вилояти, Ургут тумани, Боғишамол кўчаси, 8-уй' },
+          { kin: 'Турмуш ўртоғи', name: 'Раҳимова (Назарова) Дилноза Иброҳимовна', birth: '1989 йил, Тошкент шаҳри', job: 'Тошкент шаҳар Юнусобод туманидаги 45-мактаб ўқитувчиси', home: 'Тошкент шаҳри, Юнусобод тумани, Боғишамол кўчаси, 10-уй, 15-хонадон' },
+          { kin: 'Ўғли', name: 'Раҳимов Асадбек Жасурович', birth: '2012 йил, Тошкент шаҳри', job: 'Тошкент шаҳар Юнусобод туманидаги 45-мактаб ўқувчиси', home: 'Тошкент шаҳри, Юнусобод тумани, Боғишамол кўчаси, 10-уй, 15-хонадон' },
+        ] },
+    ],
+    render: c => {
+      const pair = (l1: string, v1: string, l2?: string, v2?: string) =>
+        `<tr><td><b>${l1}</b>${v1}</td><td>${l2 ? `<b>${l2}</b>${v2}` : ''}</td></tr>`;
+      const work = c.rows('work').filter(r => (r['years'] ?? '').trim() || (r['what'] ?? '').trim());
+      const rel = c.rows('rel').filter(r => Object.values(r).some(v => (v ?? '').trim()));
+      const cell = (v?: string) => `<td>${(v ?? '').trim() ? c.span(esc(v!.trim()).replace(/\n/g, '<br>')) : ''}</td>`;
+      return `
+      <div class="photo">3×4 см<br>рангли<br>фотосурат</div>
+      <h2>Маълумотнома</h2>
+      <p class="fio">${c.x('fio', 30)}</p>
+      <p class="c">${c.x('since', 14)}:<br>${c.x('pos', 30)}</p>
+      <table class="info">
+        ${pair('Туғилган йили:', c.x('born', 10), 'Туғилган жойи:', c.x('birthplace', 20))}
+        ${pair('Миллати:', c.x('nation', 10), 'Партиявийлиги:', c.x('party', 10))}
+        ${pair('Маълумоти:', c.x('edu', 10), 'Тамомлаган:', c.x('grad', 24))}
+        ${pair('Маълумоти бўйича мутахассислиги:', c.x('spec', 16))}
+        ${pair('Илмий даражаси:', c.x('degree', 10), 'Илмий унвони:', c.x('atitle', 10))}
+        ${pair('Қайси чет тилларини билади:', c.x('langs', 14), 'Ҳарбий (махсус) унвони:', c.x('rank', 10))}
+      </table>
+      <p><b>Давлат мукофотлари билан тақдирланганми (қанақа):</b><br>${c.x('awards', 30)}</p>
+      <p><b>Халқ депутатлари, республика, вилоят, шаҳар ва туман Кенгаши депутатими ёки бошқа сайланадиган органларнинг аъзосими (тўлиқ кўрсатилиши лозим):</b><br>${c.x('deputy', 30)}</p>
+      <h3>МЕҲНАТ ФАОЛИЯТИ</h3>
+      ${work.length
+        ? work.map(r => `<p>${c.span(esc((r['years'] ?? '').trim()))} - ${c.span(esc((r['what'] ?? '').trim()))}</p>`).join('')
+        : `<p>${c.blank(10)} - ${c.blank(40)}</p>`}
+      <div class="pb"></div>
+      <p class="c"><b>${c.has('fio') ? c.span(esc(genitive(c.raw('fio')))) : c.blank(24)} яқин қариндошлари ҳақида</b></p>
+      <h2>Маълумот</h2>
+      <table class="t">
+        <tr><th style="width:15%">Қариндошлиги</th><th style="width:20%">Фамилияси, исми ва отасининг исми</th><th style="width:18%">Туғилган йили ва жойи</th><th style="width:24%">Иш жойи ва лавозими</th><th>Турар жойи</th></tr>
+        ${rel.length
+          ? rel.map(r => `<tr>${cell(r['kin'])}${cell(r['name'])}${cell(r['birth'])}${cell(r['job'])}${cell(r['home'])}</tr>`).join('')
+          : `<tr><td>${c.blank(8)}</td><td>${c.blank(14)}</td><td>${c.blank(10)}</td><td>${c.blank(12)}</td><td>${c.blank(12)}</td></tr>`}
+      </table>`;
     },
   },
 ];

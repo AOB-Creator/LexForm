@@ -20,7 +20,7 @@ const WORD_CSS = `body{font-family:"Times New Roman",serif;font-size:12pt;line-h
 h2,h3{text-align:center;font-size:12pt}h2{text-transform:uppercase}p,li{text-align:justify}
 .c{text-align:center}.r{text-align:right}.sp{text-align:center;font-weight:bold;letter-spacing:3pt}
 table.t{border-collapse:collapse;width:100%}table.t td,table.t th{border:1px solid #000;padding:3pt 5pt;font-size:11pt}
-td.n{text-align:right}table.sig{width:100%}table.sig td{width:50%;vertical-align:top}`;
+td.n{text-align:right}table.info{width:100%}table.info td{width:50%;vertical-align:top}.photo{float:right;width:3cm;height:4cm;border:1px dashed #999;text-align:center;font-size:9pt}.fio{text-align:center;font-weight:bold}table.sig{width:100%}table.sig td{width:50%;vertical-align:top}`;
 
 @Component({
   selector: 'app-editor',
@@ -207,12 +207,12 @@ export class Editor {
     if (!t) return;
     const title = this.prefs.script() === 'lat' ? cyrToLat(t.docTitle) : t.docTitle;
     const doc = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">`
-      + `<head><meta charset="utf-8"><title>${esc(title)}</title><style>@page{size:A4;margin:2cm 1.5cm 2cm 2.5cm}${WORD_CSS}</style></head>`
+      + `<head><meta charset="utf-8"><title>${esc(title)}</title><style>@page{size:A4;margin:2cm 1.5cm 2cm 2.5cm}${WORD_CSS}${t.wordCss ?? ''}</style></head>`
       + `<body>${this.cleanHtml()}</body></html>`;
     const url = URL.createObjectURL(new Blob(['﻿', doc], { type: 'application/msword' }));
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${t.id}-${this.prefs.script()}.doc`;
+    a.download = `${t.fileName?.(this.values()) || `${t.id}-${this.prefs.script()}`}.doc`;
     document.body.appendChild(a);
     a.click();
     a.remove();

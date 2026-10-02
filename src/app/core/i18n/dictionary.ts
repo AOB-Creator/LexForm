@@ -34,7 +34,7 @@ export const DICT = {
 
   'how.title': t('Qanday ishlaydi', 'Как это работает', 'How it works'),
   'how.1.t': t('Shablonni tanlang', 'Выберите шаблон', 'Pick a template'),
-  'how.1.d': t('Qaror, buyruq, shartnoma yoki dalolatnoma — 18 ta tayyor hujjat.', 'Решение, приказ, договор или акт — 18 готовых документов.', 'Decision, order, contract or act — 18 ready documents.'),
+  'how.1.d': t('Qaror, buyruq, shartnoma yoki dalolatnoma — 19 ta tayyor hujjat.', 'Решение, приказ, договор или акт — 19 готовых документов.', 'Decision, order, contract or act — 19 ready documents.'),
   'how.2.t': t('Formani toʻldiring', 'Заполните форму', 'Fill in the form'),
   'how.2.d': t('Jadval, foiz va jami summalar avtomatik hisoblanadi; boʻsh maydon chiziq boʻlib qoladi.', 'Таблицы, проценты и итоги считаются сами; пустое поле остаётся линией.', 'Tables, percentages and totals are calculated; empty fields stay as lines.'),
   'how.3.t': t('Yuklab oling', 'Скачайте', 'Download'),

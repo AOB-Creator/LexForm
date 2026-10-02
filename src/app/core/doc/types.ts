@@ -38,4 +38,8 @@ export interface DocTemplate {
   minutes: number;
   fields: FieldDef[];
   render: (c: import('./engine').Ctx) => string;
+  /** Word export: file name without extension (default: `${id}-${script}`) */
+  fileName?: (v: Values) => string;
+  /** Word export: @page margins and base font override */
+  wordCss?: string;
 }
