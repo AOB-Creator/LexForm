@@ -45,7 +45,9 @@ h1 { font: 600 clamp(20px, 2.4vw, 28px)/1.2 var(--f-display); letter-spacing: -.
 .group summary::-webkit-details-marker { display: none; }
 .group:not([open]) summary app-icon { transform: rotate(-90deg); }
 .group-body { display: grid; gap: 12px; padding-top: 4px; }
-.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: start; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: repeat(4, auto); column-gap: 12px; row-gap: 0; align-items: start; }
+.pair > .f { grid-row: span 4; grid-template-rows: subgrid; row-gap: 5px; align-items: end; }
+.pair > .f > .hint { align-self: start; }
 
 .f { display: grid; gap: 5px; min-width: 0; align-content: start; }
 .f label { font-size: 13px; font-weight: 600; color: var(--ink-2); }
@@ -54,6 +56,7 @@ h1 { font: 600 clamp(20px, 2.4vw, 28px)/1.2 var(--f-display); letter-spacing: -.
   border: 1px solid var(--line-2); background: var(--raised); color: var(--ink);
   transition: border-color .15s, box-shadow .15s, background .15s;
 }
+.f input, .f select { min-height: 42px; }
 .f textarea { resize: vertical; min-height: 72px; }
 .f input:focus, .f select:focus, .f textarea:focus { outline: none; border-color: var(--primary); background: var(--surface); box-shadow: 0 0 0 4px var(--primary-soft); }
 .f .num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
@@ -113,7 +116,8 @@ h1 { font: 600 clamp(20px, 2.4vw, 28px)/1.2 var(--f-display); letter-spacing: -.
   .work[data-tab="form"] .preview, .work[data-tab="doc"] .form { display: none; }
 }
 @media (max-width: 520px) {
-  .pair { grid-template-columns: 1fr; }
+  .pair { grid-template-columns: 1fr; grid-template-rows: none; row-gap: 12px; }
+  .pair > .f { grid-row: auto; grid-template-rows: none; }
   .actions .btn { flex: 1 1 auto; justify-content: center; }
   .script { width: 100%; justify-content: space-between; margin: 0; }
 }

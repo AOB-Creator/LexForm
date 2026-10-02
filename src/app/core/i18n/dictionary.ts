@@ -40,6 +40,7 @@ export const DICT = {
   'how.3.t': t('Yuklab oling', 'Скачайте', 'Download'),
   'how.3.d': t('Word (.doc) fayl, chop etish yoki PDF — kirill yoki lotin yozuvida.', 'Файл Word (.doc), печать или PDF — кириллицей или латиницей.', 'Word (.doc), print or PDF — in Cyrillic or Latin script.'),
 
+  'foot.dev': t('Ishlab chiquvchi:', 'Разработано', 'Developed by'),
   'foot.note': t(
     'Shablonlar namunaviy. Muhim hujjatlarni imzolashdan oldin yurist bilan tekshiring.',
     'Шаблоны типовые. Перед подписанием важных документов проконсультируйтесь с юристом.',

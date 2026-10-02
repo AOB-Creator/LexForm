@@ -14,6 +14,7 @@ import { Header } from './layout/header';
     <footer class="foot no-print">
       <span><b>LexForm</b> · {{ 'app.tagline' | t }}</span>
       <span>{{ 'foot.note' | t }}</span>
+      <a class="dev" href="https://trustcode.uz" target="_blank" rel="noopener">{{ 'foot.dev' | t }} <b>TrustCode</b></a>
     </footer>
   `,
   styles: `
@@ -24,6 +25,9 @@ import { Header } from './layout/header';
       padding: 22px var(--gutter); border-top: 1px solid var(--line);
       color: var(--muted); font-size: 13px;
     }
+    .dev { color: inherit; text-decoration: none; white-space: nowrap; }
+    .dev b { color: var(--primary); }
+    .dev:hover b { text-decoration: underline; }
   `,
 })
 export class App {
