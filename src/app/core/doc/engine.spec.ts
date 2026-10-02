@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { emptyValues, exampleValues, TEMPLATES } from '../../templates';
-import { renderTemplate } from './engine';
+import { Ctx, renderTemplate } from './engine';
 import { fmtDate, fmtMoney, moneyWords } from './format';
 import { cyrToLat, cyrToLatHtml } from './translit';
 
@@ -58,4 +58,16 @@ describe('templates', () => {
       }
     });
   }
+});
+
+describe('Ctx.img', () => {
+  const png = 'data:image/png;base64,iVBORw0KGgo=';
+  it('renders an uploaded image', () => {
+    expect(new Ctx({ p: png }).img('p', 'X')).toBe(`<img src="${png}" alt="">`);
+  });
+  it('falls back to the placeholder for empty or unsafe values', () => {
+    expect(new Ctx({}).img('p', 'X')).toBe('X');
+    expect(new Ctx({ p: 'javascript:alert(1)' }).img('p', 'X')).toBe('X');
+    expect(new Ctx({ p: 'data:image/png;base64,abc" onerror="x' }).img('p', 'X')).toBe('X');
+  });
 });

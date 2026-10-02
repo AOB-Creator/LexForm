@@ -4,7 +4,7 @@ export type Script = 'cyr' | 'lat';
 /** A UI string in the three interface languages. */
 export interface Tr { uz: string; ru: string; en: string; }
 
-export type FieldType = 'text' | 'textarea' | 'date' | 'money' | 'number' | 'select' | 'rows';
+export type FieldType = 'text' | 'textarea' | 'date' | 'money' | 'number' | 'select' | 'rows' | 'image';
 
 export interface RowColumn { k: string; l: Tr; num?: boolean; }
 

@@ -84,6 +84,24 @@
                 @if (rowsTotal(f)) { <span class="total">{{ 'ed.sum' | t }}: <b>{{ rowsTotal(f) }}</b></span> }
               </div>
             }
+            @case ('image') {
+              <span class="lbl-img">{{ f.l | tr }}</span>
+              <div class="upload">
+                <div class="thumb">
+                  @if (str(f.k)) { <img [src]="str(f.k)" alt=""> } @else { <app-icon name="users" /> }
+                </div>
+                <div class="upload-actions">
+                  <label class="btn">
+                    <app-icon name="plus" /> {{ (str(f.k) ? 'ed.replace' : 'ed.upload') | t }}
+                    <input type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="upload(f.k, $event)">
+                  </label>
+                  @if (str(f.k)) {
+                    <button type="button" class="btn ghost" (click)="set(f.k, '')"><app-icon name="x" /> {{ 'ed.removeRow' | t }}</button>
+                  }
+                  <span class="hint">{{ 'ed.uploadHint' | t }}</span>
+                </div>
+              </div>
+            }
             @case ('select') {
               <label [for]="'f-' + f.k">{{ f.l | tr }}</label>
               <select [id]="'f-' + f.k" (change)="set(f.k, $any($event.target).value)">

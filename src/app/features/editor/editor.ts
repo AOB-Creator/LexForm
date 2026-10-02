@@ -20,7 +20,7 @@ const WORD_CSS = `body{font-family:"Times New Roman",serif;font-size:12pt;line-h
 h2,h3{text-align:center;font-size:12pt}h2{text-transform:uppercase}p,li{text-align:justify}
 .c{text-align:center}.r{text-align:right}.sp{text-align:center;font-weight:bold;letter-spacing:3pt}
 table.t{border-collapse:collapse;width:100%}table.t td,table.t th{border:1px solid #000;padding:3pt 5pt;font-size:11pt}
-td.n{text-align:right}table.info{width:100%}table.info td{width:50%;vertical-align:top}.photo{float:right;width:3cm;height:4cm;border:1px dashed #999;text-align:center;font-size:9pt}.fio{text-align:center;font-weight:bold}table.sig{width:100%}table.sig td{width:50%;vertical-align:top}`;
+td.n{text-align:right}table.info{width:100%}table.info td{width:50%;vertical-align:top}.photo{float:right;width:3cm;height:4cm;border:1px dashed #999;text-align:center;font-size:9pt}.photo.has{border:0}.photo img{width:3cm;height:4cm}.fio{text-align:center;font-weight:bold}table.sig{width:100%}table.sig td{width:50%;vertical-align:top}`;
 
 @Component({
   selector: 'app-editor',
@@ -129,6 +129,32 @@ export class Editor {
   }
   protected removeRow(k: string, i: number): void {
     this.values.update(cur => ({ ...cur, [k]: this.rows(k).filter((_, j) => j !== i) }));
+  }
+
+  /** Read an image, crop to 3×4 (centre) and scale to 300×400 JPEG so drafts stay small. */
+  protected upload(k: string, ev: Event): void {
+    const input = ev.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const W = 300, H = 400;
+      const scale = Math.max(W / img.naturalWidth, H / img.naturalHeight);
+      const sw = W / scale, sh = H / scale;
+      const canvas = document.createElement('canvas');
+      canvas.width = W;
+      canvas.height = H;
+      const ctx = canvas.getContext('2d')!;
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(0, 0, W, H);
+      ctx.drawImage(img, (img.naturalWidth - sw) / 2, (img.naturalHeight - sh) / 2, sw, sh, 0, 0, W, H);
+      URL.revokeObjectURL(url);
+      this.set(k, canvas.toDataURL('image/jpeg', 0.85));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); this.flash('ed.uploadError'); };
+    img.src = url;
   }
 
   /** Display a select option (stored in Cyrillic) in the chosen script. */

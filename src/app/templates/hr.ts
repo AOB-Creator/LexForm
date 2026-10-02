@@ -189,6 +189,7 @@ export const HR: DocTemplate[] = [
     fileName: refFileName,
     wordCss: '@page{size:A4;margin:1.5cm 1cm 1cm 2cm}body{font-size:11pt}',
     fields: [
+      { k: 'photo', g: 'person', l: tr('Fotosurat (3×4)', 'Фотография (3×4)', 'Photo (3×4)'), t: 'image', hint: tr('Oxirgi 3 oy ichida olingan rangli surat, rasmiy kiyimda.', 'Цветное фото за последние 3 месяца, в деловой одежде.', 'Colour photo taken within the last 3 months, formal wear.') },
       { k: 'fio', g: 'person', l: L.fio, ex: 'Раҳимов Жасур Аҳмадович', hint: tr('Pasport maʼlumotlari bilan tekshiriladi.', 'Сверяется с паспортными данными.', 'Must match the passport.') },
       { k: 'since', g: 'person', l: tr('Hozirgi lavozimda (qachondan)', 'В текущей должности (с какого времени)', 'In current post since'), ex: '2021 йил 1 мартдан', half: true },
       { k: 'pos', g: 'person', l: tr('Hozirgi ish joyi va lavozimi', 'Текущее место работы и должность', 'Current employer and position'), ex: '«Намуна Савдо» МЧЖ директори', half: true },
@@ -231,7 +232,7 @@ export const HR: DocTemplate[] = [
       const rel = c.rows('rel').filter(r => Object.values(r).some(v => (v ?? '').trim()));
       const cell = (v?: string) => `<td>${(v ?? '').trim() ? c.span(esc(v!.trim()).replace(/\n/g, '<br>')) : ''}</td>`;
       return `
-      <div class="photo">3×4 см<br>рангли<br>фотосурат</div>
+      <div class="photo${c.has('photo') ? ' has' : ''}">${c.img('photo', '3×4 см<br>рангли<br>фотосурат')}</div>
       <h2>Маълумотнома</h2>
       <p class="fio">${c.x('fio', 30)}</p>
       <p class="c">${c.x('since', 14)}:<br>${c.x('pos', 30)}</p>

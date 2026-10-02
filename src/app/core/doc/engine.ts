@@ -35,6 +35,11 @@ export class Ctx {
   date(k: string): string {
     return this.has(k) ? this.span(fmtDate(this.raw(k))) : `«${this.blank(3)}» ${this.blank(10)} 20${this.blank(3)} йил`;
   }
+  /** uploaded image (data URL) or the given placeholder HTML */
+  img(k: string, placeholder: string): string {
+    const r = this.raw(k);
+    return /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$/.test(r) ? `<img src="${r}" alt="">` : placeholder;
+  }
   dshort(k: string): string { return this.has(k) ? this.span(fmtDateShort(this.raw(k))) : this.blank(10); }
 }
 
