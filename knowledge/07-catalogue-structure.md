@@ -12,3 +12,12 @@ yurxizmat.uz — the Ministry of Justice self-service legal documents portal —
 | Корпоратив ҳужжатлар | талабномалар, уставлар, маълумотномалар | decisions (6 LLC decisions) · claims (claim-letter) · poa (power-of-attorney) |
 
 Legal anchors used in texts: Family Code art. 99 (child-support shares 1/4 · 1/3 · 1/2 by number of children); Law «On appeals of individuals and legal entities»; Law «On the contractual-legal basis of business entities' activity» (claim letters); Civil and Civil Procedure Codes referenced generally (loan, gift, wills/compulsory share, court order, appeal).
+
+## Batch 2 (+28 templates, total 64)
+
+- contracts: loan-individual, receipt (individuals) · residential-lease (realty) · supply, work-contract (legal) · reconciliation-act, termination-agreement (annex)
+- applications: kindergarten-admission (children) · utility-recalc (individuals) · payment-deferral (legal)
+- hr: leave-order, disciplinary-order, trip-order (orders) · explanatory-note (applications) · employment-certificate, character-reference (references)
+- notarial: travel-consent, inheritance-refusal (applications) · general-poa (poa) · apartment-sale (contracts)
+- court: court-property-division, court-wages (claims) · court-order-cancel, court-copy-request (applications) · court-cassation (appeals)
+- corporate: annual-meeting, participant-exit (decisions) · claim-reply (claims)

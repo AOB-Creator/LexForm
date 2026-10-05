@@ -4,13 +4,13 @@ Hujjat shablonlari generatori: forma to‘ldiriladi, hujjat jonli ko‘rinishda 
 
 - **Interfeys tillari:** O‘zbekcha (lotin), Русский, English — sarlavhadagi UZ / RU / EN tugmalari.
 - **Hujjat tili:** faqat o‘zbek tili — **kirill** yoki **lotin** yozuvida. Shablonlar kirillda yozilgan, lotin varianti rasmiy alifbo qoidalari bo‘yicha avtomatik transliteratsiya qilinadi (ʻ U+02BB, ʼ U+02BC).
-- **36 ta shablon, 6 boʻlim** (yurxizmat.uz tuzilmasi asosida):
-  - **Shartnomalar** — yuridik shaxslar oʻrtasida, koʻchmas mulk, avtotransport, jismoniy shaxslar bilan, dalolatnoma va kelishuvlar
-  - **Arizalar** — yuridik shaxslar, jismoniy shaxslar, bolalar boʻyicha
-  - **Shaxsiy tarkib** — xodim arizalari, buyruqlar, mehnat shartnomasi, maʼlumotnoma (obyektivka)
-  - **Notarial hujjatlar** — arizalar, vasiyatnoma, ishonchnoma, hadya shartnomasi
-  - **Sudga oid hujjatlar** — daʼvo arizalari (aliment, nikohni bekor qilish, qarz), sud buyrugʻi, apellyatsiya
-  - **Korporativ hujjatlar** — MChJ qarorlari, talabnoma, ishonchnoma
+- **64 ta shablon, 6 boʻlim** (yurxizmat.uz tuzilmasi asosida):
+  - **Shartnomalar (15)** — xizmat, oldi-sotdi, yetkazib berish, pudrat, ijara (noturar va turar joy), avtomobil, qarz shartnomasi va tilxat, solishtirma dalolatnoma, bekor qilish kelishuvi
+  - **Arizalar (6)** — fuqaro murojaati, kommunal qayta hisob, rasmiy xat, toʻlovni kechiktirish, maktab va bogʻchaga qabul
+  - **Shaxsiy tarkib (14)** — xodim arizalari, tushuntirish xati, qabul/boʻshatish/taʼtil/intizomiy/safar buyruqlari, mehnat shartnomasi, maʼlumotnomalar, tavsifnoma, obyektivka
+  - **Notarial hujjatlar (8)** — vasiyatnoma, ishonchnomalar, meros qabul/voz kechish, bolaning chiqishiga rozilik, hadya va kvartira oldi-sotdi
+  - **Sudga oid hujjatlar (10)** — daʼvolar (aliment, nikoh, mol-mulk, qarz, ish haqi), sud buyrugʻi va uni bekor qilish, nusxa soʻrash, apellyatsiya, kassatsiya
+  - **Korporativ hujjatlar (11)** — MChJ qarorlari, yillik yigʻilish, ishtirokchining chiqishi, talabnoma va unga javob, ishonchnoma
 - Summalar avtomatik so‘z bilan yoziladi (so‘m / tiyin), qoralamalar brauzerda (localStorage) saqlanadi, yorug‘ / qorong‘i mavzu.
 
 ## Ishga tushirish
