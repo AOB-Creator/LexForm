@@ -20,7 +20,7 @@ const WORD_CSS = `body{font-family:"Times New Roman",serif;font-size:12pt;line-h
 h2,h3{text-align:center;font-size:12pt}h2{text-transform:uppercase}p,li{text-align:justify}
 .c{text-align:center}.r{text-align:right}.sp{text-align:center;font-weight:bold;letter-spacing:3pt}
 table.t{border-collapse:collapse;width:100%}table.t td,table.t th{border:1px solid #000;padding:3pt 5pt;font-size:11pt}
-td.n{text-align:right}table.info{width:100%}table.info td{width:50%;vertical-align:top}.photo{float:right;width:3cm;height:4cm;border:1px dashed #999;text-align:center;font-size:9pt}.photo.has{border:0}.photo img{width:3cm;height:4cm}.fio{text-align:center;font-weight:bold}table.sig{width:100%}table.sig td{width:50%;vertical-align:top}`;
+td.n{text-align:right}.to{margin-left:50%}.to p{text-align:left;margin:0}table.info{width:100%}table.info td{width:50%;vertical-align:top}.photo{float:right;width:3cm;height:4cm;border:1px dashed #999;text-align:center;font-size:9pt}.photo.has{border:0}.photo img{width:3cm;height:4cm}.fio{text-align:center;font-weight:bold}table.sig{width:100%}table.sig td{width:50%;vertical-align:top}`;
 
 @Component({
   selector: 'app-editor',

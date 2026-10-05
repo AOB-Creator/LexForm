@@ -1,11 +1,11 @@
 import { esc, fmtMoney, parseNum } from '../core/doc/format';
 import { itemsTable, meta, ol, sigTable } from '../core/doc/engine';
 import { DocTemplate } from '../core/doc/types';
-import { ITEM_COLS, L, tr } from './shared';
+import { addressee, attachments, EX_A, ITEM_COLS, L, partyFields, STD_LIABILITY, tr } from './shared';
 
 export const CORPORATE: DocTemplate[] = [
   {
-    id: 'llc-founding', cat: 'corporate', minutes: 6,
+    id: 'llc-founding', cat: 'corporate', sub: 'decisions', minutes: 6,
     docTitle: 'Ягона иштирокчининг 1-сонли қарори ва 1-сонли буйруқ',
     title: tr('MChJ tashkil etish qarori va direktor buyrugʻi', 'Решение о создании ООО и приказ директора', 'LLC formation decision and director’s order'),
     desc: tr('Yagona ishtirokchining 1-sonli qarori va direktorning lavozimga kirishishi haqida 1-sonli buyruq.',
@@ -56,7 +56,7 @@ export const CORPORATE: DocTemplate[] = [
       ${sigTable('Директор', `____________ ${c.x('director', 18)}`)}`,
   },
   {
-    id: 'director-change', cat: 'corporate', minutes: 5,
+    id: 'director-change', cat: 'corporate', sub: 'decisions', minutes: 5,
     docTitle: 'Таъсисчилар умумий йиғилиши баёни',
     title: tr('Direktorni almashtirish bayoni', 'Протокол о смене директора', 'Minutes on changing the director'),
     desc: tr('Taʼsischilar umumiy yigʻilishi: amaldagi direktorni ozod qilish va yangisini tayinlash.',
@@ -99,7 +99,7 @@ export const CORPORATE: DocTemplate[] = [
       ${sigTable('Йиғилиш раиси<br><br>Йиғилиш котиби', `____________ ${c.x('chair', 14)}<br><br>____________ ${c.x('secr', 14)}`)}`,
   },
   {
-    id: 'name-change', cat: 'corporate', minutes: 3,
+    id: 'name-change', cat: 'corporate', sub: 'decisions', minutes: 3,
     docTitle: 'Корхона номини ўзгартириш тўғрисида қарор ва буйруқ',
     title: tr('Korxona nomini oʻzgartirish', 'Изменение наименования', 'Change of company name'),
     desc: tr('Yagona taʼsischi qarori, Ustavga oʻzgartirishlar va ijro buyrugʻi.', 'Решение единственного учредителя, изменения в устав и приказ.', 'Sole founder’s decision, charter amendments and executing order.'),
@@ -134,7 +134,7 @@ export const CORPORATE: DocTemplate[] = [
       ${sigTable('Раҳбар', `____________ ${c.x('head', 16)}`)}`,
   },
   {
-    id: 'address-change', cat: 'corporate', minutes: 4,
+    id: 'address-change', cat: 'corporate', sub: 'decisions', minutes: 4,
     docTitle: 'Юридик манзилни ўзгартириш тўғрисида қарор ва буйруқ',
     title: tr('Yuridik manzilni oʻzgartirish', 'Изменение юридического адреса', 'Change of registered address'),
     desc: tr('Yagona taʼsischi qarori (pasport maʼlumotlari bilan) va ijro buyrugʻi.', 'Решение учредителя (с паспортными данными) и приказ.', 'Founder’s decision (with passport details) and executing order.'),
@@ -173,7 +173,7 @@ export const CORPORATE: DocTemplate[] = [
       ${sigTable('Раҳбар', `____________ ${c.x('founder', 16)}`)}`,
   },
   {
-    id: 'charter-contribution', cat: 'corporate', minutes: 4,
+    id: 'charter-contribution', cat: 'corporate', sub: 'decisions', minutes: 4,
     docTitle: 'Устав фондига мулкни қабул қилиш-топшириш далолатномаси',
     title: tr('Ustav fondiga mulk topshirish dalolatnomasi', 'Акт передачи имущества в уставный фонд', 'Act of contribution to charter capital'),
     desc: tr('Taʼsischi mulk topshiradi, direktor qabul qiladi. Jami summa soʻz bilan avtomatik.', 'Учредитель передаёт имущество, директор принимает. Итог прописью — автоматически.', 'Founder transfers property, director accepts. Total in words is automatic.'),
@@ -201,7 +201,7 @@ export const CORPORATE: DocTemplate[] = [
     },
   },
   {
-    id: 'dividend', cat: 'corporate', minutes: 6,
+    id: 'dividend', cat: 'corporate', sub: 'decisions', minutes: 6,
     docTitle: 'Соф фойдани тақсимлаш тўғрисида умумий йиғилиш баёни',
     title: tr('Dividend taqsimlash bayoni', 'Протокол о распределении дивидендов', 'Dividend distribution minutes'),
     desc: tr('Choraklik sof foydani ulushlarga mutanosib taqsimlash; soliq va toʻlanadigan summa avtomatik.', 'Распределение прибыли пропорционально долям; налог и сумма к выплате — автоматически.', 'Profit split by shares; tax and net payout calculated automatically.'),
@@ -255,6 +255,48 @@ export const CORPORATE: DocTemplate[] = [
         'Дивидендларни тўлаш бош ҳисобчига, қарор ижросини таъминлаш жамият директорига юклатилсин.',
       ], 3)}
       ${sigTable('Йиғилиш раиси<br><br>Йиғилиш котиби', `____________ ${c.x('chair', 14)}<br><br>____________ ${c.x('secr', 14)}`)}`;
+    },
+  },
+  {
+    id: 'claim-letter', cat: 'corporate', sub: 'claims', minutes: 5,
+    docTitle: 'Талабнома',
+    title: tr('Talabnoma (pretenziya)', 'Претензия', 'Claim letter'),
+    desc: tr('Shartnoma boʻyicha qarzdorga sudgacha talab: asosiy qarz, penya va jami summa soʻz bilan; javob muddati.', 'Досудебная претензия контрагенту: основной долг, пеня, итог прописью, срок ответа.', 'Pre-trial claim to a counterparty: principal, penalty, total in words, response deadline.'),
+    fields: [
+      ...partyFields('cr', 'party1', EX_A),
+      { k: 'out', g: 'doc', l: tr('Chiquvchi raqam', 'Исходящий №', 'Reference No.'), ex: '52/26', half: true },
+      { k: 'date', g: 'doc', l: L.date, t: 'date', ex: '2026-10-05', half: true },
+      { k: 'db', g: 'party2', l: tr('Qarzdor tashkilot', 'Организация-должник', 'Debtor company'), ex: '«Мисол Хизмат» МЧЖ' },
+      { k: 'db_head', g: 'party2', l: tr('Rahbar F.I.Sh.', 'Ф.И.О. руководителя', 'Head'), ex: 'Д.Ш. Раҳимова', half: true },
+      { k: 'db_stir', g: 'party2', l: tr('STIR', 'ИНН', 'TIN'), ex: '302765432', half: true },
+      { k: 'db_addr', g: 'party2', l: tr('Yuridik manzil', 'Юридический адрес', 'Registered address'), ex: 'Тошкент ш., Чилонзор тумани, Бунёдкор шоҳ кўчаси, 10-уй' },
+      { k: 'c_no', g: 'contract', l: tr('Shartnoma raqami', 'Номер договора', 'Contract No.'), ex: '45', half: true },
+      { k: 'c_date', g: 'contract', l: tr('Shartnoma sanasi', 'Дата договора', 'Contract date'), t: 'date', ex: '2026-05-04', half: true },
+      { k: 'facts', g: 'contract', l: tr('Bajarilmagan majburiyat', 'Неисполненное обязательство', 'Breached obligation'), t: 'textarea', ex: 'Шартномага асосан 15.06.2026 йилда етказиб берилган товар учун тўлов 10 банк куни ичида амалга оширилиши лозим эди. Товар 15.06.2026 йилдаги 128-сонли ҳисобварақ-фактура асосида тўлиқ қабул қилинган, бироқ тўлов ҳозиргача амалга оширилмаган.' },
+      { k: 'debt', g: 'payment', l: tr('Asosiy qarz', 'Основной долг', 'Principal'), t: 'money', ex: '20500000', half: true },
+      { k: 'pen', g: 'payment', l: tr('Penya', 'Пеня', 'Penalty'), t: 'money', ex: '2460000', half: true },
+      { k: 'days', g: 'payment', l: tr('Javob/toʻlov muddati (kun)', 'Срок ответа/оплаты (дней)', 'Deadline (days)'), t: 'number', ex: '10', half: true },
+    ],
+    render: c => {
+      const d = c.num('debt'), pn = c.num('pen');
+      const total = (isFinite(d) ? d : 0) + (isFinite(pn) ? pn : 0);
+      return `
+      <p class="c"><b>${c.x('cr_name', 22)}</b><br>СТИР ${c.x('cr_stir', 9)} · ${c.x('cr_addr', 24)} · тел. ${c.x('cr_phone', 12)}</p>
+      <p>${c.dshort('date')} № ${c.x('out', 6)}</p>
+      ${addressee(`<b>${c.x('db', 20)} раҳбари</b>`, `${c.x('db_head', 14)}га`, `СТИР: ${c.x('db_stir', 9)}`, `Манзил: ${c.x('db_addr', 24)}`)}
+      <h2>Талабнома</h2>
+      <p>${c.x('cr_name', 18)} (кейинги ўринларда «Кредитор») ва ${c.x('db', 18)} (кейинги ўринларда «Қарздор») ўртасида ${c.dshort('c_date')} йилда ${c.x('c_no', 4)}-сонли шартнома тузилган.</p>
+      <p>${c.x('facts', 40)}</p>
+      <p>Шу тариқа, Қарздор шартнома бўйича мажбуриятларини лозим даражада бажармади. ${STD_LIABILITY} ва шартнома шартларига мувофиқ, Қарздорнинг Кредитор олдидаги қарзи қуйидагича:</p>
+      <table class="t">
+        <tr><td>Асосий қарз</td><td class="n">${c.sum('debt')}</td></tr>
+        ${c.has('pen') ? `<tr><td>Пеня</td><td class="n">${c.sum('pen')}</td></tr>` : ''}
+        <tr><td><b>Жами</b></td><td class="n"><b>${total ? c.span(fmtMoney(total)) : c.blank(10)}</b></td></tr>
+      </table>
+      <p>Юқоридагиларга асосан, ушбу талабномани олган кундан бошлаб ${c.x('days', 2)} кун ичида ${c.moneyN(total)} миқдоридаги маблағни Кредиторнинг ${c.x('cr_acc', 16)} ҳисоб рақамига (${c.x('cr_bank', 16)}, МФО ${c.x('cr_mfo', 5)}) тўлашингизни талаб қиламиз.</p>
+      <p>Белгиланган муддатда талаб қондирилмаса ёки жавоб берилмаса, Кредитор қарзни, пеняни ва суд харажатларини ундириш учун иқтисодий судга мурожаат қилишга мажбур бўлади.</p>
+      ${attachments(c, ['Шартнома нусхаси.', 'Ҳисобварақ-фактура ва бошқа бирламчи ҳужжатлар нусхалари.', 'Қарз ва пеня ҳисоб-китоби.'])}
+      ${sigTable(c.x('cr_pos', 10), `____________ ${c.x('cr_rep', 16)}`)}`;
     },
   },
 ];

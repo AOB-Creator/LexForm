@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { emptyValues, exampleValues, TEMPLATES } from '../../templates';
+import { CATEGORIES, GROUPS } from '../../templates/shared';
 import { Ctx, renderTemplate } from './engine';
 import { fmtDate, fmtMoney, moneyWords } from './format';
 import { cyrToLat, cyrToLatHtml } from './translit';
@@ -69,5 +70,26 @@ describe('Ctx.img', () => {
     expect(new Ctx({}).img('p', 'X')).toBe('X');
     expect(new Ctx({ p: 'javascript:alert(1)' }).img('p', 'X')).toBe('X');
     expect(new Ctx({ p: 'data:image/png;base64,abc" onerror="x' }).img('p', 'X')).toBe('X');
+  });
+});
+
+describe('catalogue structure', () => {
+  it('every template sits in an existing category and subcategory', () => {
+    for (const t of TEMPLATES) {
+      const cat = CATEGORIES.find(c => c.id === t.cat);
+      expect(cat, t.id).toBeTruthy();
+      expect(cat!.subs.some(s => s.id === t.sub), `${t.id} → ${t.cat}/${t.sub}`).toBe(true);
+    }
+  });
+  it('every subcategory has at least one template', () => {
+    for (const c of CATEGORIES) for (const s of c.subs) {
+      expect(TEMPLATES.some(t => t.cat === c.id && t.sub === s.id), `${c.id}/${s.id}`).toBe(true);
+    }
+  });
+  it('every form group has a label', () => {
+    for (const t of TEMPLATES) for (const f of t.fields) expect(GROUPS[f.g], `${t.id}.${f.k} → ${f.g}`).toBeTruthy();
+  });
+  it('field keys are unique within a template', () => {
+    for (const t of TEMPLATES) expect(new Set(t.fields.map(f => f.k)).size, t.id).toBe(t.fields.length);
   });
 });

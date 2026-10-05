@@ -4,7 +4,7 @@ import { ITEM_COLS, L, tr } from './shared';
 
 export const ACTS: DocTemplate[] = [
   {
-    id: 'completion-act', cat: 'acts', minutes: 3,
+    id: 'completion-act', cat: 'contracts', sub: 'annex', minutes: 3,
     docTitle: 'Бажарилган ишлар (кўрсатилган хизматлар) далолатномаси',
     title: tr('Bajarilgan ishlar dalolatnomasi', 'Акт выполненных работ', 'Act of completed works'),
     desc: tr('Shartnoma boʻyicha ish va xizmatlar roʻyxati, jami summa soʻz bilan, eʼtirozsiz qabul.', 'Перечень работ и услуг по договору, итог прописью, приёмка без претензий.', 'Works and services under a contract, total in words, accepted without claims.'),
@@ -36,7 +36,7 @@ export const ACTS: DocTemplate[] = [
     },
   },
   {
-    id: 'power-of-attorney', cat: 'acts', minutes: 3,
+    id: 'power-of-attorney', cat: 'corporate', sub: 'poa', minutes: 3,
     docTitle: 'Ишончнома',
     title: tr('Ishonchnoma', 'Доверенность', 'Power of attorney'),
     desc: tr('Tashkilot nomidan vakilga vakolat berish: hujjatlarni rasmiylashtirish, imzolash, qabul qilish.', 'Полномочия представителю от имени организации: оформление, подписание, получение документов.', 'Authorising a representative to act for the company: filing, signing, receiving documents.'),

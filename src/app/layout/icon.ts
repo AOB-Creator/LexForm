@@ -9,6 +9,8 @@ const PATHS: Record<string, string> = {
   copy: 'M9 9h10v12H9zM5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1',
   download: 'M12 3v12m-5-5 5 5 5-5M4 21h16',
   print: 'M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2M6 14h12v7H6z',
+  scale: 'M12 3v18M7 21h10M5 7h14M5 7l-3 7a3 3 0 0 0 6 0L5 7Zm14 0-3 7a3 3 0 0 0 6 0l-3-7ZM12 3a1.5 1.5 0 1 0 0 .01',
+  pen: 'M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z',
   plus: 'M12 5v14M5 12h14',
   x: 'M18 6 6 18M6 6l12 12',
   wand: 'm15 4 5 5M4 20 15 9m3-6v2m4 2h-2m-1-4 1-1M8 4v2M7 5h2',

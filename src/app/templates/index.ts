@@ -1,10 +1,14 @@
 import { DocTemplate, FieldDef, Values } from '../core/doc/types';
 import { ACTS } from './acts';
+import { APPLICATIONS } from './applications';
 import { CONTRACTS } from './contracts';
 import { CORPORATE } from './corporate';
+import { COURT } from './court';
 import { HR } from './hr';
+import { HR_REQUESTS } from './hr-requests';
+import { NOTARIAL } from './notarial';
 
-export const TEMPLATES: DocTemplate[] = [...CORPORATE, ...HR, ...CONTRACTS, ...ACTS];
+export const TEMPLATES: DocTemplate[] = [...CONTRACTS, ...APPLICATIONS, ...HR_REQUESTS, ...HR, ...NOTARIAL, ...COURT, ...CORPORATE, ...ACTS];
 
 export function findTemplate(id: string): DocTemplate | undefined {
   return TEMPLATES.find(t => t.id === id);

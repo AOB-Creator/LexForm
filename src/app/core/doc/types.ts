@@ -26,11 +26,13 @@ export interface FieldDef {
 export type RowValue = Record<string, string>;
 export type Values = Record<string, string | RowValue[]>;
 
-export type CategoryId = 'corporate' | 'hr' | 'contracts' | 'acts';
+export type CategoryId = 'contracts' | 'applications' | 'hr' | 'notarial' | 'court' | 'corporate';
 
 export interface DocTemplate {
   id: string;
   cat: CategoryId;
+  /** subcategory id — see CATEGORIES[].subs in templates/shared.ts */
+  sub: string;
   title: Tr;
   desc: Tr;
   /** document title as printed (Uzbek Cyrillic) */

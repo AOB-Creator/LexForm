@@ -142,6 +142,8 @@ h1, h2, h3 { text-wrap: balance; }
   table.t th, table.t td { border: 1px solid var(--paper-line); padding: 4px 6px; vertical-align: top; }
   table.t th { font-weight: 700; text-align: center; }
   table.t td.n { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .to { margin: 0 0 18px 50%; }
+  .to p { margin: 0 0 3px; text-align: left; }
   table.info { width: 100%; border-collapse: collapse; margin: 4px 0; font-size: 14.5px; }
   table.info td { width: 50%; vertical-align: top; padding: 3px 12px 3px 0; }
   table.info b { display: block; }

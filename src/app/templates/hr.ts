@@ -19,7 +19,7 @@ const ackLine = (who: string) => `<p class="ack">Буйруқ билан тан�
 
 export const HR: DocTemplate[] = [
   {
-    id: 'employment-contract', cat: 'hr', minutes: 8,
+    id: 'employment-contract', cat: 'hr', sub: 'contracts', minutes: 8,
     docTitle: 'Меҳнат шартномаси',
     title: tr('Mehnat shartnomasi', 'Трудовой договор', 'Employment contract'),
     desc: tr('Ish beruvchi va xodim oʻrtasida: lavozim, muddat, sinov, maosh, taʼtil, rekvizitlar.', 'Между работодателем и работником: должность, срок, испытание, оклад, отпуск, реквизиты.', 'Between employer and employee: position, term, probation, salary, leave, details.'),
@@ -65,7 +65,7 @@ export const HR: DocTemplate[] = [
       ${sigTable(reqCell(c, 'e', 'Иш берувчи'), `<b>«Ходим»</b><br>${c.x('w', 20)}<br>Паспорт: ${c.x('w_pass', 10)}<br>Берилган: ${c.x('w_pass_by', 16)}<br>Манзил: ${c.x('w_addr', 22)}<br>Тел.: ${c.x('w_phone', 12)}<br>ЖШШИР: ${c.x('w_pinfl', 14)}<br><br>____________ (имзо)<br><br>Ички меҳнат тартиби қоидалари ва лавозим йўриқномаси билан танишдим: ____________`)}`,
   },
   {
-    id: 'hiring-order', cat: 'hr', minutes: 3,
+    id: 'hiring-order', cat: 'hr', sub: 'orders', minutes: 3,
     docTitle: 'Ишга қабул қилиш тўғрисида буйруқ',
     title: tr('Ishga qabul qilish buyrugʻi', 'Приказ о приёме на работу', 'Hiring order'),
     desc: tr('Mehnat shartnomasi asosida xodimni lavozimga qabul qilish.', 'Приём работника на должность на основании трудового договора.', 'Appointing an employee on the basis of the employment contract.'),
@@ -96,7 +96,7 @@ export const HR: DocTemplate[] = [
       ${ackLine(c.x('w', 16))}`,
   },
   {
-    id: 'dismissal-order', cat: 'hr', minutes: 3,
+    id: 'dismissal-order', cat: 'hr', sub: 'orders', minutes: 3,
     docTitle: 'Меҳнат шартномасини бекор қилиш тўғрисида буйруқ',
     title: tr('Ishdan boʻshatish buyrugʻi', 'Приказ об увольнении', 'Dismissal order'),
     desc: tr('Mehnat shartnomasini bekor qilish, foydalanilmagan taʼtil uchun kompensatsiya.', 'Прекращение трудового договора, компенсация за неиспользованный отпуск.', 'Termination of employment with unused-leave compensation.'),
@@ -132,7 +132,7 @@ export const HR: DocTemplate[] = [
       ${ackLine(c.x('w', 16))}`,
   },
   {
-    id: 'staffing', cat: 'hr', minutes: 5,
+    id: 'staffing', cat: 'hr', sub: 'orders', minutes: 5,
     docTitle: 'Штат жадвалини тасдиқлаш тўғрисида буйруқ ва штат жадвали',
     title: tr('Shtat jadvali va buyruq', 'Штатное расписание и приказ', 'Staffing table and order'),
     desc: tr('Buyruq va ilova: lavozimlar, birliklar, maoshlar; oylik fond avtomatik hisoblanadi.', 'Приказ и приложение: должности, единицы, оклады; месячный фонд — автоматически.', 'Order plus annex: positions, headcount, salaries; monthly payroll is calculated.'),
@@ -182,7 +182,7 @@ export const HR: DocTemplate[] = [
   },
 
   {
-    id: 'personal-reference', cat: 'hr', minutes: 10,
+    id: 'personal-reference', cat: 'hr', sub: 'references', minutes: 10,
     docTitle: 'Маълумотнома',
     title: tr('Maʼlumotnoma (obyektivka)', 'Справка-объективка', 'Personal reference (objektivka)'),
     desc: tr('Xodim haqida maʼlumotnoma: shaxsiy maʼlumotlar, maʼlumoti, mehnat faoliyati va yaqin qarindoshlari jadvali.', 'Справка о сотруднике: личные данные, образование, трудовая деятельность и таблица близких родственников.', 'Staff reference: personal details, education, work history and a table of close relatives.'),

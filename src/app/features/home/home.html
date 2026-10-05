@@ -62,15 +62,25 @@
   </div>
 
   <div class="filters" role="group">
-    <button type="button" class="filter" [attr.aria-pressed]="cat() === 'all'" (click)="cat.set('all')">
+    <button type="button" class="filter" [attr.aria-pressed]="cat() === 'all'" (click)="pickCat('all')">
       {{ 'list.all' | t }} <span>{{ total }}</span>
     </button>
     @for (c of categories; track c.id) {
-      <button type="button" class="filter" [attr.aria-pressed]="cat() === c.id" (click)="cat.set(c.id)">
+      <button type="button" class="filter" [attr.aria-pressed]="cat() === c.id" (click)="pickCat(c.id)">
         <app-icon [name]="catIcon[c.id]" /> {{ c.title | tr }} <span>{{ countByCat()[c.id] }}</span>
       </button>
     }
   </div>
+  @if (subs().length) {
+    <div class="subs" role="group">
+      <button type="button" class="sub" [attr.aria-pressed]="sub() === 'all'" (click)="sub.set('all')">{{ 'list.all' | t }}</button>
+      @for (s of subs(); track s.id) {
+        <button type="button" class="sub" [attr.aria-pressed]="sub() === s.id" (click)="sub.set(s.id)">
+          {{ s.title | tr }} <span>{{ countByCat()[cat() + '/' + s.id] }}</span>
+        </button>
+      }
+    </div>
+  }
 
   @if (list().length) {
     <div class="grid">
@@ -78,7 +88,7 @@
         <a class="card" [routerLink]="['/t', t.id]" [attr.data-cat]="t.cat">
           <div class="card-top">
             <span class="cat-ico"><app-icon [name]="catIcon[t.cat]" /></span>
-            <span class="cat-name">{{ catTitle(t.cat) | tr }}</span>
+            <span class="cat-name">{{ catTitle(t.cat) | tr }} <i>›</i> {{ subTitle(t.cat, t.sub) | tr }}</span>
             @if (hasDraft(t.id)) { <span class="draft">{{ 'list.draft' | t }}</span> }
           </div>
           <h3>{{ t.title | tr }}</h3>

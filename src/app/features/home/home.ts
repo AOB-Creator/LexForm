@@ -10,7 +10,7 @@ import { Icon } from '../../layout/icon';
 import { exampleValues, findTemplate, TEMPLATES } from '../../templates';
 import { CATEGORIES } from '../../templates/shared';
 
-const CAT_ICON: Record<CategoryId, string> = { corporate: 'building', hr: 'users', contracts: 'handshake', acts: 'stamp' };
+const CAT_ICON: Record<CategoryId, string> = { contracts: 'handshake', applications: 'pen', hr: 'users', notarial: 'stamp', court: 'scale', corporate: 'building' };
 
 @Component({
   selector: 'app-home',
@@ -30,20 +30,31 @@ export class Home {
   protected readonly total = TEMPLATES.length;
   protected readonly query = signal('');
   protected readonly cat = signal<CategoryId | 'all'>('all');
+  protected readonly sub = signal<string>('all');
+  protected readonly subs = computed(() => CATEGORIES.find(c => c.id === this.cat())?.subs ?? []);
 
   protected readonly list = computed(() => {
     const q = this.query().trim().toLowerCase();
     const c = this.cat();
+    const s = this.sub();
     this.i18n.lang();
-    return TEMPLATES.filter(t => (c === 'all' || t.cat === c) && (!q ||
+    return TEMPLATES.filter(t => (c === 'all' || t.cat === c) && (s === 'all' || t.sub === s) && (!q ||
       [t.title.uz, t.title.ru, t.title.en, t.desc.uz, t.desc.ru, t.desc.en, t.docTitle].join(' ').toLowerCase().includes(q)));
   });
 
   protected readonly countByCat = computed(() => {
     const m: Record<string, number> = {};
-    TEMPLATES.forEach(t => (m[t.cat] = (m[t.cat] ?? 0) + 1));
+    TEMPLATES.forEach(t => {
+      m[t.cat] = (m[t.cat] ?? 0) + 1;
+      m[t.cat + '/' + t.sub] = (m[t.cat + '/' + t.sub] ?? 0) + 1;
+    });
     return m;
   });
+
+  protected pickCat(c: CategoryId | 'all'): void {
+    this.cat.set(c);
+    this.sub.set('all');
+  }
 
   /** Live sample shown in the hero: the real LLC-formation template with example data. */
   protected readonly sample = computed(() => {
@@ -54,4 +65,5 @@ export class Home {
 
   protected hasDraft(id: string): boolean { return this.drafts.has(id); }
   protected catTitle(id: CategoryId) { return CATEGORIES.find(c => c.id === id)!.title; }
+  protected subTitle(id: CategoryId, sub: string) { return CATEGORIES.find(c => c.id === id)!.subs.find(s => s.id === sub)!.title; }
 }

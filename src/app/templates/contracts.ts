@@ -1,21 +1,10 @@
 import { h, itemsTable, meta, ol, p, partyIntro, reqCell, sigTable } from '../core/doc/engine';
 import { DocTemplate } from '../core/doc/types';
-import { EX_A, EX_B, ITEM_COLS, L, partyFields, STD_LIABILITY, tr } from './shared';
-
-const personCell = (c: import('../core/doc/engine').Ctx, pfx: string, role: string) =>
-  `<b>«${role}»</b><br>${c.x(pfx, 20)}<br>Паспорт: ${c.x(pfx + '_pass', 18)}<br>Манзил: ${c.x(pfx + '_addr', 22)}<br>ЖШШИР: ${c.x(pfx + '_pinfl', 14)}<br>Ҳисоб/карта: ${c.x(pfx + '_acc', 18)}<br><br>____________ ${c.x(pfx, 14)}`;
-
-const personFields = (pfx: string, g: string, ex: { fio: string; pass: string; addr: string }) => [
-  { k: pfx, g, l: L.fio, ex: ex.fio },
-  { k: pfx + '_pass', g, l: tr('Pasport (seriya, raqam, kim bergan, sana)', 'Паспорт (серия, номер, кем и когда выдан)', 'Passport (series, number, issuer, date)'), ex: ex.pass },
-  { k: pfx + '_addr', g, l: L.addr, ex: ex.addr },
-  { k: pfx + '_pinfl', g, l: tr('JShShIR', 'ПИНФЛ', 'Personal ID (PINFL)'), half: true },
-  { k: pfx + '_acc', g, l: tr('Hisob yoki karta raqami', 'Счёт или номер карты', 'Account or card number'), half: true },
-];
+import { EX_A, EX_B, ITEM_COLS, L, partyFields, personCell, personFields, STD_LIABILITY, tr, vehicleFields, vehicleText } from './shared';
 
 export const CONTRACTS: DocTemplate[] = [
   {
-    id: 'services', cat: 'contracts', minutes: 7,
+    id: 'services', cat: 'contracts', sub: 'legal', minutes: 7,
     docTitle: 'Хизмат кўрсатиш шартномаси',
     title: tr('Xizmat koʻrsatish shartnomasi', 'Договор оказания услуг', 'Services agreement'),
     desc: tr('Xizmatlar jadvali, avans, standart penyalar (0,5% va 0,4%, 50% gacha), iqtisodiy sud.', 'Таблица услуг, аванс, стандартные пени (0,5% и 0,4%, до 50%), экономический суд.', 'Services table, advance, standard penalties (0.5% / 0.4%, capped at 50%), economic court.'),
@@ -67,7 +56,7 @@ export const CONTRACTS: DocTemplate[] = [
     },
   },
   {
-    id: 'sale', cat: 'contracts', minutes: 7,
+    id: 'sale', cat: 'contracts', sub: 'legal', minutes: 7,
     docTitle: 'Олди-сотди шартномаси',
     title: tr('Tovar oldi-sotdi shartnomasi', 'Договор купли-продажи товара', 'Sale of goods agreement'),
     desc: tr('Tovarlar jadvali, avans, yetkazib berish, reklamatsiya, standart javobgarlik.', 'Таблица товаров, аванс, поставка, рекламация, стандартная ответственность.', 'Goods table, advance, delivery, claims, standard liability.'),
@@ -116,7 +105,7 @@ export const CONTRACTS: DocTemplate[] = [
     },
   },
   {
-    id: 'lease', cat: 'contracts', minutes: 8,
+    id: 'lease', cat: 'contracts', sub: 'realty', minutes: 8,
     docTitle: 'Нотурар жой ижара шартномаси',
     title: tr('Noturar joy ijara shartnomasi', 'Договор аренды нежилого помещения', 'Commercial premises lease'),
     desc: tr('Jismoniy shaxs → MChJ. Topshirish dalolatnomasi bilan; soliq organida 10 kun ichida hisobga qoʻyish.', 'Физлицо → ООО. С передаточным актом; учёт в налоговом органе в течение 10 дней.', 'Individual → LLC. With handover act; tax registration within 10 days.'),
@@ -174,7 +163,7 @@ export const CONTRACTS: DocTemplate[] = [
       ${sigTable(`Топширдим:<br>Ижарага берувчи<br><br>____________ ${c.x('ll', 14)}`, `Қабул қилдим:<br>Ижарачи<br><br>____________ ${c.x('tn_rep', 14)}<br>М.Ў.`)}`,
   },
   {
-    id: 'financial-aid', cat: 'contracts', minutes: 4,
+    id: 'financial-aid', cat: 'contracts', sub: 'legal', minutes: 4,
     docTitle: 'Молиявий ёрдам (фоизсиз қарз) шартномаси',
     title: tr('Moliyaviy yordam (foizsiz qarz)', 'Финансовая помощь (беспроцентный заём)', 'Financial aid (interest-free loan)'),
     desc: tr('Korxonalararo qaytariladigan moliyaviy yordam: summa, oʻtkazish, qaytarish sanasi, penya.', 'Возвратная финпомощь между компаниями: сумма, перечисление, возврат, пеня.', 'Returnable inter-company aid: amount, transfer, repayment date, penalty.'),
@@ -209,7 +198,7 @@ export const CONTRACTS: DocTemplate[] = [
       ${sigTable(reqCell(c, 'le', 'Қарз берувчи'), reqCell(c, 'bo', 'Қарз олувчи'))}`,
   },
   {
-    id: 'civil-services', cat: 'contracts', minutes: 6,
+    id: 'civil-services', cat: 'contracts', sub: 'individuals', minutes: 6,
     docTitle: 'Фуқаролик-ҳуқуқий тусдаги хизмат кўрсатиш шартномаси',
     title: tr('Jismoniy shaxs bilan FHT shartnomasi', 'Договор ГПХ с физическим лицом', 'Civil-law contract with an individual'),
     desc: tr('Tashkilot va jismoniy shaxs oʻrtasida xizmat koʻrsatish shartnomasi + bajarilgan ishlar dalolatnomasi.', 'Договор оказания услуг между организацией и физлицом + акт выполненных работ.', 'Services contract between a company and an individual, plus completion act.'),
@@ -259,7 +248,7 @@ export const CONTRACTS: DocTemplate[] = [
       ${sigTable(`Ижрочи<br><br>____________ ${c.x('ex', 14)}`, `Буюртмачи<br><br>____________ ${c.x('cu_rep', 14)}<br>М.Ў.`)}`,
   },
   {
-    id: 'supplementary', cat: 'contracts', minutes: 3,
+    id: 'supplementary', cat: 'contracts', sub: 'annex', minutes: 3,
     docTitle: 'Шартномага қўшимча келишув',
     title: tr('Shartnomaga qoʻshimcha kelishuv', 'Дополнительное соглашение', 'Contract amendment'),
     desc: tr('Shartnoma summasi va/yoki amal qilish muddatini oʻzgartirish.', 'Изменение суммы и/или срока действия договора.', 'Change the contract amount and/or term.'),
@@ -298,5 +287,36 @@ export const CONTRACTS: DocTemplate[] = [
       ${ol(items)}
       ${sigTable(reqCell(c, 'p1', r1), reqCell(c, 'p2', r2))}`;
     },
+  },
+  {
+    id: 'vehicle-sale', cat: 'contracts', sub: 'vehicle', minutes: 6,
+    docTitle: 'Автотранспорт воситасининг олди-сотди шартномаси',
+    title: tr('Avtomobil oldi-sotdi shartnomasi', 'Договор купли-продажи автомобиля', 'Car sale agreement'),
+    desc: tr('Jismoniy shaxslar oʻrtasida: avtomobil maʼlumotlari, narx soʻz bilan, toʻlov va topshirish.', 'Между физлицами: данные авто, цена прописью, оплата и передача.', 'Between individuals: vehicle details, price in words, payment and handover.'),
+    fields: [
+      { k: 'city', g: 'doc', l: L.city, ex: 'Тошкент шаҳри', half: true },
+      { k: 'date', g: 'doc', l: L.date, t: 'date', ex: '2026-10-05', half: true },
+      ...personFields('sl', 'seller', { fio: 'Юсупов Шерзод Анварович', pass: 'AC 7654321, Миробод тумани ИИБ, 10.02.2017', addr: 'Тошкент ш., Миробод тумани, Нукус кўчаси, 20-уй, 21-хонадон' }),
+      ...personFields('by', 'buyer', { fio: 'Алиев Тимур Рустамович', pass: 'AB 1234567, Чилонзор тумани ИИБ, 12.08.2018', addr: 'Тошкент ш., Чилонзор тумани, 5-мавзе, 3-уй, 7-хонадон' }),
+      ...vehicleFields('vehicle'),
+      { k: 'price', g: 'payment', l: tr('Narxi', 'Цена', 'Price'), t: 'money', ex: '120000000' },
+      { k: 'pay', g: 'payment', l: tr('Toʻlov tartibi', 'Порядок оплаты', 'Payment'), t: 'select', opts: ['шартнома имзолангунга қадар нақд пулда тўлиқ', 'шартнома имзолангандан кейин уч банк куни ичида Сотувчининг ҳисоб рақамига', 'шартнома имзолангандан кейин уч банк куни ичида Сотувчининг банк картасига'], ex: 'шартнома имзолангунга қадар нақд пулда тўлиқ' },
+    ],
+    render: c => `
+      <h2>Автотранспорт воситасининг олди-сотди шартномаси</h2>
+      ${meta(c.x('city', 14), c.date('date'))}
+      ${p(`Биз, бир тарафдан ${c.x('sl', 22)} (паспорт: ${c.x('sl_pass', 18)}, яшаш манзили: ${c.x('sl_addr', 24)}), кейинги ўринларда «Сотувчи», ва иккинчи тарафдан ${c.x('by', 22)} (паспорт: ${c.x('by_pass', 18)}, яшаш манзили: ${c.x('by_addr', 24)}), кейинги ўринларда «Харидор», ушбу шартномани қуйидагилар ҳақида туздик:`)}
+      ${ol([
+        `Сотувчи ўзига мулк ҳуқуқи асосида тегишли бўлган ${vehicleText(c)}ни (кейинги ўринларда «Автомобиль») Харидорнинг мулкига сотади, Харидор эса уни қабул қилиб, ҳақини тўлайди.`,
+        `Автомобилнинг нархи тарафлар келишувига кўра ${c.money('price')}ни ташкил этади.`,
+        `Тўлов ${c.x('pay', 24)} амалга оширилади.`,
+        'Сотувчи Автомобиль ҳеч кимга сотилмаганлиги, гаровга қўйилмаганлиги, низоли эмаслиги, ҳибсга олинмаганлиги ва қидирувда эмаслигини кафолатлайди.',
+        'Харидор Автомобилни кўздан кечирди, унинг техник ҳолатига эътирози йўқ.',
+        'Автомобиль, унинг калитлари ва қайд этиш гувоҳномаси шартнома имзоланган куни Харидорга топширилади. Шу пайтдан бошлаб Автомобилнинг тасодифан нобуд бўлиш хавфи Харидорга ўтади.',
+        'Харидор Автомобилни қонунчиликда белгиланган муддат ва тартибда ўз номига рўйхатдан ўтказади. Рўйхатдан ўтказиш харажатларини Харидор тўлайди.',
+        'Шартнома қонунчиликда белгиланган тартибда расмийлаштирилади ва тарафлар имзолаган пайтдан кучга киради. Шартнома уч нусхада тузилди.',
+      ])}
+      <h3>Тарафларнинг имзолари</h3>
+      ${sigTable(personCell(c, 'sl', 'Сотувчи'), personCell(c, 'by', 'Харидор'))}`,
   },
 ];

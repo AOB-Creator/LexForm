@@ -1,12 +1,46 @@
+import { esc } from '../core/doc/format';
 import { CategoryId, FieldDef, RowColumn, Tr } from '../core/doc/types';
 
 export const tr = (uz: string, ru: string, en: string): Tr => ({ uz, ru, en });
 
-export const CATEGORIES: { id: CategoryId; title: Tr; desc: Tr }[] = [
-  { id: 'corporate', title: tr('Korporativ', 'Корпоративные', 'Corporate'), desc: tr('MChJ tashkil etish, qarorlar, bayonlar', 'Создание ООО, решения, протоколы', 'Company formation, decisions, minutes') },
-  { id: 'hr', title: tr('Kadrlar', 'Кадры', 'HR'), desc: tr('Mehnat shartnomasi va buyruqlar', 'Трудовой договор и приказы', 'Employment contract and orders') },
-  { id: 'contracts', title: tr('Shartnomalar', 'Договоры', 'Contracts'), desc: tr('Xizmat, oldi-sotdi, ijara, qarz', 'Услуги, купля-продажа, аренда, заём', 'Services, sale, lease, loans') },
-  { id: 'acts', title: tr('Dalolatnoma va ishonchnomalar', 'Акты и доверенности', 'Acts & powers of attorney'), desc: tr('Bajarilgan ishlar, topshirish, ishonchnoma', 'Выполненные работы, передача, доверенность', 'Completed works, handover, power of attorney') },
+export interface Category { id: CategoryId; title: Tr; desc: Tr; subs: { id: string; title: Tr }[] }
+
+/** Catalogue structure (modelled on the sections of the Ministry of Justice yurxizmat.uz portal). */
+export const CATEGORIES: Category[] = [
+  { id: 'contracts', title: tr('Shartnomalar', 'Договоры', 'Contracts'), desc: tr('Xizmat, oldi-sotdi, ijara, avtotransport', 'Услуги, купля-продажа, аренда, автотранспорт', 'Services, sale, lease, vehicles'), subs: [
+    { id: 'legal', title: tr('Yuridik shaxslar oʻrtasida', 'Между юрлицами', 'Between companies') },
+    { id: 'realty', title: tr('Koʻchmas mulk', 'Недвижимость', 'Real estate') },
+    { id: 'vehicle', title: tr('Avtotransport', 'Автотранспорт', 'Vehicles') },
+    { id: 'individuals', title: tr('Jismoniy shaxslar bilan', 'С физлицами', 'With individuals') },
+    { id: 'annex', title: tr('Dalolatnoma va kelishuvlar', 'Акты и соглашения', 'Acts & annexes') },
+  ] },
+  { id: 'applications', title: tr('Arizalar', 'Заявления', 'Applications'), desc: tr('Davlat organlari va tashkilotlarga murojaatlar', 'Обращения в госорганы и организации', 'Requests to authorities and organisations'), subs: [
+    { id: 'legal', title: tr('Yuridik shaxslar', 'Юридические лица', 'Companies') },
+    { id: 'individuals', title: tr('Jismoniy shaxslar', 'Физические лица', 'Individuals') },
+    { id: 'children', title: tr('Bolalar boʻyicha', 'По детям', 'Children') },
+  ] },
+  { id: 'hr', title: tr('Shaxsiy tarkib', 'Кадровые документы', 'Personnel'), desc: tr('Xodim arizalari, buyruqlar, mehnat shartnomasi', 'Заявления работников, приказы, трудовой договор', 'Staff requests, orders, employment contract'), subs: [
+    { id: 'applications', title: tr('Arizalar', 'Заявления', 'Requests') },
+    { id: 'orders', title: tr('Buyruqlar', 'Приказы', 'Orders') },
+    { id: 'contracts', title: tr('Mehnat shartnomalari', 'Трудовые договоры', 'Employment contracts') },
+    { id: 'references', title: tr('Maʼlumotnomalar', 'Справки', 'References') },
+  ] },
+  { id: 'notarial', title: tr('Notarial hujjatlar', 'Нотариальные документы', 'Notarial'), desc: tr('Vasiyatnoma, ishonchnoma, hadya, meros', 'Завещание, доверенность, дарение, наследство', 'Wills, powers of attorney, gifts, inheritance'), subs: [
+    { id: 'applications', title: tr('Arizalar', 'Заявления', 'Applications') },
+    { id: 'wills', title: tr('Vasiyatnomalar', 'Завещания', 'Wills') },
+    { id: 'poa', title: tr('Ishonchnomalar', 'Доверенности', 'Powers of attorney') },
+    { id: 'contracts', title: tr('Shartnomalar', 'Договоры', 'Contracts') },
+  ] },
+  { id: 'court', title: tr('Sudga oid hujjatlar', 'Судебные документы', 'Court'), desc: tr('Daʼvo arizalari, sud buyrugʻi, shikoyatlar', 'Иски, судебный приказ, жалобы', 'Claims, court orders, appeals'), subs: [
+    { id: 'claims', title: tr('Daʼvo arizalar', 'Исковые заявления', 'Statements of claim') },
+    { id: 'applications', title: tr('Arizalar', 'Заявления', 'Applications') },
+    { id: 'appeals', title: tr('Apellyatsiya va kassatsiya', 'Апелляция и кассация', 'Appeals & cassation') },
+  ] },
+  { id: 'corporate', title: tr('Korporativ hujjatlar', 'Корпоративные документы', 'Corporate'), desc: tr('MChJ qarorlari, talabnomalar, ishonchnomalar', 'Решения ООО, претензии, доверенности', 'LLC decisions, claim letters, powers of attorney'), subs: [
+    { id: 'decisions', title: tr('Qarorlar va bayonnomalar', 'Решения и протоколы', 'Decisions & minutes') },
+    { id: 'claims', title: tr('Talabnomalar', 'Претензии', 'Claim letters') },
+    { id: 'poa', title: tr('Ishonchnomalar', 'Доверенности', 'Powers of attorney') },
+  ] },
 ];
 
 /** Form section headings. */
@@ -45,6 +79,27 @@ export const GROUPS: Record<string, Tr> = {
   powers: tr('Vakolatlar', 'Полномочия', 'Powers'),
   sign: tr('Imzo', 'Подпись', 'Signature'),
   act: tr('Dalolatnoma', 'Акт', 'Act'),
+  plaintiff: tr('Daʼvogar', 'Истец', 'Claimant'),
+  defendant: tr('Javobgar', 'Ответчик', 'Defendant'),
+  court: tr('Sud', 'Суд', 'Court'),
+  claim: tr('Talab mazmuni', 'Суть требования', 'Claim'),
+  children: tr('Bolalar', 'Дети', 'Children'),
+  marriage: tr('Nikoh', 'Брак', 'Marriage'),
+  debt: tr('Qarz', 'Долг', 'Debt'),
+  applicant: tr('Ariza beruvchi', 'Заявитель', 'Applicant'),
+  addressee: tr('Kimga', 'Адресат', 'Addressee'),
+  request: tr('Murojaat mazmuni', 'Содержание обращения', 'Request'),
+  testator: tr('Vasiyat qiluvchi', 'Завещатель', 'Testator'),
+  heirs: tr('Merosxoʻrlar', 'Наследники', 'Heirs'),
+  deceased: tr('Meros qoldiruvchi', 'Наследодатель', 'Deceased'),
+  vehicle: tr('Avtotransport vositasi', 'Транспортное средство', 'Vehicle'),
+  donor: tr('Hadya qiluvchi', 'Даритель', 'Donor'),
+  donee: tr('Hadya oluvchi', 'Одаряемый', 'Donee'),
+  gift: tr('Hadya predmeti', 'Предмет дарения', 'Gift'),
+  child: tr('Bola', 'Ребёнок', 'Child'),
+  parent: tr('Ota-ona', 'Родитель', 'Parent'),
+  leave: tr('Taʼtil', 'Отпуск', 'Leave'),
+  case: tr('Ish va qaror', 'Дело и решение', 'Case and decision'),
   person: tr('Shaxsiy maʼlumotlar', 'Личные данные', 'Personal details'),
   education: tr('Maʼlumoti va unvonlar', 'Образование и звания', 'Education & titles'),
   career: tr('Mehnat faoliyati', 'Трудовая деятельность', 'Work history'),
@@ -98,6 +153,43 @@ export const EX_B: PartyExample = {
   addr: 'Тошкент ш., Чилонзор тумани, Бунёдкор шоҳ кўчаси, 10-уй', acc: '2020 8000 2002 6789 0001', mfo: '00873',
   bank: '«Мисол банк» АТБ Чилонзор филиали', phone: '+998 71 300-00-00',
 };
+
+export const personCell = (c: import('../core/doc/engine').Ctx, pfx: string, role: string) =>
+  `<b>«${role}»</b><br>${c.x(pfx, 20)}<br>Паспорт: ${c.x(pfx + '_pass', 18)}<br>Манзил: ${c.x(pfx + '_addr', 22)}<br>ЖШШИР: ${c.x(pfx + '_pinfl', 14)}<br>Ҳисоб/карта: ${c.x(pfx + '_acc', 18)}<br><br>____________ ${c.x(pfx, 14)}`;
+
+export const personFields = (pfx: string, g: string, ex: { fio: string; pass: string; addr: string }): FieldDef[] => [
+  { k: pfx, g, l: L.fio, ex: ex.fio },
+  { k: pfx + '_pass', g, l: tr('Pasport (seriya, raqam, kim bergan, sana)', 'Паспорт (серия, номер, кем и когда выдан)', 'Passport (series, number, issuer, date)'), ex: ex.pass },
+  { k: pfx + '_addr', g, l: L.addr, ex: ex.addr },
+  { k: pfx + '_pinfl', g, l: tr('JShShIR', 'ПИНФЛ', 'Personal ID (PINFL)'), half: true },
+  { k: pfx + '_acc', g, l: tr('Hisob yoki karta raqami', 'Счёт или номер карты', 'Account or card number'), half: true },
+];
+
+/** Right-hand addressee block of an application: «…га / …дан». */
+export const addressee = (...lines: string[]) => `<div class="to">${lines.filter(Boolean).map(l => `<p>${l}</p>`).join('')}</div>`;
+
+/** Date on the left, signature and name on the right. */
+export const signLine = (c: import('../core/doc/engine').Ctx, dateKey: string, fioKey: string) =>
+  `<table class="sig"><tr><td>${c.date(dateKey)}</td><td class="r">____________ ${c.x(fioKey, 18)}</td></tr></table>`;
+
+/** Numbered list of attachments; extra lines from a textarea are appended. */
+export const attachments = (c: import('../core/doc/engine').Ctx, fixed: string[], extraKey?: string) => {
+  const extra = extraKey ? c.raw(extraKey).split('\n').map(s => s.trim()).filter(Boolean).map(s => c.span(esc(s))) : [];
+  const all = [...fixed, ...extra];
+  return all.length ? `<p><b>Илова:</b></p><ol>${all.map(i => `<li>${i}</li>`).join('')}</ol>` : '';
+};
+
+export const vehicleFields = (g: string): FieldDef[] => [
+  { k: 'v_model', g, l: tr('Rusumi va modeli', 'Марка и модель', 'Make and model'), ex: 'Chevrolet Cobalt', half: true },
+  { k: 'v_year', g, l: tr('Ishlab chiqarilgan yili', 'Год выпуска', 'Year of manufacture'), ex: '2021', half: true },
+  { k: 'v_color', g, l: tr('Rangi', 'Цвет', 'Colour'), ex: 'оқ', half: true },
+  { k: 'v_plate', g, l: tr('Davlat raqam belgisi', 'Госномер', 'Licence plate'), ex: '01 A 123 BC', half: true },
+  { k: 'v_vin', g, l: tr('Kuzov (VIN) raqami', 'Номер кузова (VIN)', 'Body (VIN) number'), ex: 'XWBJA69V0MA000000', half: true },
+  { k: 'v_engine', g, l: tr('Dvigatel raqami', 'Номер двигателя', 'Engine number'), ex: 'B15D2 000000', half: true },
+  { k: 'v_doc', g, l: tr('Qayd etish guvohnomasi (seriya, raqam, sana)', 'Техпаспорт (серия, номер, дата)', 'Registration certificate (series, No., date)'), ex: 'AAF 0123456, 15.03.2021' },
+];
+export const vehicleText = (c: import('../core/doc/engine').Ctx) =>
+  `${c.x('v_model', 14)} русумли, ${c.x('v_year', 4)} йилда ишлаб чиқарилган, ${c.x('v_color', 6)} рангли, давлат рақам белгиси ${c.x('v_plate', 10)}, кузов (VIN) рақами ${c.x('v_vin', 14)}, двигатель рақами ${c.x('v_engine', 10)} бўлган автотранспорт воситаси (қайд этиш гувоҳномаси: ${c.x('v_doc', 16)})`;
 
 export const ITEM_COLS: RowColumn[] = [
   { k: 'name', l: tr('Nomi', 'Наименование', 'Name') },
