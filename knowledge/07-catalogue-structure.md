@@ -21,3 +21,14 @@ Legal anchors used in texts: Family Code art. 99 (child-support shares 1/4 · 1/
 - notarial: travel-consent, inheritance-refusal (applications) · general-poa (poa) · apartment-sale (contracts)
 - court: court-property-division, court-wages (claims) · court-order-cancel, court-copy-request (applications) · court-cassation (appeals)
 - corporate: annual-meeting, participant-exit (decisions) · claim-reply (claims)
+
+## Batch 3 (+30 templates, total 94)
+
+New subcategories: hr/notices, hr/internal, court/responses, corporate/charters, corporate/letters.
+
+- contracts: cargo, storage, nda, equipment-lease (legal) · car-rental (vehicle) · handover-act, invoice (annex; invoice prices include VAT, VAT share = total × r / (100 + r))
+- applications: consumer-complaint, loan-deferral (individuals) · tax-refund (legal) · school-transfer (children)
+- hr: transfer-order, bonus-order (orders) · material-liability (contracts) · job-description (internal) · memo, reduction-notice (notices)
+- notarial: marriage-contract, alimony-agreement (contracts) · realty-poa (poa) · spouse-consent (applications)
+- court: court-damages, court-consumer (claims) · court-motion, court-objection (responses)
+- corporate: llc-charter (charters) · guarantee-letter, requisites-letter (letters) · major-deal, share-sale (decisions)

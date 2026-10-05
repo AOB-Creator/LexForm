@@ -4,13 +4,13 @@ Hujjat shablonlari generatori: forma to‘ldiriladi, hujjat jonli ko‘rinishda 
 
 - **Interfeys tillari:** O‘zbekcha (lotin), Русский, English — sarlavhadagi UZ / RU / EN tugmalari.
 - **Hujjat tili:** faqat o‘zbek tili — **kirill** yoki **lotin** yozuvida. Shablonlar kirillda yozilgan, lotin varianti rasmiy alifbo qoidalari bo‘yicha avtomatik transliteratsiya qilinadi (ʻ U+02BB, ʼ U+02BC).
-- **64 ta shablon, 6 boʻlim** (yurxizmat.uz tuzilmasi asosida):
-  - **Shartnomalar (15)** — xizmat, oldi-sotdi, yetkazib berish, pudrat, ijara (noturar va turar joy), avtomobil, qarz shartnomasi va tilxat, solishtirma dalolatnoma, bekor qilish kelishuvi
-  - **Arizalar (6)** — fuqaro murojaati, kommunal qayta hisob, rasmiy xat, toʻlovni kechiktirish, maktab va bogʻchaga qabul
-  - **Shaxsiy tarkib (14)** — xodim arizalari, tushuntirish xati, qabul/boʻshatish/taʼtil/intizomiy/safar buyruqlari, mehnat shartnomasi, maʼlumotnomalar, tavsifnoma, obyektivka
-  - **Notarial hujjatlar (8)** — vasiyatnoma, ishonchnomalar, meros qabul/voz kechish, bolaning chiqishiga rozilik, hadya va kvartira oldi-sotdi
-  - **Sudga oid hujjatlar (10)** — daʼvolar (aliment, nikoh, mol-mulk, qarz, ish haqi), sud buyrugʻi va uni bekor qilish, nusxa soʻrash, apellyatsiya, kassatsiya
-  - **Korporativ hujjatlar (11)** — MChJ qarorlari, yillik yigʻilish, ishtirokchining chiqishi, talabnoma va unga javob, ishonchnoma
+- **94 ta shablon, 6 boʻlim** (yurxizmat.uz tuzilmasi asosida):
+  - **Shartnomalar (22)** — xizmat, oldi-sotdi, yetkazib berish, pudrat, yuk tashish, saqlash, NDA, ijara (noturar, turar joy, uskuna, avtomobil), avtomobil oldi-sotdi, qarz va tilxat, dalolatnomalar, hisobvaraq, bekor qilish kelishuvi
+  - **Arizalar (10)** — fuqaro murojaati, isteʼmolchi talabnomasi, kredit kechiktirish, kommunal qayta hisob, rasmiy xat, soliq qaytarish, toʻlov kechiktirish, maktab/bogʻcha/oʻtkazish
+  - **Shaxsiy tarkib (20)** — xodim arizalari, buyruqlar (qabul, boʻshatish, taʼtil, intizomiy, safar, oʻtkazish, mukofot, shtat), mehnat va moddiy javobgarlik shartnomalari, maʼlumotnomalar, bildirgi, ogohlantirish, lavozim yoʻriqnomasi
+  - **Notarial hujjatlar (12)** — vasiyatnoma, ishonchnomalar, meros, rozilik (bola, er-xotin), hadya, kvartira, nikoh shartnomasi, aliment kelishuvi
+  - **Sudga oid hujjatlar (14)** — daʼvolar (aliment, nikoh, mol-mulk, qarz, ish haqi, zarar, isteʼmolchi), sud buyrugʻi, iltimosnoma, eʼtiroz, nusxa, apellyatsiya, kassatsiya
+  - **Korporativ hujjatlar (16)** — MChJ qarorlari va ustavi, yillik yigʻilish, yirik bitim, ulush sotish, ishtirokchi chiqishi, talabnoma va javob, kafolat va rekvizitlar xati, ishonchnoma
 - Summalar avtomatik so‘z bilan yoziladi (so‘m / tiyin), qoralamalar brauzerda (localStorage) saqlanadi, yorug‘ / qorong‘i mavzu.
 
 ## Ishga tushirish

@@ -24,6 +24,8 @@ export const CATEGORIES: Category[] = [
     { id: 'orders', title: tr('Buyruqlar', 'Приказы', 'Orders') },
     { id: 'contracts', title: tr('Mehnat shartnomalari', 'Трудовые договоры', 'Employment contracts') },
     { id: 'references', title: tr('Maʼlumotnomalar', 'Справки', 'References') },
+    { id: 'notices', title: tr('Bildirishnomalar', 'Уведомления', 'Notices & memos') },
+    { id: 'internal', title: tr('Ichki hujjatlar', 'Внутренние документы', 'Internal documents') },
   ] },
   { id: 'notarial', title: tr('Notarial hujjatlar', 'Нотариальные документы', 'Notarial'), desc: tr('Vasiyatnoma, ishonchnoma, hadya, meros', 'Завещание, доверенность, дарение, наследство', 'Wills, powers of attorney, gifts, inheritance'), subs: [
     { id: 'applications', title: tr('Arizalar', 'Заявления', 'Applications') },
@@ -34,11 +36,14 @@ export const CATEGORIES: Category[] = [
   { id: 'court', title: tr('Sudga oid hujjatlar', 'Судебные документы', 'Court'), desc: tr('Daʼvo arizalari, sud buyrugʻi, shikoyatlar', 'Иски, судебный приказ, жалобы', 'Claims, court orders, appeals'), subs: [
     { id: 'claims', title: tr('Daʼvo arizalar', 'Исковые заявления', 'Statements of claim') },
     { id: 'applications', title: tr('Arizalar', 'Заявления', 'Applications') },
+    { id: 'responses', title: tr('Eʼtirozlar va iltimosnomalar', 'Возражения и ходатайства', 'Objections & motions') },
     { id: 'appeals', title: tr('Apellyatsiya va kassatsiya', 'Апелляция и кассация', 'Appeals & cassation') },
   ] },
   { id: 'corporate', title: tr('Korporativ hujjatlar', 'Корпоративные документы', 'Corporate'), desc: tr('MChJ qarorlari, talabnomalar, ishonchnomalar', 'Решения ООО, претензии, доверенности', 'LLC decisions, claim letters, powers of attorney'), subs: [
     { id: 'decisions', title: tr('Qarorlar va bayonnomalar', 'Решения и протоколы', 'Decisions & minutes') },
     { id: 'claims', title: tr('Talabnomalar', 'Претензии', 'Claim letters') },
+    { id: 'charters', title: tr('Ustavlar', 'Уставы', 'Charters') },
+    { id: 'letters', title: tr('Maʼlumotnoma va xatlar', 'Справки и письма', 'References & letters') },
     { id: 'poa', title: tr('Ishonchnomalar', 'Доверенности', 'Powers of attorney') },
   ] },
 ];

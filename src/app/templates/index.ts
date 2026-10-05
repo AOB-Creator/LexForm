@@ -10,8 +10,11 @@ import { NOTARIAL } from './notarial';
 import { MORE_CONTRACTS } from './more-contracts';
 import { MORE_HR } from './more-hr';
 import { MORE_CORPORATE, MORE_COURT, MORE_NOTARIAL } from './more-legal';
+import { BATCH3_CONTRACTS } from './batch3-contracts';
+import { BATCH3_CORPORATE, BATCH3_COURT, BATCH3_NOTARIAL } from './batch3-legal';
+import { BATCH3_APPLICATIONS, BATCH3_HR } from './batch3-people';
 
-export const TEMPLATES: DocTemplate[] = [...CONTRACTS, ...MORE_CONTRACTS, ...APPLICATIONS, ...HR_REQUESTS, ...HR, ...MORE_HR, ...NOTARIAL, ...MORE_NOTARIAL, ...COURT, ...MORE_COURT, ...CORPORATE, ...MORE_CORPORATE, ...ACTS];
+export const TEMPLATES: DocTemplate[] = [...CONTRACTS, ...MORE_CONTRACTS, ...BATCH3_CONTRACTS, ...APPLICATIONS, ...BATCH3_APPLICATIONS, ...HR_REQUESTS, ...HR, ...MORE_HR, ...BATCH3_HR, ...NOTARIAL, ...MORE_NOTARIAL, ...BATCH3_NOTARIAL, ...COURT, ...MORE_COURT, ...BATCH3_COURT, ...CORPORATE, ...MORE_CORPORATE, ...BATCH3_CORPORATE, ...ACTS];
 
 export function findTemplate(id: string): DocTemplate | undefined {
   return TEMPLATES.find(t => t.id === id);
