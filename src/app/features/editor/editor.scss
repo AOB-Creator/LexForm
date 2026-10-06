@@ -83,6 +83,8 @@ h1 { font: 600 clamp(20px, 2.4vw, 28px)/1.2 var(--f-display); letter-spacing: -.
 .lbl-row { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; }
 .today { border: 0; background: none; padding: 0; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--primary); white-space: nowrap; }
 .today:hover { text-decoration: underline; }
+.h1-row { display: flex; align-items: flex-start; gap: 6px; }
+.h1-row h1 { margin-bottom: 6px; }
 .star { border: 0; background: none; cursor: pointer; color: var(--muted); vertical-align: middle; padding: 2px 4px; border-radius: 8px; }
 .star:hover { color: var(--accent); }
 .star.on { color: #e0a100; }
@@ -102,6 +104,16 @@ h1 { font: 600 clamp(20px, 2.4vw, 28px)/1.2 var(--f-display); letter-spacing: -.
 .x:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); }
 .rows-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
 .total { font: 500 13px var(--f-mono); color: var(--ink-2); }
+
+/* ---------- related ---------- */
+.related { padding: 32px var(--gutter) 56px; border-top: 1px solid var(--line); background: var(--bg-2); }
+.related h2 { font: 700 13px/1 var(--f-ui); text-transform: uppercase; letter-spacing: .12em; color: var(--primary); margin: 0 0 14px; }
+.related ul { list-style: none; padding: 0; margin: 0 0 14px; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.related li a { display: grid; gap: 4px; height: 100%; padding: 12px 14px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); color: var(--ink); text-decoration: none; }
+.related li a:hover { border-color: var(--primary); }
+.related li span { font-size: 13px; color: var(--muted); }
+.related .all { font-weight: 700; font-size: 14px; color: var(--primary); text-decoration: none; }
+.crumbs a.chip { text-decoration: none; }
 
 /* ---------- preview ---------- */
 .preview { min-width: 0; padding: 22px var(--gutter) 64px; }

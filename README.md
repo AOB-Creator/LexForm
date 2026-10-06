@@ -22,13 +22,24 @@ Hujjat shablonlari generatori: forma to‘ldiriladi, hujjat jonli ko‘rinishda 
 - **Maydonlarni tekshirish** — STIR (9), JShShIR (14), MFO (5), hisob raqami (20), telefon, pasport formati.
 - **«Bugun»** tugmasi sana maydonlarida, **masshtab** (70–150%), `Ctrl+S` — Word, `Ctrl+P` — chop etish.
 
+## SEO
+
+- **Prerender (SSG):** `npm run build` bosh sahifa, 6 ta boʻlim (`/c/:id`) va barcha shablonlarni (`/t/:id`) statik HTML'ga aylantiradi — qidiruv tizimlari toʻliq matnni koʻradi.
+- Har bir sahifada: `title`, `description`, `canonical`, `robots`, Open Graph va Twitter teglari (`core/services/seo.service.ts`).
+- **JSON-LD:** WebSite (+ SearchAction `/?q=`), Organization, WebApplication, FAQPage (bosh sahifa), BreadcrumbList + CollectionPage/ItemList (boʻlimlar), BreadcrumbList + WebPage (shablonlar).
+- `scripts/postbuild.mjs` — `sitemap.xml` va `404.html`; `public/robots.txt`, `site.webmanifest`, `og.png`, ikonlar.
+- Ichki havolalar: boʻlim sahifalari, footer'dagi boʻlimlar, har bir shablonda «Oʻxshash shablonlar».
+- `vercel.json`: `www` → asosiy domen 301, statik fayllar keshi, `/my` uchun `noindex`, mavjud boʻlmagan sahifalar haqiqiy 404.
+
+**Ishga tushirgandan keyin:** Google Search Console va Yandex Webmaster'da `lexform.uz` ni tasdiqlang va `https://lexform.uz/sitemap.xml` ni yuboring.
+
 ## Ishga tushirish
 
 ```bash
 npm install      # .npmrc: legacy-peer-deps=true
 npm start        # http://localhost:4200
 npm test         # vitest: transliteratsiya, summa so‘zda, barcha shablonlar render testi
-npm run build    # dist/lexform-app/browser — istalgan statik hostingga (SPA fallback → index.html)
+npm run build    # prerender + sitemap → dist/lexform-app/browser (statik hosting)
 ```
 
 Node 22.22+ talab qilinadi (Angular 21).

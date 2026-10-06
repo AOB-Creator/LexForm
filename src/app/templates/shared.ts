@@ -3,23 +3,23 @@ import { CategoryId, FieldDef, RowColumn, Tr } from '../core/doc/types';
 
 export const tr = (uz: string, ru: string, en: string): Tr => ({ uz, ru, en });
 
-export interface Category { id: CategoryId; title: Tr; desc: Tr; subs: { id: string; title: Tr }[] }
+export interface Category { id: CategoryId; title: Tr; desc: Tr; subs: { id: string; title: Tr }[]; /** longer landing-page intro */ intro?: Tr }
 
 /** Catalogue structure (modelled on the sections of the Ministry of Justice yurxizmat.uz portal). */
 export const CATEGORIES: Category[] = [
-  { id: 'contracts', title: tr('Shartnomalar', 'Договоры', 'Contracts'), desc: tr('Xizmat, oldi-sotdi, ijara, avtotransport', 'Услуги, купля-продажа, аренда, автотранспорт', 'Services, sale, lease, vehicles'), subs: [
+  { id: 'contracts', title: tr('Shartnomalar', 'Договоры', 'Contracts'), desc: tr('Xizmat, oldi-sotdi, ijara, avtotransport', 'Услуги, купля-продажа, аренда, автотранспорт', 'Services, sale, lease, vehicles'), intro: tr('Yuridik va jismoniy shaxslar oʻrtasidagi shartnomalar namunalari: xizmat koʻrsatish, oldi-sotdi, yetkazib berish, pudrat, ijara, qarz, garov, avtomobil va kvartira savdosi. Har bir shartnoma forma orqali toʻldiriladi, summa soʻz bilan avtomatik yoziladi, hujjat kirill yoki lotin yozuvida Word va PDF koʻrinishida yuklab olinadi.', 'Образцы договоров между юридическими и физическими лицами на узбекском языке: услуги, купля-продажа, поставка, подряд, аренда, заём, залог, продажа автомобиля и квартиры. Заполняется через форму, сумма прописью формируется автоматически, скачивание в Word и PDF.', 'Contract templates between companies and individuals in Uzbek: services, sale, supply, works, lease, loans, pledge, car and flat sales. Filled through a form, amounts in words, download as Word or PDF.'), subs: [
     { id: 'legal', title: tr('Yuridik shaxslar oʻrtasida', 'Между юрлицами', 'Between companies') },
     { id: 'realty', title: tr('Koʻchmas mulk', 'Недвижимость', 'Real estate') },
     { id: 'vehicle', title: tr('Avtotransport', 'Автотранспорт', 'Vehicles') },
     { id: 'individuals', title: tr('Jismoniy shaxslar bilan', 'С физлицами', 'With individuals') },
     { id: 'annex', title: tr('Dalolatnoma va kelishuvlar', 'Акты и соглашения', 'Acts & annexes') },
   ] },
-  { id: 'applications', title: tr('Arizalar', 'Заявления', 'Applications'), desc: tr('Davlat organlari va tashkilotlarga murojaatlar', 'Обращения в госорганы и организации', 'Requests to authorities and organisations'), subs: [
+  { id: 'applications', title: tr('Arizalar', 'Заявления', 'Applications'), desc: tr('Davlat organlari va tashkilotlarga murojaatlar', 'Обращения в госорганы и организации', 'Requests to authorities and organisations'), intro: tr('Davlat organlari, banklar, maktab va bogʻchalarga arizalar namunalari: fuqaroning murojaati, isteʼmolchi talabnomasi, kommunal toʻlovni qayta hisoblash, soliqni qaytarish, litsenziya, bolali oilalarga nafaqa. Ariza oʻzbek tilida toʻgʻri shaklda tayyorlanadi.', 'Образцы заявлений в госорганы, банки, школы и детсады: обращение гражданина, претензия потребителя, перерасчёт коммунальных, возврат налога, лицензия, пособие на детей — на узбекском языке.', 'Application templates for authorities, banks, schools and kindergartens: citizen appeals, consumer claims, utility recalculation, tax refunds, licences, child benefit.'), subs: [
     { id: 'legal', title: tr('Yuridik shaxslar', 'Юридические лица', 'Companies') },
     { id: 'individuals', title: tr('Jismoniy shaxslar', 'Физические лица', 'Individuals') },
     { id: 'children', title: tr('Bolalar boʻyicha', 'По детям', 'Children') },
   ] },
-  { id: 'hr', title: tr('Shaxsiy tarkib', 'Кадровые документы', 'Personnel'), desc: tr('Xodim arizalari, buyruqlar, mehnat shartnomasi', 'Заявления работников, приказы, трудовой договор', 'Staff requests, orders, employment contract'), subs: [
+  { id: 'hr', title: tr('Shaxsiy tarkib', 'Кадровые документы', 'Personnel'), desc: tr('Xodim arizalari, buyruqlar, mehnat shartnomasi', 'Заявления работников, приказы, трудовой договор', 'Staff requests, orders, employment contract'), intro: tr('Kadrlar hujjatlari namunalari: mehnat shartnomasi, ishga qabul qilish, ishdan boʻshatish, taʼtil, xizmat safari, intizomiy jazo va mukofotlash buyruqlari, xodim arizalari, maʼlumotnoma, obyektivka, tavsifnoma va lavozim yoʻriqnomasi.', 'Образцы кадровых документов на узбекском: трудовой договор, приказы о приёме, увольнении, отпуске, командировке, взыскании и премии, заявления работников, справки, объективка, характеристика, должностная инструкция.', 'HR templates in Uzbek: employment contract, hiring, dismissal, leave, travel, disciplinary and bonus orders, staff requests, certificates, objektivka, references and job descriptions.'), subs: [
     { id: 'applications', title: tr('Arizalar', 'Заявления', 'Requests') },
     { id: 'orders', title: tr('Buyruqlar', 'Приказы', 'Orders') },
     { id: 'contracts', title: tr('Mehnat shartnomalari', 'Трудовые договоры', 'Employment contracts') },
@@ -27,19 +27,19 @@ export const CATEGORIES: Category[] = [
     { id: 'notices', title: tr('Bildirishnomalar', 'Уведомления', 'Notices & memos') },
     { id: 'internal', title: tr('Ichki hujjatlar', 'Внутренние документы', 'Internal documents') },
   ] },
-  { id: 'notarial', title: tr('Notarial hujjatlar', 'Нотариальные документы', 'Notarial'), desc: tr('Vasiyatnoma, ishonchnoma, hadya, meros', 'Завещание, доверенность, дарение, наследство', 'Wills, powers of attorney, gifts, inheritance'), subs: [
+  { id: 'notarial', title: tr('Notarial hujjatlar', 'Нотариальные документы', 'Notarial'), desc: tr('Vasiyatnoma, ishonchnoma, hadya, meros', 'Завещание, доверенность, дарение, наследство', 'Wills, powers of attorney, gifts, inheritance'), intro: tr('Notarial tasdiqlanadigan hujjatlar namunalari: vasiyatnoma, ishonchnomalar (avtomobil, koʻchmas mulk, pensiya, bank), merosni qabul qilish va undan voz kechish arizalari, hadya, kvartira oldi-sotdi, nikoh shartnomasi va aliment kelishuvi.', 'Образцы нотариальных документов на узбекском: завещание, доверенности (авто, недвижимость, пенсия, банк), заявления о принятии и отказе от наследства, дарение, купля-продажа квартиры, брачный договор, соглашение об алиментах.', 'Notarial templates in Uzbek: wills, powers of attorney (car, property, pension, bank), inheritance applications, gifts, flat sale, marriage contract and child-support agreement.'), subs: [
     { id: 'applications', title: tr('Arizalar', 'Заявления', 'Applications') },
     { id: 'wills', title: tr('Vasiyatnomalar', 'Завещания', 'Wills') },
     { id: 'poa', title: tr('Ishonchnomalar', 'Доверенности', 'Powers of attorney') },
     { id: 'contracts', title: tr('Shartnomalar', 'Договоры', 'Contracts') },
   ] },
-  { id: 'court', title: tr('Sudga oid hujjatlar', 'Судебные документы', 'Court'), desc: tr('Daʼvo arizalari, sud buyrugʻi, shikoyatlar', 'Иски, судебный приказ, жалобы', 'Claims, court orders, appeals'), subs: [
+  { id: 'court', title: tr('Sudga oid hujjatlar', 'Судебные документы', 'Court'), desc: tr('Daʼvo arizalari, sud buyrugʻi, shikoyatlar', 'Иски, судебный приказ, жалобы', 'Claims, court orders, appeals'), intro: tr('Sudga oid hujjatlar namunalari: aliment undirish, nikohni bekor qilish, mol-mulkni taqsimlash, qarz va ish haqini undirish, ishga tiklash, zararni qoplash daʼvo arizalari, sud buyrugʻi, iltimosnoma, daʼvoga eʼtiroz, apellyatsiya va kassatsiya shikoyatlari.', 'Образцы судебных документов на узбекском: иски о взыскании алиментов, расторжении брака, разделе имущества, долга и зарплаты, восстановлении на работе, возмещении ущерба; судебный приказ, ходатайство, возражение, апелляционная и кассационная жалобы.', 'Court templates in Uzbek: claims for child support, divorce, property division, debts and wages, reinstatement and damages; court orders, motions, defences, appeals and cassation.'), subs: [
     { id: 'claims', title: tr('Daʼvo arizalar', 'Исковые заявления', 'Statements of claim') },
     { id: 'applications', title: tr('Arizalar', 'Заявления', 'Applications') },
     { id: 'responses', title: tr('Eʼtirozlar va iltimosnomalar', 'Возражения и ходатайства', 'Objections & motions') },
     { id: 'appeals', title: tr('Apellyatsiya va kassatsiya', 'Апелляция и кассация', 'Appeals & cassation') },
   ] },
-  { id: 'corporate', title: tr('Korporativ hujjatlar', 'Корпоративные документы', 'Corporate'), desc: tr('MChJ qarorlari, talabnomalar, ishonchnomalar', 'Решения ООО, претензии, доверенности', 'LLC decisions, claim letters, powers of attorney'), subs: [
+  { id: 'corporate', title: tr('Korporativ hujjatlar', 'Корпоративные документы', 'Corporate'), desc: tr('MChJ qarorlari, talabnomalar, ishonchnomalar', 'Решения ООО, претензии, доверенности', 'LLC decisions, claim letters, powers of attorney'), intro: tr('MChJ uchun korporativ hujjatlar namunalari: taʼsis qarori va ustav, direktorni almashtirish, nom va manzilni oʻzgartirish, dividend, yillik yigʻilish, yirik bitim, ulushni sotish, filial ochish va tugatish, talabnoma, kafolat xati va ishonchnomalar.', 'Образцы корпоративных документов ООО на узбекском: решение об учреждении и устав, смена директора, названия и адреса, дивиденды, годовое собрание, крупная сделка, продажа доли, филиал, ликвидация, претензия, гарантийное письмо, доверенности.', 'LLC corporate templates in Uzbek: formation decision and charter, director, name and address changes, dividends, annual meeting, major deals, share sale, branches, liquidation, claim letters, guarantees and powers of attorney.'), subs: [
     { id: 'decisions', title: tr('Qarorlar va bayonnomalar', 'Решения и протоколы', 'Decisions & minutes') },
     { id: 'claims', title: tr('Talabnomalar', 'Претензии', 'Claim letters') },
     { id: 'charters', title: tr('Ustavlar', 'Уставы', 'Charters') },

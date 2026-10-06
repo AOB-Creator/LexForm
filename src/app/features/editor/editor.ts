@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, HostListener, inject, input, signal, untracked, viewChild } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { DomSanitizer, Title } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { renderTemplate } from '../../core/doc/engine';
 import { esc, fmtMoney, moneyWords, parseNum } from '../../core/doc/format';
@@ -10,11 +10,12 @@ import { DictKey } from '../../core/i18n/dictionary';
 import { I18n, TPipe, TrPipe } from '../../core/i18n/i18n.service';
 import { Drafts } from '../../core/services/drafts.service';
 import { Library } from '../../core/services/library.service';
+import { crumbs, Seo, SITE } from '../../core/services/seo.service';
 import { Prefs } from '../../core/services/prefs.service';
 import { ProfileKind, Profiles, PROFILE_SUFFIXES } from '../../core/services/profiles.service';
 import { fieldWarning } from '../../core/services/validate';
 import { Icon } from '../../layout/icon';
-import { completion, emptyValues, exampleValues, findTemplate } from '../../templates';
+import { completion, emptyValues, exampleValues, findTemplate, TEMPLATES } from '../../templates';
 import { CATEGORIES, GROUPS } from '../../templates/shared';
 
 interface Group { key: string; fields: (FieldDef | [FieldDef, FieldDef])[]; }
@@ -39,7 +40,7 @@ export class Editor {
 
   private readonly drafts = inject(Drafts);
   private readonly sanitizer = inject(DomSanitizer);
-  private readonly title = inject(Title);
+  private readonly seo = inject(Seo);
   protected readonly i18n = inject(I18n);
   protected readonly prefs = inject(Prefs);
   protected readonly library = inject(Library);
@@ -55,6 +56,12 @@ export class Editor {
   protected readonly tab = signal<'form' | 'doc'>('form');
 
   protected readonly category = computed(() => CATEGORIES.find(c => c.id === this.tpl()?.cat));
+  protected readonly related = computed(() => {
+    const t = this.tpl();
+    if (!t) return [];
+    const same = TEMPLATES.filter(x => x.id !== t.id && x.cat === t.cat);
+    return [...same.filter(x => x.sub === t.sub), ...same.filter(x => x.sub !== t.sub)].slice(0, 6);
+  });
 
   protected readonly groups = computed<Group[]>(() => {
     const t = this.tpl();
@@ -118,7 +125,27 @@ export class Editor {
     });
     effect(() => {
       const t = this.tpl();
-      this.title.setTitle(t ? `${this.i18n.tr(t.title)} · LexForm` : 'LexForm');
+      if (!t) {
+        this.seo.update({ title: 'Shablon topilmadi | LexForm', description: '', path: '/404', noindex: true });
+        return;
+      }
+      const cat = CATEGORIES.find(c => c.id === t.cat)!;
+      const path = `/t/${t.id}`;
+      const description = `${t.title.uz}: ${t.desc.uz} Kirill yoki lotin yozuvida, Word va PDF, bepul. ${t.title.ru} — образец на узбекском языке.`;
+      this.seo.update({
+        title: `${t.title.uz} namunasi — onlayn toʻldirish va Word | LexForm`,
+        description,
+        path,
+        type: 'article',
+        jsonLd: [
+          crumbs([['Bosh sahifa', '/'], [cat.title.uz, `/c/${cat.id}`], [t.title.uz, path]]),
+          {
+            '@type': 'WebPage', name: t.title.uz, description, url: SITE + path, inLanguage: 'uz',
+            isPartOf: { '@type': 'WebSite', name: 'LexForm', url: SITE },
+            about: { '@type': 'DigitalDocument', name: t.docTitle, inLanguage: 'uz', isAccessibleForFree: true },
+          },
+        ],
+      });
     });
   }
 

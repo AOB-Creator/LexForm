@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal, untracked } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
 import { renderTemplate } from '../../core/doc/engine';
@@ -6,6 +6,8 @@ import { CategoryId } from '../../core/doc/types';
 import { I18n, TPipe, TrPipe } from '../../core/i18n/i18n.service';
 import { Drafts } from '../../core/services/drafts.service';
 import { Library } from '../../core/services/library.service';
+import { Seo, SITE } from '../../core/services/seo.service';
+import { DICT, DictKey } from '../../core/i18n/dictionary';
 import { Prefs } from '../../core/services/prefs.service';
 import { Icon } from '../../layout/icon';
 import { exampleValues, findTemplate, TEMPLATES } from '../../templates';
@@ -27,6 +29,9 @@ export class Home {
   protected readonly prefs = inject(Prefs);
   protected readonly library = inject(Library);
 
+  /** ?q= from the URL (WebSite SearchAction target) */
+  readonly q = input<string>();
+  protected readonly faq = [1, 2, 3, 4, 5].map(n => ({ q: `faq.${n}.q` as DictKey, a: `faq.${n}.a` as DictKey }));
   protected readonly categories = CATEGORIES;
   protected readonly catIcon = CAT_ICON;
   protected readonly total = TEMPLATES.length;
@@ -73,6 +78,27 @@ export class Home {
     const html = renderTemplate(t, exampleValues(t), this.prefs.script()).split('<div class="pb"></div>')[0];
     return this.sanitizer.bypassSecurityTrustHtml(html);
   });
+
+  constructor() {
+    effect(() => {
+      const q = this.q();
+      if (q) untracked(() => { this.query.set(q); this.cat.set('all'); });
+    });
+    inject(Seo).update({
+      title: 'LexForm — yuridik hujjatlar namunalari: shartnoma, ariza, daʼvo, buyruq',
+      description: `${TEMPLATES.length} ta bepul yuridik hujjat namunasi: shartnomalar, arizalar, daʼvo arizalari, buyruqlar, vasiyatnoma va ishonchnomalar. Forma orqali toʻldiring, oʻzbek tilida (kirill yoki lotin) Word va PDF yuklab oling. Образцы договоров и заявлений на узбекском языке.`,
+      path: '/',
+      jsonLd: [
+        { '@type': 'WebSite', name: 'LexForm', url: SITE + '/', inLanguage: ['uz', 'ru', 'en'],
+          potentialAction: { '@type': 'SearchAction', target: { '@type': 'EntryPoint', urlTemplate: SITE + '/?q={search_term_string}' }, 'query-input': 'required name=search_term_string' } },
+        { '@type': 'Organization', name: 'LexForm', url: SITE + '/', logo: SITE + '/icon-512.png',
+          parentOrganization: { '@type': 'Organization', name: 'TrustCode', url: 'https://trustcode.uz' } },
+        { '@type': 'WebApplication', name: 'LexForm', url: SITE + '/', applicationCategory: 'BusinessApplication', operatingSystem: 'Any', inLanguage: 'uz',
+          offers: { '@type': 'Offer', price: '0', priceCurrency: 'UZS' }, creator: { '@type': 'Organization', name: 'TrustCode', url: 'https://trustcode.uz' } },
+        { '@type': 'FAQPage', mainEntity: this.faq.map(f => ({ '@type': 'Question', name: DICT[f.q].uz, acceptedAnswer: { '@type': 'Answer', text: DICT[f.a].uz } })) },
+      ],
+    });
+  }
 
   protected hasDraft(id: string): boolean { return this.drafts.has(id); }
   protected catTitle(id: CategoryId) { return CATEGORIES.find(c => c.id === id)!.title; }

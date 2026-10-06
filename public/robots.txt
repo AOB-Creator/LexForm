@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /my
+
+Sitemap: https://lexform.uz/sitemap.xml
+Host: https://lexform.uz

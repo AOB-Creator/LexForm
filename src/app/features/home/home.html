@@ -132,3 +132,15 @@
     <li><span class="n">3</span><h3>{{ 'how.3.t' | t }}</h3><p>{{ 'how.3.d' | t }}</p></li>
   </ol>
 </section>
+
+<section class="faq" id="faq">
+  <h2>{{ 'faq.title' | t }}</h2>
+  <div class="qa">
+    @for (f of faq; track f.q) {
+      <details>
+        <summary>{{ f.q | t }}</summary>
+        <p>{{ f.a | t }}</p>
+      </details>
+    }
+  </div>
+</section>

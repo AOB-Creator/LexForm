@@ -2,16 +2,17 @@
   <div class="top no-print">
     <div class="crumbs">
       <a routerLink="/" fragment="templates" class="back"><app-icon name="back" /> {{ 'ed.back' | t }}</a>
-      <span class="chip">{{ category()?.title | tr }}</span>
+      @if (category(); as c) { <a class="chip" [routerLink]="['/c', c.id]">{{ c.title | tr }}</a> }
     </div>
     <div class="title-row">
       <div class="titles">
-        <h1>{{ t.title | tr }}
+        <div class="h1-row">
+        <h1>{{ t.title | tr }}</h1>
           <button type="button" class="star" [class.on]="library.isFav(t.id)" (click)="library.toggleFav(t.id)"
                   [attr.aria-pressed]="library.isFav(t.id)" [attr.aria-label]="(library.isFav(t.id) ? 'ed.unfav' : 'ed.fav') | t" [attr.title]="(library.isFav(t.id) ? 'ed.unfav' : 'ed.fav') | t">
             <app-icon name="star" />
           </button>
-        </h1>
+        </div>
         <p>{{ t.desc | tr }}</p>
       </div>
       <div class="actions">
@@ -179,6 +180,18 @@
       @if (prefs.script() === 'lat') { <p class="pv-note no-print">{{ 'ed.latinNote' | t }}</p> }
     </section>
   </div>
+
+  @if (related().length) {
+    <section class="related no-print">
+      <h2>{{ 'rel.title' | t }}</h2>
+      <ul>
+        @for (r of related(); track r.id) {
+          <li><a [routerLink]="['/t', r.id]"><b>{{ r.title | tr }}</b><span>{{ r.desc | tr }}</span></a></li>
+        }
+      </ul>
+      @if (category(); as c) { <a class="all" [routerLink]="['/c', c.id]">{{ 'rel.all' | t }}: {{ c.title | tr }} →</a> }
+    </section>
+  }
 
   <div class="toast no-print" role="status" [class.show]="toast()">{{ toast() }}</div>
 } @else {

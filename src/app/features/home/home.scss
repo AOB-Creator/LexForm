@@ -153,3 +153,13 @@ h2 { font: 600 clamp(22px, 2.6vw, 30px)/1.2 var(--f-display); letter-spacing: -.
   .float.words { top: auto; bottom: 30px; left: 0; }
   .seal { width: 100px; height: 100px; right: 0; bottom: 70px; }
 }
+
+/* ---------- faq ---------- */
+.faq { max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter) clamp(48px, 7vw, 88px); }
+.qa { display: grid; gap: 8px; margin-top: 18px; }
+.qa details { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); padding: 0 18px; }
+.qa summary { cursor: pointer; padding: 14px 0; font-weight: 700; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+.qa summary::after { content: '+'; color: var(--primary); font-weight: 700; }
+.qa details[open] summary::after { content: '−'; }
+.qa summary::-webkit-details-marker { display: none; }
+.qa p { margin: 0 0 16px; color: var(--ink-2); }

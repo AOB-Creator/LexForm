@@ -5,6 +5,7 @@ import { DictKey } from '../../core/i18n/dictionary';
 import { I18n, TPipe, TrPipe } from '../../core/i18n/i18n.service';
 import { Drafts } from '../../core/services/drafts.service';
 import { Library } from '../../core/services/library.service';
+import { Seo } from '../../core/services/seo.service';
 import { Profile, Profiles } from '../../core/services/profiles.service';
 import { Icon } from '../../layout/icon';
 import { completion, findTemplate } from '../../templates';
@@ -42,6 +43,10 @@ export class My {
   private readonly library = inject(Library);
   protected readonly profiles = inject(Profiles);
   protected readonly toast = signal<DictKey | ''>('');
+
+  constructor() {
+    inject(Seo).update({ title: 'Mening hujjatlarim | LexForm', description: 'Qoralamalar, rekvizitlar kitobi va zaxira nusxa.', path: '/my', noindex: true });
+  }
 
   protected readonly items = computed(() => {
     this.drafts.version();

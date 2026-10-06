@@ -23,7 +23,7 @@ export class Prefs {
     effect(() => {
       const th = this.theme();
       this.store.set('theme', th);
-      this.doc.documentElement.dataset['theme'] = th;
+      this.doc.documentElement.setAttribute('data-theme', th);
     });
   }
 
