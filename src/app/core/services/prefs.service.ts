@@ -13,16 +13,21 @@ export class Prefs {
   readonly script = signal<Script>(this.store.get<Script>('script') ?? 'cyr');
   readonly theme = signal<Theme>(this.store.get<Theme>('theme') ?? this.systemTheme());
   readonly marks = signal<boolean>(this.store.get<boolean>('marks') ?? true);
+  /** document preview zoom, % */
+  readonly zoom = signal<number>(this.store.get<number>('zoom') ?? 100);
 
   constructor() {
     effect(() => this.store.set('script', this.script()));
     effect(() => this.store.set('marks', this.marks()));
+    effect(() => this.store.set('zoom', this.zoom()));
     effect(() => {
       const th = this.theme();
       this.store.set('theme', th);
       this.doc.documentElement.dataset['theme'] = th;
     });
   }
+
+  zoomBy(step: number): void { this.zoom.update(z => Math.min(150, Math.max(70, z + step))); }
 
   toggleTheme(): void { this.theme.update(t => (t === 'dark' ? 'light' : 'dark')); }
 

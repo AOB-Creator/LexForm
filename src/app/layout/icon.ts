@@ -23,6 +23,11 @@ const PATHS: Record<string, string> = {
   clock: 'M12 7v5l3 2m6-2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
   check: 'm5 12 5 5L20 7',
   chevron: 'm6 9 6 6 6-6',
+  star: 'm12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3l-5.5 2.9 1-6.2L3 9.6l6.2-.9Z',
+  bookmark: 'M6 3h12v18l-6-4-6 4Z',
+  folder: 'M3 6a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z',
+  upload: 'M12 21V9m-5 5 5-5 5 5M4 3h16',
+  command: 'M9 6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3Z',
 };
 
 @Component({

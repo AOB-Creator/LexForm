@@ -1,0 +1,56 @@
+<section class="wrap">
+  <h1>{{ 'my.title' | t }}</h1>
+  <p class="lead">{{ 'my.lead' | t }}</p>
+
+  <h2><app-icon name="file" /> {{ 'my.drafts' | t }} <span class="count">{{ items().length }}</span></h2>
+  @if (items().length) {
+    <ul class="list">
+      @for (d of items(); track d.id) {
+        <li>
+          <a class="main" [routerLink]="['/t', d.id]">
+            <span class="ttl">{{ d.t.title | tr }}</span>
+            <span class="sub">{{ cat(d.t).cat | tr }} › {{ cat(d.t).sub | tr }}</span>
+          </a>
+          <span class="meta">{{ 'my.updated' | t }}: {{ when(d.updated) }}</span>
+          <span class="pct" [style.--p]="d.pct"><span>{{ d.pct }}%</span></span>
+          <div class="act">
+            <a class="btn ghost sm" [routerLink]="['/t', d.id]">{{ 'list.open' | t }}</a>
+            <button type="button" class="btn ghost sm danger" (click)="removeDraft(d.id)"><app-icon name="x" /> {{ 'my.delete' | t }}</button>
+          </div>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="empty">{{ 'my.noDrafts' | t }}</p>
+  }
+
+  <h2><app-icon name="bookmark" /> {{ 'my.profiles' | t }} <span class="count">{{ profiles.all().length }}</span></h2>
+  @if (profiles.all().length) {
+    <ul class="list">
+      @for (p of profiles.all(); track p.id) {
+        <li>
+          <div class="main">
+            <span class="ttl">{{ p.label }}</span>
+            <span class="sub">{{ summary(p) }}</span>
+          </div>
+          <span class="chip">{{ (p.kind === 'company' ? 'my.company' : 'my.person') | t }}</span>
+          <div class="act">
+            <button type="button" class="btn ghost sm danger" (click)="removeProfile(p.id)"><app-icon name="x" /> {{ 'my.delete' | t }}</button>
+          </div>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="empty">{{ 'my.noProfiles' | t }}</p>
+  }
+
+  <h2><app-icon name="download" /> {{ 'my.backup' | t }}</h2>
+  <div class="backup">
+    <button type="button" class="btn primary" (click)="exportAll()"><app-icon name="download" /> {{ 'my.export' | t }}</button>
+    <label class="btn">
+      <app-icon name="upload" /> {{ 'my.import' | t }}
+      <input type="file" accept="application/json,.json" hidden (change)="importFile($event)">
+    </label>
+  </div>
+</section>
+<div class="toast no-print" role="status" [class.show]="toast()">@if (toast(); as k) { {{ k | t }} }</div>

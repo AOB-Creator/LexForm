@@ -13,6 +13,15 @@ Hujjat shablonlari generatori: forma to‘ldiriladi, hujjat jonli ko‘rinishda 
   - **Korporativ hujjatlar (21)** — MChJ qarorlari va ustavi, yillik yigʻilish, yirik bitim, ulush sotish, ishtirokchi chiqishi, talabnoma va javob, kafolat va rekvizitlar xati, ishonchnoma, filial, tugatish, rekvizit oʻzgarishi, tovar va avtomobil ishonchnomalari
 - Summalar avtomatik so‘z bilan yoziladi (so‘m / tiyin), qoralamalar brauzerda (localStorage) saqlanadi, yorug‘ / qorong‘i mavzu.
 
+## Qulay funksiyalar
+
+- **Rekvizitlar kitobi** — tashkilot yoki shaxs maʼlumotlarini «Kitobga saqlash» bilan saqlab, istalgan hujjatdagi tomon blokiga bir bosishda qoʻyish.
+- **Mening hujjatlarim** (`/my`) — barcha qoralamalar (tahrir vaqti, toʻldirilganlik %), rekvizitlar kitobi, **zaxira nusxa** (.json eksport/import, import qilinadigan qiymatlar tozalanadi).
+- **Sevimlilar** (★) va **oxirgi ochilganlar** bosh sahifada.
+- **Tezkor qidiruv** — `Ctrl+K` (lotin/kirill/rus/ingliz nomlar boʻyicha).
+- **Maydonlarni tekshirish** — STIR (9), JShShIR (14), MFO (5), hisob raqami (20), telefon, pasport formati.
+- **«Bugun»** tugmasi sana maydonlarida, **masshtab** (70–150%), `Ctrl+S` — Word, `Ctrl+P` — chop etish.
+
 ## Ishga tushirish
 
 ```bash

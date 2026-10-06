@@ -95,6 +95,22 @@ h2 { font: 600 clamp(22px, 2.6vw, 30px)/1.2 var(--f-display); letter-spacing: -.
   &[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); span { color: inherit; opacity: .7; } }
 }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.cell { position: relative; display: flex; min-width: 0; }
+.cell .card { flex: 1; }
+.cell .star {
+  position: absolute; top: 12px; right: 12px; z-index: 1; border: 0; background: none; cursor: pointer;
+  color: var(--muted); padding: 6px; border-radius: 8px; opacity: .55; transition: opacity .15s, color .15s;
+}
+.cell:hover .star, .cell .star:focus-visible, .cell .star.on { opacity: 1; }
+.cell .star.on { color: #e0a100; }
+.cell .star.on ::ng-deep svg { fill: currentColor; }
+.cell .card .draft { margin-right: 28px; }
+.recent { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-bottom: 14px; }
+.recent .lbl { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.recent .lbl app-icon { width: 15px; height: 15px; }
+.recent .chip { text-decoration: none; }
+.recent .chip:hover { color: var(--primary); }
+.filter.fav app-icon { color: #e0a100; }
 .card {
   display: flex; flex-direction: column; gap: 8px; min-width: 0;
   padding: 18px 18px 16px; border-radius: var(--r-lg);

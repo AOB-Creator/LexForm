@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, inject, input, signal, untracked, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, HostListener, inject, input, signal, untracked, viewChild } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
@@ -9,12 +9,16 @@ import { DocTemplate, FieldDef, RowValue, Values } from '../../core/doc/types';
 import { DictKey } from '../../core/i18n/dictionary';
 import { I18n, TPipe, TrPipe } from '../../core/i18n/i18n.service';
 import { Drafts } from '../../core/services/drafts.service';
+import { Library } from '../../core/services/library.service';
 import { Prefs } from '../../core/services/prefs.service';
+import { ProfileKind, Profiles, PROFILE_SUFFIXES } from '../../core/services/profiles.service';
+import { fieldWarning } from '../../core/services/validate';
 import { Icon } from '../../layout/icon';
 import { completion, emptyValues, exampleValues, findTemplate } from '../../templates';
 import { CATEGORIES, GROUPS } from '../../templates/shared';
 
 interface Group { key: string; fields: (FieldDef | [FieldDef, FieldDef])[]; }
+interface PartyBlock { pfx: string; kind: ProfileKind; }
 
 const WORD_CSS = `body{font-family:"Times New Roman",serif;font-size:12pt;line-height:1.4}
 h2,h3{text-align:center;font-size:12pt}h2{text-transform:uppercase}p,li{text-align:justify}
@@ -38,6 +42,8 @@ export class Editor {
   private readonly title = inject(Title);
   protected readonly i18n = inject(I18n);
   protected readonly prefs = inject(Prefs);
+  protected readonly library = inject(Library);
+  protected readonly profiles = inject(Profiles);
   protected readonly groupsLabel = GROUPS;
 
   private readonly sheet = viewChild<ElementRef<HTMLElement>>('sheet');
@@ -67,6 +73,21 @@ export class Editor {
     return out;
   });
 
+  /** Party blocks per form group (company details or a person), for the address book. */
+  protected readonly parties = computed<Record<string, PartyBlock>>(() => {
+    const t = this.tpl();
+    const out: Record<string, PartyBlock> = {};
+    if (!t) return out;
+    const keys = new Set(t.fields.map(f => f.k));
+    for (const f of t.fields) {
+      if (out[f.g]) continue;
+      if (f.k.endsWith('_name') && keys.has(f.k.replace(/_name$/, '_stir'))) out[f.g] = { pfx: f.k.replace(/_name$/, ''), kind: 'company' };
+      else if (keys.has(f.k + '_pass') && keys.has(f.k + '_addr')) out[f.g] = { pfx: f.k, kind: 'person' };
+    }
+    return out;
+  });
+  private readonly keys = computed(() => new Set(this.tpl()?.fields.map(f => f.k) ?? []));
+
   protected readonly html = computed(() => {
     const t = this.tpl();
     return t ? this.sanitizer.bypassSecurityTrustHtml(renderTemplate(t, this.values(), this.prefs.script())) : '';
@@ -86,6 +107,7 @@ export class Editor {
         const saved = this.drafts.load(t.id);
         this.values.set(saved ?? exampleValues(t));
         this.note.set(saved ? 'ed.saved' : 'ed.exampleNote');
+        this.library.touch(t.id);
       });
     });
     // autosave
@@ -98,6 +120,45 @@ export class Editor {
       const t = this.tpl();
       this.title.setTitle(t ? `${this.i18n.tr(t.title)} · LexForm` : 'LexForm');
     });
+  }
+
+  protected warn(f: FieldDef): DictKey | null {
+    return fieldWarning(f.k, this.str(f.k), f.k.endsWith('_acc') && this.keys().has(f.k.replace(/_acc$/, '_stir')));
+  }
+
+  protected today(k: string): void {
+    const d = new Date();
+    this.set(k, `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`);
+  }
+
+  protected applyProfile(b: PartyBlock, id: string): void {
+    const pr = this.profiles.all().find(x => x.id === id);
+    if (!pr) return;
+    this.values.update(cur => {
+      const next = { ...cur };
+      for (const sfx of PROFILE_SUFFIXES[b.kind]) {
+        if (this.keys().has(b.pfx + sfx) && pr.data[sfx] !== undefined) next[b.pfx + sfx] = pr.data[sfx];
+      }
+      return next;
+    });
+    this.flash('pf.applied');
+  }
+
+  protected saveProfile(b: PartyBlock): void {
+    const label = this.str(b.kind === 'company' ? b.pfx + '_name' : b.pfx).trim();
+    if (!label) { this.flash('pf.empty'); return; }
+    const data: Record<string, string> = {};
+    for (const sfx of PROFILE_SUFFIXES[b.kind]) if (this.keys().has(b.pfx + sfx)) data[sfx] = this.str(b.pfx + sfx);
+    this.profiles.save(b.kind, label, data);
+    this.flash('pf.saved');
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  protected onKey(e: KeyboardEvent): void {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+      e.preventDefault();
+      this.downloadDoc();
+    }
   }
 
   protected isPair(x: FieldDef | [FieldDef, FieldDef]): x is [FieldDef, FieldDef] { return Array.isArray(x); }

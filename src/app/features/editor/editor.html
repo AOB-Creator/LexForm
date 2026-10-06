@@ -6,7 +6,12 @@
     </div>
     <div class="title-row">
       <div class="titles">
-        <h1>{{ t.title | tr }}</h1>
+        <h1>{{ t.title | tr }}
+          <button type="button" class="star" [class.on]="library.isFav(t.id)" (click)="library.toggleFav(t.id)"
+                  [attr.aria-pressed]="library.isFav(t.id)" [attr.aria-label]="(library.isFav(t.id) ? 'ed.unfav' : 'ed.fav') | t" [attr.title]="(library.isFav(t.id) ? 'ed.unfav' : 'ed.fav') | t">
+            <app-icon name="star" />
+          </button>
+        </h1>
         <p>{{ t.desc | tr }}</p>
       </div>
       <div class="actions">
@@ -45,6 +50,15 @@
           <details class="group" open>
             <summary><span>{{ groupsLabel[g.key] | tr }}</span><app-icon name="chevron" /></summary>
             <div class="group-body">
+              @if (parties()[g.key]; as b) {
+                <div class="party-tools">
+                  <select (change)="applyProfile(b, $any($event.target).value); $any($event.target).value = ''" [attr.aria-label]="(b.kind === 'company' ? 'pf.fill' : 'pf.fillPerson') | t">
+                    <option value="">{{ (b.kind === 'company' ? 'pf.fill' : 'pf.fillPerson') | t }}</option>
+                    @for (pr of profiles.of(b.kind); track pr.id) { <option [value]="pr.id">{{ pr.label }}</option> }
+                  </select>
+                  <button type="button" class="btn ghost sm" (click)="saveProfile(b)"><app-icon name="bookmark" /> {{ 'pf.save' | t }}</button>
+                </div>
+              }
               @for (item of g.fields; track $index) {
                 @if (isPair(item)) {
                   <div class="pair">
@@ -118,7 +132,10 @@
               <textarea [id]="'f-' + f.k" rows="3" [value]="str(f.k)" (input)="set(f.k, $any($event.target).value)"></textarea>
             }
             @case ('date') {
-              <label [for]="'f-' + f.k">{{ f.l | tr }}</label>
+              <div class="lbl-row">
+                <label [for]="'f-' + f.k">{{ f.l | tr }}</label>
+                <button type="button" class="today" (click)="today(f.k)">{{ 'ed.today' | t }}</button>
+              </div>
               <input [id]="'f-' + f.k" type="date" [value]="str(f.k)" (input)="set(f.k, $any($event.target).value)">
             }
             @case ('money') {
@@ -138,6 +155,7 @@
               <input [id]="'f-' + f.k" [value]="str(f.k)" (input)="set(f.k, $any($event.target).value)">
             }
           }
+          @if (warn(f); as w) { <span class="hint warn">{{ w | t }}</span> }
           @if (f.hint) { <span class="hint">{{ f.hint | tr }}</span> }
         </div>
       </ng-template>
@@ -149,9 +167,15 @@
           <input type="checkbox" [checked]="prefs.marks()" (change)="prefs.marks.set($any($event.target).checked)">
           <span>{{ 'ed.marks' | t }}</span>
         </label>
+        <div class="zoom" role="group">
+          <button type="button" class="btn icon ghost sm" (click)="prefs.zoomBy(-10)" [attr.aria-label]="'ed.zoomOut' | t" [attr.title]="'ed.zoomOut' | t">−</button>
+          <span>{{ prefs.zoom() }}%</span>
+          <button type="button" class="btn icon ghost sm" (click)="prefs.zoomBy(10)" [attr.aria-label]="'ed.zoomIn' | t" [attr.title]="'ed.zoomIn' | t">+</button>
+        </div>
         <span class="lang-note">{{ 'ed.docLang' | t }} · {{ prefs.script() === 'lat' ? 'lotin' : 'кирилл' }}</span>
       </div>
-      <article #sheet class="sheet" [class.marks]="prefs.marks()" [innerHTML]="html()"></article>
+      <article #sheet class="sheet" [class.marks]="prefs.marks()" [style.zoom]="prefs.zoom() / 100" [innerHTML]="html()"></article>
+      <p class="pv-note no-print">{{ 'ed.shortcuts' | t }}</p>
       @if (prefs.script() === 'lat') { <p class="pv-note no-print">{{ 'ed.latinNote' | t }}</p> }
     </section>
   </div>

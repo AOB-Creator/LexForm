@@ -61,10 +61,21 @@
     </label>
   </div>
 
+  @if (recentList().length) {
+    <div class="recent">
+      <span class="lbl"><app-icon name="clock" /> {{ 'list.recent' | t }}:</span>
+      @for (t of recentList(); track t.id) { <a class="chip" [routerLink]="['/t', t.id]">{{ t.title | tr }}</a> }
+    </div>
+  }
   <div class="filters" role="group">
     <button type="button" class="filter" [attr.aria-pressed]="cat() === 'all'" (click)="pickCat('all')">
       {{ 'list.all' | t }} <span>{{ total }}</span>
     </button>
+    @if (library.favs().length) {
+      <button type="button" class="filter fav" [attr.aria-pressed]="cat() === 'fav'" (click)="pickCat('fav')">
+        <app-icon name="star" /> {{ 'list.favs' | t }} <span>{{ library.favs().length }}</span>
+      </button>
+    }
     @for (c of categories; track c.id) {
       <button type="button" class="filter" [attr.aria-pressed]="cat() === c.id" (click)="pickCat(c.id)">
         <app-icon [name]="catIcon[c.id]" /> {{ c.title | tr }} <span>{{ countByCat()[c.id] }}</span>
@@ -85,6 +96,11 @@
   @if (list().length) {
     <div class="grid">
       @for (t of list(); track t.id) {
+        <div class="cell">
+        <button type="button" class="star" [class.on]="library.isFav(t.id)" (click)="toggleFav($event, t.id)"
+                [attr.aria-pressed]="library.isFav(t.id)" [attr.aria-label]="(library.isFav(t.id) ? 'ed.unfav' : 'ed.fav') | t" [attr.title]="(library.isFav(t.id) ? 'ed.unfav' : 'ed.fav') | t">
+          <app-icon name="star" />
+        </button>
         <a class="card" [routerLink]="['/t', t.id]" [attr.data-cat]="t.cat">
           <div class="card-top">
             <span class="cat-ico"><app-icon [name]="catIcon[t.cat]" /></span>
@@ -100,6 +116,7 @@
             <span class="go">{{ 'list.open' | t }} <app-icon name="arrow" /></span>
           </div>
         </a>
+        </div>
       }
     </div>
   } @else {

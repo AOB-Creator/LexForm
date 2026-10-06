@@ -64,6 +64,7 @@ h1 { font: 600 clamp(20px, 2.4vw, 28px)/1.2 var(--f-display); letter-spacing: -.
 .money input { padding-right: 52px; }
 .money .cur { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font: 500 11px var(--f-mono); color: var(--muted); }
 .hint { font-size: 12px; color: var(--muted); }
+.hint.warn { color: var(--danger); font-weight: 600; }
 .hint.words { color: var(--accent); font-weight: 600; }
 
 .lbl-img { font-size: 13px; font-weight: 600; color: var(--ink-2); }
@@ -75,6 +76,19 @@ h1 { font: 600 clamp(20px, 2.4vw, 28px)/1.2 var(--f-display); letter-spacing: -.
 }
 .upload-actions { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .upload-actions label.btn { cursor: pointer; }
+
+.party-tools { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 8px; margin-bottom: 2px; border-radius: 10px; background: var(--primary-soft); }
+.party-tools select { flex: 1 1 180px; min-width: 0; padding: 7px 10px; border-radius: 8px; border: 1px solid var(--line-2); background: var(--surface); color: var(--ink); font-size: 13px; }
+.btn.sm { padding: 6px 10px; font-size: 12.5px; min-height: 0; }
+.lbl-row { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; }
+.today { border: 0; background: none; padding: 0; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--primary); white-space: nowrap; }
+.today:hover { text-decoration: underline; }
+.star { border: 0; background: none; cursor: pointer; color: var(--muted); vertical-align: middle; padding: 2px 4px; border-radius: 8px; }
+.star:hover { color: var(--accent); }
+.star.on { color: #e0a100; }
+.star.on ::ng-deep svg { fill: currentColor; }
+.zoom { display: inline-flex; align-items: center; gap: 4px; font: 500 12px var(--f-mono); }
+.zoom .btn { width: 26px; height: 26px; padding: 0; justify-content: center; font-size: 16px; }
 
 .rows-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .rows { display: grid; gap: 8px; }

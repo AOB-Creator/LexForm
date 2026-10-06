@@ -5,6 +5,7 @@ import { renderTemplate } from '../../core/doc/engine';
 import { CategoryId } from '../../core/doc/types';
 import { I18n, TPipe, TrPipe } from '../../core/i18n/i18n.service';
 import { Drafts } from '../../core/services/drafts.service';
+import { Library } from '../../core/services/library.service';
 import { Prefs } from '../../core/services/prefs.service';
 import { Icon } from '../../layout/icon';
 import { exampleValues, findTemplate, TEMPLATES } from '../../templates';
@@ -24,12 +25,13 @@ export class Home {
   private readonly sanitizer = inject(DomSanitizer);
   private readonly drafts = inject(Drafts);
   protected readonly prefs = inject(Prefs);
+  protected readonly library = inject(Library);
 
   protected readonly categories = CATEGORIES;
   protected readonly catIcon = CAT_ICON;
   protected readonly total = TEMPLATES.length;
   protected readonly query = signal('');
-  protected readonly cat = signal<CategoryId | 'all'>('all');
+  protected readonly cat = signal<CategoryId | 'all' | 'fav'>('all');
   protected readonly sub = signal<string>('all');
   protected readonly subs = computed(() => CATEGORIES.find(c => c.id === this.cat())?.subs ?? []);
 
@@ -38,7 +40,8 @@ export class Home {
     const c = this.cat();
     const s = this.sub();
     this.i18n.lang();
-    return TEMPLATES.filter(t => (c === 'all' || t.cat === c) && (s === 'all' || t.sub === s) && (!q ||
+    const favs = this.library.favs();
+    return TEMPLATES.filter(t => (c === 'all' || t.cat === c || (c === 'fav' && favs.includes(t.id))) && (s === 'all' || t.sub === s) && (!q ||
       [t.title.uz, t.title.ru, t.title.en, t.desc.uz, t.desc.ru, t.desc.en, t.docTitle].join(' ').toLowerCase().includes(q)));
   });
 
@@ -51,7 +54,15 @@ export class Home {
     return m;
   });
 
-  protected pickCat(c: CategoryId | 'all'): void {
+  protected readonly recentList = computed(() => this.library.recent().map(id => findTemplate(id)).filter((t): t is NonNullable<typeof t> => !!t).slice(0, 6));
+
+  protected toggleFav(e: Event, id: string): void {
+    e.preventDefault();
+    e.stopPropagation();
+    this.library.toggleFav(id);
+  }
+
+  protected pickCat(c: CategoryId | 'all' | 'fav'): void {
     this.cat.set(c);
     this.sub.set('all');
   }
