@@ -32,3 +32,14 @@ New subcategories: hr/notices, hr/internal, court/responses, corporate/charters,
 - notarial: marriage-contract, alimony-agreement (contracts) · realty-poa (poa) · spouse-consent (applications)
 - court: court-damages, court-consumer (claims) · court-motion, court-objection (responses)
 - corporate: llc-charter (charters) · guarantee-letter, requisites-letter (letters) · major-deal, share-sale (decisions)
+
+## Batch 4 (+33 templates, total 127)
+
+- contracts: commission, mandate, software-dev, pledge, surety, assignment, barter (legal) · offset-act (annex)
+- applications: mahalla-reference, card-block (individuals) · child-absence, benefit-application (children) · license-application (legal)
+- hr: maternity-leave, childcare-leave (applications) · acting-order, weekend-work-order (orders) · contract-amendment, mutual-termination, remote-work (contracts)
+- notarial: pension-poa, bank-poa (poa) · will-revocation (wills)
+- court: court-reinstatement, court-child-residence, court-alimony-change (claims) · court-writ-request, court-security (applications)
+- corporate: branch-decision, liquidation-decision (decisions) · details-change-letter (letters) · goods-poa, company-vehicle-poa (poa)
+
+Security: a spec renders every template with an HTML-injection payload in every text field and table cell and asserts no raw tag reaches the output.

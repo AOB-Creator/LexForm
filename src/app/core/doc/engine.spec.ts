@@ -93,3 +93,21 @@ describe('catalogue structure', () => {
     for (const t of TEMPLATES) expect(new Set(t.fields.map(f => f.k)).size, t.id).toBe(t.fields.length);
   });
 });
+
+describe('templates escape user input', () => {
+  const evil = '<img src=x onerror=alert(1)>';
+  for (const t of TEMPLATES) {
+    it(`${t.id} never emits raw HTML from field values`, () => {
+      const v = exampleValues(t);
+      for (const f of t.fields) {
+        if (f.t === 'image' || f.t === 'select' || f.t === 'date' || f.t === 'money' || f.t === 'number') continue;
+        if (f.t === 'rows') v[f.k] = [Object.fromEntries((f.cols ?? []).map(col => [col.k, col.num ? '1' : evil]))];
+        else v[f.k] = evil;
+      }
+      for (const s of ['cyr', 'lat'] as const) {
+        const html = renderTemplate(t, v, s);
+        expect(html, `${t.id}/${s}`).not.toContain('<img src=x');
+      }
+    });
+  }
+});

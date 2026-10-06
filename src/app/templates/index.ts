@@ -13,8 +13,11 @@ import { MORE_CORPORATE, MORE_COURT, MORE_NOTARIAL } from './more-legal';
 import { BATCH3_CONTRACTS } from './batch3-contracts';
 import { BATCH3_CORPORATE, BATCH3_COURT, BATCH3_NOTARIAL } from './batch3-legal';
 import { BATCH3_APPLICATIONS, BATCH3_HR } from './batch3-people';
+import { BATCH4_CONTRACTS } from './batch4-contracts';
+import { BATCH4_CORPORATE, BATCH4_COURT, BATCH4_NOTARIAL } from './batch4-legal';
+import { BATCH4_APPLICATIONS, BATCH4_HR } from './batch4-people';
 
-export const TEMPLATES: DocTemplate[] = [...CONTRACTS, ...MORE_CONTRACTS, ...BATCH3_CONTRACTS, ...APPLICATIONS, ...BATCH3_APPLICATIONS, ...HR_REQUESTS, ...HR, ...MORE_HR, ...BATCH3_HR, ...NOTARIAL, ...MORE_NOTARIAL, ...BATCH3_NOTARIAL, ...COURT, ...MORE_COURT, ...BATCH3_COURT, ...CORPORATE, ...MORE_CORPORATE, ...BATCH3_CORPORATE, ...ACTS];
+export const TEMPLATES: DocTemplate[] = [...CONTRACTS, ...MORE_CONTRACTS, ...BATCH3_CONTRACTS, ...BATCH4_CONTRACTS, ...APPLICATIONS, ...BATCH3_APPLICATIONS, ...BATCH4_APPLICATIONS, ...HR_REQUESTS, ...HR, ...MORE_HR, ...BATCH3_HR, ...BATCH4_HR, ...NOTARIAL, ...MORE_NOTARIAL, ...BATCH3_NOTARIAL, ...BATCH4_NOTARIAL, ...COURT, ...MORE_COURT, ...BATCH3_COURT, ...BATCH4_COURT, ...CORPORATE, ...MORE_CORPORATE, ...BATCH3_CORPORATE, ...BATCH4_CORPORATE, ...ACTS];
 
 export function findTemplate(id: string): DocTemplate | undefined {
   return TEMPLATES.find(t => t.id === id);
