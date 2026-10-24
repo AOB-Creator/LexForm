@@ -1,4 +1,6 @@
 import { DocTemplate, FieldDef, Values } from '../core/doc/types';
+import { RU } from './ru';
+import { ruExample } from './ru/examples';
 import { ACTS } from './acts';
 import { APPLICATIONS } from './applications';
 import { CONTRACTS } from './contracts';
@@ -19,14 +21,21 @@ import { BATCH4_APPLICATIONS, BATCH4_HR } from './batch4-people';
 
 export const TEMPLATES: DocTemplate[] = [...CONTRACTS, ...MORE_CONTRACTS, ...BATCH3_CONTRACTS, ...BATCH4_CONTRACTS, ...APPLICATIONS, ...BATCH3_APPLICATIONS, ...BATCH4_APPLICATIONS, ...HR_REQUESTS, ...HR, ...MORE_HR, ...BATCH3_HR, ...BATCH4_HR, ...NOTARIAL, ...MORE_NOTARIAL, ...BATCH3_NOTARIAL, ...BATCH4_NOTARIAL, ...COURT, ...MORE_COURT, ...BATCH3_COURT, ...BATCH4_COURT, ...CORPORATE, ...MORE_CORPORATE, ...BATCH3_CORPORATE, ...BATCH4_CORPORATE, ...ACTS];
 
+// attach Russian versions where available
+for (const t of TEMPLATES) if (RU[t.id]) t.ru = RU[t.id];
+
 export function findTemplate(id: string): DocTemplate | undefined {
   return TEMPLATES.find(t => t.id === id);
 }
 
-export function exampleValues(t: DocTemplate): Values {
+export function exampleValues(t: DocTemplate, lang: 'uz' | 'ru' = 'uz'): Values {
   const v: Values = {};
+  // Russian examples only make sense for templates with a Russian version; select values stay Uzbek (they are mapped at render time)
+  const conv = lang === 'ru' && t.ru ? ruExample : (s: string) => s;
   t.fields.forEach((f: FieldDef) => {
-    v[f.k] = Array.isArray(f.ex) ? f.ex.map(r => ({ ...r })) : (f.ex ?? (f.t === 'select' && f.opts ? f.opts[0] : ''));
+    if (Array.isArray(f.ex)) v[f.k] = f.ex.map(r => Object.fromEntries(Object.entries(r).map(([k, x]) => [k, conv(x)])));
+    else if (f.t === 'select') v[f.k] = f.ex ?? (f.opts ? f.opts[0] : '');
+    else v[f.k] = f.ex === undefined ? '' : conv(f.ex);
   });
   return v;
 }

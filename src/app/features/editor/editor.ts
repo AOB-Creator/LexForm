@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, computed, effect, ElementRef, HostL
 import { NgTemplateOutlet } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
-import { renderTemplate } from '../../core/doc/engine';
-import { esc, fmtMoney, moneyWords, parseNum } from '../../core/doc/format';
+import { docTitleFor, renderTemplate } from '../../core/doc/engine';
+import { esc, fmtMoney, moneyWords, moneyWordsRu, parseNum } from '../../core/doc/format';
 import { cyrToLat } from '../../core/doc/translit';
-import { DocTemplate, FieldDef, RowValue, Values } from '../../core/doc/types';
+import { DocTemplate, FieldDef, RowValue, Script, Values } from '../../core/doc/types';
 import { DictKey } from '../../core/i18n/dictionary';
 import { I18n, TPipe, TrPipe } from '../../core/i18n/i18n.service';
 import { Drafts } from '../../core/services/drafts.service';
@@ -95,9 +95,12 @@ export class Editor {
   });
   private readonly keys = computed(() => new Set(this.tpl()?.fields.map(f => f.k) ?? []));
 
+  /** Output actually used: Russian falls back to Uzbek Cyrillic for templates without a Russian version. */
+  protected readonly script = computed<Script>(() => (this.prefs.script() === 'ru' && !this.tpl()?.ru ? 'cyr' : this.prefs.script()));
+
   protected readonly html = computed(() => {
     const t = this.tpl();
-    return t ? this.sanitizer.bypassSecurityTrustHtml(renderTemplate(t, this.values(), this.prefs.script())) : '';
+    return t ? this.sanitizer.bypassSecurityTrustHtml(renderTemplate(t, this.values(), this.script())) : '';
   });
 
   protected readonly progress = computed(() => {
@@ -112,7 +115,7 @@ export class Editor {
       if (!t) return;
       untracked(() => {
         const saved = this.drafts.load(t.id);
-        this.values.set(saved ?? exampleValues(t));
+        this.values.set(saved ?? exampleValues(t, this.prefs.script() === 'ru' ? 'ru' : 'uz'));
         this.note.set(saved ? 'ed.saved' : 'ed.exampleNote');
         this.library.touch(t.id);
       });
@@ -246,13 +249,22 @@ export class Editor {
   }
 
   /** Display a select option (stored in Cyrillic) in the chosen script. */
-  protected opt(o: string): string { return this.prefs.script() === 'lat' ? cyrToLat(o) : o; }
+  protected opt(f: FieldDef, o: string): string {
+    const s = this.script();
+    if (s === 'ru') {
+      const ru = this.tpl()?.ru?.opts?.[f.k];
+      const i = f.opts?.indexOf(o) ?? -1;
+      return ru && i >= 0 ? ru[i] : o;
+    }
+    return s === 'lat' ? cyrToLat(o) : o;
+  }
 
   protected moneyHint(k: string): string {
     const n = parseNum(this.str(k));
     if (!isFinite(n)) return '';
-    const w = moneyWords(n);
-    return `${fmtMoney(n)} — ${this.prefs.script() === 'lat' ? cyrToLat(w) : w}`;
+    const s = this.script();
+    const w = s === 'ru' ? moneyWordsRu(n) : moneyWords(n);
+    return `${fmtMoney(n)} — ${s === 'lat' ? cyrToLat(w) : w}`;
   }
   protected rowsTotal(f: FieldDef): string {
     if (!f.cols?.some(c => c.k === 'qty') || !f.cols.some(c => c.k === 'price')) return '';
@@ -266,7 +278,7 @@ export class Editor {
   protected fillExample(): void {
     const t = this.tpl();
     if (!t) return;
-    this.values.set(exampleValues(t));
+    this.values.set(exampleValues(t, this.script() === 'ru' ? 'ru' : 'uz'));
     this.note.set('ed.exampleNote');
   }
   protected clear(): void {
@@ -319,14 +331,14 @@ export class Editor {
   protected downloadDoc(): void {
     const t = this.tpl();
     if (!t) return;
-    const title = this.prefs.script() === 'lat' ? cyrToLat(t.docTitle) : t.docTitle;
+    const title = docTitleFor(t, this.script());
     const doc = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">`
       + `<head><meta charset="utf-8"><title>${esc(title)}</title><style>@page{size:A4;margin:2cm 1.5cm 2cm 2.5cm}${WORD_CSS}${t.wordCss ?? ''}</style></head>`
       + `<body>${this.cleanHtml()}</body></html>`;
     const url = URL.createObjectURL(new Blob(['﻿', doc], { type: 'application/msword' }));
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${t.fileName?.(this.values()) || `${t.id}-${this.prefs.script()}`}.doc`;
+    a.download = `${t.fileName?.(this.values()) || `${t.id}-${this.script()}`}.doc`;
     document.body.appendChild(a);
     a.click();
     a.remove();

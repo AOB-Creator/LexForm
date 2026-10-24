@@ -1,10 +1,10 @@
-import { esc, fmtDate, fmtDateShort, fmtMoney, moneyWords, parseNum } from './format';
-import { cyrToLatHtml } from './translit';
-import { DocTemplate, RowValue, Script, Values } from './types';
+import { esc, fmtDate, fmtDateRu, fmtDateShort, fmtMoney, moneyWords, moneyWordsRu, parseNum } from './format';
+import { cyrToLat, cyrToLatHtml } from './translit';
+import { DocLang, DocTemplate, RowValue, Script, Values } from './types';
 
 /** Render context: reads values and turns them into document HTML (Uzbek Cyrillic). Empty values become underlines. */
 export class Ctx {
-  constructor(private readonly values: Values) {}
+  constructor(private readonly values: Values, readonly lang: DocLang = 'uz') {}
 
   raw(k: string): string {
     const v = this.values[k];
@@ -29,10 +29,11 @@ export class Ctx {
   money(k: string): string { return this.moneyN(this.num(k)); }
   moneyN(n: number): string {
     if (!isFinite(n) || n === 0) return `${this.blank(10)} (${this.blank(30)})`;
-    return `${this.span(fmtMoney(n))} (${this.span(moneyWords(n))})`;
+    return `${this.span(fmtMoney(n))} (${this.span(this.lang === 'ru' ? moneyWordsRu(n) : moneyWords(n))})`;
   }
   sum(k: string): string { const n = this.num(k); return isFinite(n) ? this.span(fmtMoney(n)) : this.blank(10); }
   date(k: string): string {
+    if (this.lang === 'ru') return this.has(k) ? this.span(fmtDateRu(this.raw(k))) : `«${this.blank(3)}» ${this.blank(10)} 20${this.blank(3)} г.`;
     return this.has(k) ? this.span(fmtDate(this.raw(k))) : `«${this.blank(3)}» ${this.blank(10)} 20${this.blank(3)} йил`;
   }
   /** uploaded image (data URL) or the given placeholder HTML */
@@ -44,8 +45,24 @@ export class Ctx {
 }
 
 export function renderTemplate(t: DocTemplate, values: Values, script: Script): string {
+  if (script === 'ru' && t.ru) {
+    // select options are stored in Uzbek; swap in their Russian wording
+    const v: Values = { ...values };
+    for (const f of t.fields) {
+      const ru = t.ru.opts?.[f.k];
+      const i = f.opts && ru ? f.opts.indexOf(String(v[f.k] ?? '')) : -1;
+      if (ru && i >= 0) v[f.k] = ru[i];
+    }
+    return t.ru.render(new Ctx(v, 'ru'));
+  }
   const html = t.render(new Ctx(values));
   return script === 'lat' ? cyrToLatHtml(html) : html;
+}
+
+/** Document title in the chosen output. */
+export function docTitleFor(t: DocTemplate, script: Script): string {
+  if (script === 'ru' && t.ru) return t.ru.docTitle;
+  return script === 'lat' ? cyrToLat(t.docTitle) : t.docTitle;
 }
 
 /* ---------------- building blocks shared by templates ---------------- */
@@ -85,7 +102,25 @@ export function itemsTable(c: Ctx, key: string): { html: string; total: number }
       + `<td class="n">${isFinite(q) ? fmtMoney(q) : ''}</td><td class="n">${isFinite(pr) ? fmtMoney(pr) : ''}</td><td class="n">${isFinite(s) ? fmtMoney(s) : ''}</td></tr>`;
   });
   if (!rows.length) body = `<tr><td class="n">1</td><td>${c.blank(12)}</td><td></td><td></td><td></td><td></td></tr>`;
-  body += `<tr><td></td><td colspan="4"><b>Жами</b></td><td class="n"><b>${total ? fmtMoney(total) : ''}</b></td></tr>`;
-  const head = ['№', 'Номи', 'Ўлчов бирлиги', 'Миқдори', 'Нархи', 'Суммаси'].map(x => `<th>${x}</th>`).join('');
+  body += `<tr><td></td><td colspan="4"><b>${c.lang === 'ru' ? 'Итого' : 'Жами'}</b></td><td class="n"><b>${total ? fmtMoney(total) : ''}</b></td></tr>`;
+  const ru = c.lang === 'ru';
+  const head = (ru ? ['№', 'Наименование', 'Ед. изм.', 'Кол-во', 'Цена', 'Сумма'] : ['№', 'Номи', 'Ўлчов бирлиги', 'Миқдори', 'Нархи', 'Суммаси']).map(x => `<th>${x}</th>`).join('');
   return { html: `<table class="t"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`, total };
+}
+
+/* ---------------- Russian building blocks ---------------- */
+
+/** «Name» (далее — «Role»), от имени которого действует директор F.I.O. (основание полномочий: Устав) — case-neutral for user-typed values */
+export function partyIntroRu(c: Ctx, pfx: string, role: string): string {
+  return `${c.x(pfx + '_name', 20)} (далее — «${role}»), от имени которого действует ${c.x(pfx + '_pos', 8)} ${c.x(pfx + '_rep', 22)} (основание полномочий: ${c.x(pfx + '_basis', 8)})`;
+}
+
+export function reqCellRu(c: Ctx, pfx: string, role: string): string {
+  return `<b>«${role}»</b><br>${c.x(pfx + '_name', 20)}<br>
+    Адрес: ${c.x(pfx + '_addr', 24)}<br>
+    ИНН: ${c.x(pfx + '_stir', 12)}<br>
+    Р/с: ${c.x(pfx + '_acc', 22)}<br>
+    Банк: ${c.x(pfx + '_bank', 20)}<br>
+    МФО: ${c.x(pfx + '_mfo', 6)} &nbsp; Тел.: ${c.x(pfx + '_phone', 12)}<br><br>
+    ${c.x(pfx + '_pos', 8)} ____________ ${c.x(pfx + '_rep', 16)}<br>М.П.`;
 }

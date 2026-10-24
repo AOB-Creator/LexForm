@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { emptyValues, exampleValues, TEMPLATES } from '../../templates';
 import { CATEGORIES, GROUPS } from '../../templates/shared';
+import { ruExample } from '../../templates/ru/examples';
 import { Ctx, renderTemplate } from './engine';
-import { fmtDate, fmtMoney, moneyWords } from './format';
+import { fmtDate, fmtDateRu, fmtMoney, moneyWords, moneyWordsRu, numWordsRu } from './format';
 import { cyrToLat, cyrToLatHtml } from './translit';
 
 describe('money words (Uzbek Cyrillic)', () => {
@@ -104,10 +105,78 @@ describe('templates escape user input', () => {
         if (f.t === 'rows') v[f.k] = [Object.fromEntries((f.cols ?? []).map(col => [col.k, col.num ? '1' : evil]))];
         else v[f.k] = evil;
       }
-      for (const s of ['cyr', 'lat'] as const) {
+      for (const s of ['cyr', 'lat', 'ru'] as const) {
         const html = renderTemplate(t, v, s);
         expect(html, `${t.id}/${s}`).not.toContain('<img src=x');
       }
     });
   }
+});
+
+describe('Russian output', () => {
+  it('writes money in Russian words with correct forms', () => {
+    expect(numWordsRu(1)).toBe('один');
+    expect(numWordsRu(21000)).toBe('двадцать одна тысяча');
+    expect(numWordsRu(2000000)).toBe('два миллиона');
+    expect(numWordsRu(5014)).toBe('пять тысяч четырнадцать');
+    expect(numWordsRu(1464000)).toBe('один миллион четыреста шестьдесят четыре тысячи');
+    expect(moneyWordsRu(20500000)).toBe('Двадцать миллионов пятьсот тысяч сум');
+    expect(moneyWordsRu(12.5)).toBe('Двенадцать сум пятьдесят тийин');
+    expect(fmtDateRu('2026-10-06')).toBe('«06» октября 2026 г.');
+  });
+
+  const ruTemplates = TEMPLATES.filter(t => t.ru);
+  it('has a first batch of Russian versions', () => expect(ruTemplates.length).toBeGreaterThanOrEqual(25));
+
+  for (const t of ruTemplates) {
+    it(`${t.id}: Russian option lists match the Uzbek ones`, () => {
+      for (const [k, list] of Object.entries(t.ru!.opts ?? {})) {
+        const f = t.fields.find(x => x.k === k);
+        expect(f?.opts, `${t.id}.${k}`).toBeTruthy();
+        expect(list.length, `${t.id}.${k}`).toBe(f!.opts!.length);
+      }
+    });
+    it(`${t.id}: Russian text renders cleanly and contains no Uzbek-only letters`, () => {
+      for (const v of [exampleValues(t), emptyValues(t)]) {
+        const html = renderTemplate(t, v, 'ru');
+        expect(html).not.toMatch(/undefined|NaN|\[object/);
+      }
+      // with empty values every word on the page comes from the template itself
+      const empty = renderTemplate(t, emptyValues(t), 'ru').replace(/<[^>]+>/g, ' ');
+      expect(empty, t.id).not.toMatch(/[ўқғҳЎҚҒҲ]/);
+    });
+    it(`${t.id}: select values are translated`, () => {
+      const v = exampleValues(t);
+      const html = renderTemplate(t, v, 'ru');
+      for (const [k, list] of Object.entries(t.ru!.opts ?? {})) {
+        const f = t.fields.find(x => x.k === k)!;
+        const i = f.opts!.indexOf(String(v[k]));
+        if (i >= 0 && html.includes(String(v[k])) && !list[i].includes(String(v[k]))) throw new Error(`${t.id}.${k} left untranslated`);
+      }
+    });
+  }
+
+  it('Russian example values carry no Uzbek-only letters', () => {
+    for (const t of ruTemplates) {
+      const v = exampleValues(t, 'ru');
+      for (const f of t.fields) {
+        if (f.t === 'select' || f.t === 'image') continue;
+        expect(JSON.stringify(v[f.k]), `${t.id}.${f.k}`).not.toMatch(/[ўқғҳЎҚҒҲ]/);
+      }
+      expect(renderTemplate(t, v, 'ru'), t.id).not.toMatch(/[ўқғҳЎҚҒҲ]/);
+    }
+  });
+
+  it('converts common example values', () => {
+    expect(ruExample('«Намуна Савдо» МЧЖ')).toBe('ООО «Намуна Савдо»');
+    expect(ruExample('Тошкент ш., Юнусобод тумани, Амир Темур кўчаси, 1-уй')).toBe('г. Ташкент, Юнусабадский район, ул. Амир Темур, д. 1');
+    expect(ruExample('Чилонзор тумани ИИБ, 12.08.2018')).toBe('ОВД Чиланзарского района, 12.08.2018');
+    expect(ruExample('Каримов Алишер Баҳромович')).toBe('Каримов Алишер Бахромович');
+    expect(ruExample('«Намуна банк» АТБ Юнусобод филиали')).toBe('Юнусабадский филиал АКБ «Намуна банк»');
+  });
+
+  it('falls back to Uzbek Cyrillic when no Russian version exists', () => {
+    const t = TEMPLATES.find(x => !x.ru)!;
+    expect(renderTemplate(t, exampleValues(t), 'ru')).toBe(renderTemplate(t, exampleValues(t), 'cyr'));
+  });
 });

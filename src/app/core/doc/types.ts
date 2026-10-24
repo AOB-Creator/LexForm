@@ -1,5 +1,7 @@
 export type UiLang = 'uz' | 'ru' | 'en';
-export type Script = 'cyr' | 'lat';
+/** Document output: Uzbek Cyrillic, Uzbek Latin, or Russian (for templates that have a Russian version). */
+export type Script = 'cyr' | 'lat' | 'ru';
+export type DocLang = 'uz' | 'ru';
 
 /** A UI string in the three interface languages. */
 export interface Tr { uz: string; ru: string; en: string; }
@@ -40,8 +42,17 @@ export interface DocTemplate {
   minutes: number;
   fields: FieldDef[];
   render: (c: import('./engine').Ctx) => string;
+  /** Russian version of the document (optional; templates without it fall back to Uzbek Cyrillic). */
+  ru?: RuVersion;
   /** Word export: file name without extension (default: `${id}-${script}`) */
   fileName?: (v: Values) => string;
   /** Word export: @page margins and base font override */
   wordCss?: string;
+}
+
+export interface RuVersion {
+  docTitle: string;
+  render: (c: import('./engine').Ctx) => string;
+  /** Russian wording for select options, index-aligned with FieldDef.opts */
+  opts?: Record<string, string[]>;
 }

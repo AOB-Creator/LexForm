@@ -113,6 +113,7 @@
           <div class="card-foot">
             <span class="chip"><app-icon name="clock" /> ~{{ t.minutes }} {{ 'list.minutes' | t }}</span>
             <span class="chip">{{ t.fields.length }} {{ 'list.fields' | t }}</span>
+            @if (t.ru) { <span class="chip ru" [attr.title]="'list.ru' | t">RU</span> }
             <span class="go">{{ 'list.open' | t }} <app-icon name="arrow" /></span>
           </div>
         </a>

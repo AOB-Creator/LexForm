@@ -21,6 +21,8 @@
           <div class="seg" role="group" [attr.aria-label]="'ed.script' | t">
             <button type="button" [attr.aria-pressed]="prefs.script() === 'cyr'" (click)="prefs.script.set('cyr')">Кирилл</button>
             <button type="button" [attr.aria-pressed]="prefs.script() === 'lat'" (click)="prefs.script.set('lat')">Lotin</button>
+            <button type="button" [attr.aria-pressed]="script() === 'ru'" [disabled]="!t.ru" (click)="prefs.script.set('ru')"
+                    [attr.title]="t.ru ? null : ('ed.ruSoon' | t)">Рус</button>
           </div>
         </div>
         <button class="btn" type="button" (click)="copy()"><app-icon name="copy" /> {{ 'ed.copy' | t }}</button>
@@ -125,7 +127,7 @@
             @case ('select') {
               <label [for]="'f-' + f.k">{{ f.l | tr }}</label>
               <select [id]="'f-' + f.k" (change)="set(f.k, $any($event.target).value)">
-                @for (o of f.opts; track o) { <option [value]="o" [selected]="str(f.k) === o">{{ opt(o) }}</option> }
+                @for (o of f.opts; track o) { <option [value]="o" [selected]="str(f.k) === o">{{ opt(f, o) }}</option> }
               </select>
             }
             @case ('textarea') {
@@ -173,11 +175,13 @@
           <span>{{ prefs.zoom() }}%</span>
           <button type="button" class="btn icon ghost sm" (click)="prefs.zoomBy(10)" [attr.aria-label]="'ed.zoomIn' | t" [attr.title]="'ed.zoomIn' | t">+</button>
         </div>
-        <span class="lang-note">{{ 'ed.docLang' | t }} · {{ prefs.script() === 'lat' ? 'lotin' : 'кирилл' }}</span>
+        <span class="lang-note">{{ (script() === 'ru' ? 'ed.docLangRu' : 'ed.docLang') | t }}@if (script() !== 'ru') { · {{ script() === 'lat' ? 'lotin' : 'кирилл' }} }</span>
       </div>
       <article #sheet class="sheet" [class.marks]="prefs.marks()" [style.zoom]="prefs.zoom() / 100" [innerHTML]="html()"></article>
       <p class="pv-note no-print">{{ 'ed.shortcuts' | t }}</p>
-      @if (prefs.script() === 'lat') { <p class="pv-note no-print">{{ 'ed.latinNote' | t }}</p> }
+      @if (script() === 'lat') { <p class="pv-note no-print">{{ 'ed.latinNote' | t }}</p> }
+      @if (script() === 'ru') { <p class="pv-note no-print">{{ 'ed.ruNote' | t }}</p> }
+      @if (prefs.script() === 'ru' && !t.ru) { <p class="pv-note warn no-print">{{ 'ed.ruSoon' | t }}</p> }
     </section>
   </div>
 
