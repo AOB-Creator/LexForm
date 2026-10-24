@@ -33,7 +33,9 @@ export function exampleValues(t: DocTemplate, lang: 'uz' | 'ru' = 'uz'): Values 
   // Russian examples only make sense for templates with a Russian version; select values stay Uzbek (they are mapped at render time)
   const conv = lang === 'ru' && t.ru ? ruExample : (s: string) => s;
   t.fields.forEach((f: FieldDef) => {
-    if (Array.isArray(f.ex)) v[f.k] = f.ex.map(r => Object.fromEntries(Object.entries(r).map(([k, x]) => [k, conv(x)])));
+    const own = lang === 'ru' ? t.ru?.ex?.[f.k] : undefined;
+    if (own !== undefined) v[f.k] = Array.isArray(own) ? own.map(r => ({ ...r })) : own;
+    else if (Array.isArray(f.ex)) v[f.k] = f.ex.map(r => Object.fromEntries(Object.entries(r).map(([k, x]) => [k, conv(x)])));
     else if (f.t === 'select') v[f.k] = f.ex ?? (f.opts ? f.opts[0] : '');
     else v[f.k] = f.ex === undefined ? '' : conv(f.ex);
   });

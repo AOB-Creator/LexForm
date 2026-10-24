@@ -53,6 +53,8 @@ export interface DocTemplate {
 export interface RuVersion {
   docTitle: string;
   render: (c: import('./engine').Ctx) => string;
+  /** Russian example values that replace the automatically converted ones */
+  ex?: Values;
   /** Russian wording for select options, index-aligned with FieldDef.opts */
   opts?: Record<string, string[]>;
 }
